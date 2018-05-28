@@ -69,7 +69,7 @@ $conn->set_charset("utf8");
                     while ($row = $result->fetch_assoc()) {
                         echo '
                     <div class="col-lg-4 col-md-4 col-sm-6 col-10" style="margin-top: 30px;">
-                        <a href="'.$row["english"].'/index.php" class="genric-btn info circle" style="width:100%; font-size: 16pt;">'.$row["chinese"].'</a>
+                        <a href="scripts/'.$row["english"].'/index.php" class="genric-btn info circle" style="width:100%; font-size: 16pt;">'.$row["chinese"].'</a>
                     </div>';
                         $counter = $counter + 1;
                     }
