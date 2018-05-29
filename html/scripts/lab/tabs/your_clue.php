@@ -258,7 +258,7 @@
                     while ($row = $result->fetch_assoc()) {
                         if ($row["username"] != $_SESSION["username"]) {
                             echo '
-                    <input type="checkbox" name="share_targets[]" value="'.$row["username"].'" style="margin-bottom: 10px;"> '.$row["chinese_name"].'<br>';
+                    <input type="checkbox" name="share_targets[]" value="'.$row["username"].'" style="margin-bottom: 10px;"> 【'.$row["chinese_name"].'】<br>';
                         }
                     }
                     ?>

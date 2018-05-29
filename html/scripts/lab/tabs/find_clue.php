@@ -156,7 +156,7 @@
                     while ($row = $result->fetch_assoc()) {
                         if ($row["username"] != $_SESSION["username"]) {
                             echo '
-                        <input required type="radio" name="share_target" value="'.$row["username"].'" style="margin-top: 10px;"> '.$row["chinese_name"].'<br>';
+                        <input required type="radio" name="share_target" value="'.$row["username"].'" style="margin-top: 10px;"> 【'.$row["chinese_name"].'】<br>';
                         }
                     }
                     ?>
