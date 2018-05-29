@@ -14,16 +14,24 @@
             $sql1 = 'SELECT * FROM player_clue WHERE clue='.$clue_id;
             $result = $conn->query($sql1);
             if ($result->num_rows == 0) {
-                $sql2 = 'INSERT INTO player_clue(person, clue) VALUES("'.$_SESSION["username"].'", '.$clue_id.')';
-                $conn->query($sql2);
                 $sql2 = 'SELECT C.position, C.content2, C.points, L.location_c FROM clues as C LEFT JOIN location AS L on C.location=L.location_e WHERE id='.$clue_id;
                 $result = $conn->query($sql2);
                 while ($row = $result->fetch_assoc()) {
                     $clue = $row;
                 }
-                $user_information["points"] = $user_information["points"] - $clue["points"];
-                $sql2 = 'UPDATE players SET points=points-'.$clue["points"].' WHERE username="'.$_SESSION["username"].'"';
-                $conn->query($sql2);
+                if ($clue["points"] > $user_information["points"]) {
+                    echo '
+    <script type="text/javascript">
+        alert("作弊有意思么？");
+        window.location = "home.php?tab=your_clue";
+    </script>';
+                }
+                else {
+                    $sql3 = 'INSERT INTO player_clue(person, clue) VALUES("'.$_SESSION["username"].'", '.$clue_id.')';
+                    $conn->query($sql3);
+                    $sql3 = 'UPDATE players SET points=points-'.$clue["points"].' WHERE username="'.$_SESSION["username"].'"';
+                    $conn->query($sql3);
+                }
             }
             else {
                 echo '
@@ -148,7 +156,7 @@
                     while ($row = $result->fetch_assoc()) {
                         if ($row["username"] != $_SESSION["username"]) {
                             echo '
-                        <input required type="radio" name="share_target" value="'.$row["username"].'" style="margin-top: 10px;"> '.$row["chinese_name"].'<br>';
+                        <input required type="radio" name="share_target" value="'.$row["username"].'" style="margin-top: 10px;"> 【'.$row["chinese_name"].'】<br>';
                         }
                     }
                     ?>

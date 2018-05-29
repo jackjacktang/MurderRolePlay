@@ -107,7 +107,8 @@ while ($row = $result->fetch_assoc()) {
                         </li>
                         <li style="display: <?php echo ($status>=2? "block":"none"); ?>;"><a href="<?php echo ($tab=='find_clue'? '#':'home.php?tab=find_clue') ?>">调查线索</a></li>
                         <li><a href="<?php echo ($tab=='your_clue'? '#':'home.php?tab=your_clue') ?>">你的线索</a></li>
-                        <li style="display: <?php echo ($status>=4? "block":"none"); ?>;"><a href="<?php echo ($tab=='submit'? '#':'home.php?tab=submit') ?>">提交结果</a></li>
+                        <li style="display: <?php echo ($status>=4? "block":"none"); ?>;"><a href="<?php echo ($tab=='submit'? '#':'home.php?tab=submit') ?>">指认凶手</a></li>
+                        <li style="display: <?php echo ($status>=5? "block":"none"); ?>;"><a href="<?php echo ($tab=='result'? '#':'home.php?tab=result') ?>">最终得分</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>
                 </nav>
@@ -122,6 +123,7 @@ while ($row = $result->fetch_assoc()) {
     if ($tab == "find_clue" && $status >= 2) include("tabs/find_clue.php");
     if ($tab == "your_clue") include("tabs/your_clue.php");
     if ($tab == "submit" && $status >= 4) include("tabs/submit.php");
+    if ($tab == "result" && $status >= 5) include("tabs/result.php");
     $conn->close();
     ?>
 
