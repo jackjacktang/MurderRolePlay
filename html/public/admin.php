@@ -73,7 +73,8 @@ while ($row = $result->fetch_assoc()) {
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
-                        <li><a href="<?php echo($tab=='background'? '#':'home.php?tab=background'); ?>">故事背景</a></li>
+                        <li><a href="<?php echo($tab=='background'? '#':'admin.php?tab=background'); ?>">故事背景</a></li>
+                        <li><a href="<?php echo($tab=='clue'? '#':'admin.php?tab=clue'); ?>">线索管理</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>
                 </nav>
@@ -83,7 +84,7 @@ while ($row = $result->fetch_assoc()) {
 
 
     <?php
-    if ($tab == "background") include("admin_tabs/background.php");
+    include("admin_tabs/".$tab.".php");
     $conn->close();
     ?>
 
