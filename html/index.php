@@ -36,13 +36,26 @@
 $db_host = "localhost";
 $db_user = "root";
 $db_password = "Lu636593";
-$db = "role_play";
+$db = "rp";
 $conn = new mysqli($db_host, $db_user, $db_password, $db);
 if (mysqli_connect_errno()) {
     echo mysqli_connect_error();
 }
 $conn->set_charset("utf8");
+
+session_start();
+if (isset($_POST["script_name"])) {
+    $_SESSION["script_name"] = $_POST["script_name"];
+    $sql = 'Select * from rp WHERE english="'.$_POST["script_name"].'"';
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $_SESSION["script_chinese"] = $row["chinese"];
+    }
+    header("Location: public/index.php");
+}
 ?>
+
+
 
     <header id="header">
         <div class="container">
@@ -55,29 +68,31 @@ $conn->set_charset("utf8");
     </header><!-- #header -->
 
     <br><br><br>
-    <section>
-        <div class="container">
-            <div class="section-top-border">
-                <div class="row justify-content-center">
-                    <div class="col-lg-9 col-md0 col-sm-10">
-                    <img src="img/cover.jpg" style="width: 100%;"/>
+    <form method="post" action="index.php">
+        <section>
+            <div class="container">
+                <div class="section-top-border">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-9 col-md0 col-sm-10">
+                            <img src="img/cover.jpg" style="width: 100%;"/>
+                        </div>
+                        <?php
+                        $sql = "SELECT * FROM rp";
+                        $result = $conn->query($sql);
+                        $counter = 0;
+                        while ($row = $result->fetch_assoc()) {
+                            echo '
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-10" style="margin-top: 30px;">
+                            <button class="genric-btn info circle" style="width:100%; font-size: 16pt;" value="'.$row["english"].'" name="script_name">'.$row["chinese"].'</button>
+                        </div>';
+                            $counter = $counter + 1;
+                        }
+                        ?>
                     </div>
-                    <?php
-                    $sql = "SELECT * FROM role_play";
-                    $result = $conn->query($sql);
-                    $counter = 0;
-                    while ($row = $result->fetch_assoc()) {
-                        echo '
-                    <div class="col-lg-4 col-md-4 col-sm-6 col-10" style="margin-top: 30px;">
-                        <a href="scripts/'.$row["english"].'/index.php" class="genric-btn info circle" style="width:100%; font-size: 16pt;">'.$row["chinese"].'</a>
-                    </div>';
-                        $counter = $counter + 1;
-                    }
-                    ?>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </form>
 
     <?php
     $conn->close();
