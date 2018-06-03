@@ -172,38 +172,38 @@
     </div>
 
     <script type="text/javascript">
-    var modal = document.getElementById("myModal1");
-    var modal_title = document.getElementById("modal_title");
-    var modal_content = document.getElementById("modal_content");
-    var remain_points = <?php echo $user_information["points"]; ?>;
-    function open_modal(id, position, points) {
-        modal.style.display = "block";
-        modal_title.innerHTML = position;
-        if (points > remain_points) {
-            document.getElementById("modal_confirm").style.display = "none";
-            modal_content.innerHTML = "你剩余 " + remain_points + " 个行动点，这个线索将耗费你 " + points + " 个行动点。你的行动点不足。";
+        var modal = document.getElementById("myModal1");
+        var modal_title = document.getElementById("modal_title");
+        var modal_content = document.getElementById("modal_content");
+        var remain_points = <?php echo $user_information["points"]; ?>;
+        function open_modal(id, position, points) {
+            modal.style.display = "block";
+            modal_title.innerHTML = position;
+            if (points > remain_points) {
+                document.getElementById("modal_confirm").style.display = "none";
+                modal_content.innerHTML = "你剩余 " + remain_points + " 个行动点，这个线索将耗费你 " + points + " 个行动点。你的行动点不足。";
+            }
+            else {
+                document.getElementById("clue_id").value = id;
+                document.getElementById("modal_confirm").style.display = "block";
+                modal_content.innerHTML = "你剩余 " + remain_points + " 个行动点，这个线索将耗费你 " + points + " 个行动点。是否继续？";
+            }
         }
-        else {
-            document.getElementById("clue_id").value = id;
-            document.getElementById("modal_confirm").style.display = "block";
-            modal_content.innerHTML = "你剩余 " + remain_points + " 个行动点，这个线索将耗费你 " + points + " 个行动点。是否继续？";
-        }
-    }
-    function close_modal1() {
-        modal.style.display = "none";
-    }
-    function close_modal2() {
-        document.getElementById("myModal2").style.display = "none";
-    }
-    function open_share_modal() {
-        share_modal.style.display = "block";
-    }
-    function close_share_modal() {
-        share_modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
+        function close_modal1() {
             modal.style.display = "none";
         }
-    }
+        function close_modal2() {
+            document.getElementById("myModal2").style.display = "none";
+        }
+        function open_share_modal() {
+            share_modal.style.display = "block";
+        }
+        function close_share_modal() {
+            share_modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>

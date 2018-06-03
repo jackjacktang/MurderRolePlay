@@ -294,78 +294,78 @@
     </div>
 
     <script type="text/javascript">
-    var img_modal = document.getElementById("img_modal");
-    var delete_modal = document.getElementById("delete_modal");
-    var share_modal = document.getElementById("share_modal");
-    var unlock_modal = document.getElementById("unlock_modal");
-    var remain_points = <?php echo $user_information["points"]; ?>;
-    function open_img_modal(id, location, position, content) {
-        img_modal.style.display = "block";
-        document.getElementById("img_modal_title").innerHTML = location + "：" + position;
-        if (id == 0) {
-            document.getElementById("img_modal_img").src = "files/clues/alt.png";
+        var img_modal = document.getElementById("img_modal");
+        var delete_modal = document.getElementById("delete_modal");
+        var share_modal = document.getElementById("share_modal");
+        var unlock_modal = document.getElementById("unlock_modal");
+        var remain_points = <?php echo $user_information["points"]; ?>;
+        function open_img_modal(id, location, position, content) {
+            img_modal.style.display = "block";
+            document.getElementById("img_modal_title").innerHTML = location + "：" + position;
+            if (id == 0) {
+                document.getElementById("img_modal_img").src = "files/clues/alt.png";
+            }
+            else {
+                document.getElementById("img_modal_img").src = "files/clues/" + id + ".jpg";
+            }
+            document.getElementById("img_modal_content").innerHTML = content;
+            hide_background();
         }
-        else {
-            document.getElementById("img_modal_img").src = "files/clues/" + id + ".jpg";
-        }
-        document.getElementById("img_modal_content").innerHTML = content;
-        hide_background();
-    }
-    function close_img_modal() {
-        img_modal.style.display = "none";
-        show_background();
-    }
-    function open_delete_modal(id, location, position) {
-        document.getElementById("delete_modal_title").innerHTML = location + "：" + position;
-        document.getElementById("delete_clue_id").value = id;
-        delete_modal.style.display = "block";
-    }
-    function close_delete_modal() {
-        delete_modal.style.display = "none";
-    }
-    function open_share_modal(id, location, position) {
-        document.getElementById("share_modal_title").innerHTML = location + "：" + position;
-        document.getElementById("share_clue_id").value = id;
-        share_modal.style.display = "block";
-    }
-    function close_share_modal() {
-        share_modal.style.display = "none";
-    }
-    function open_unlock_modal(id, location, position, points) {
-        document.getElementById("unlock_modal_title").innerHTML = location + "：" + position;
-        if (points > remain_points) {
-            document.getElementById("unlock_confirm").style.display = "none";
-            document.getElementById("unlock_modal_content").innerHTML = "解锁这个线索需要 " + points + " 个额外行动点。你的行动点不足。";
-        }
-        else {
-            document.getElementById("unlock_modal_content").innerHTML = "解锁这个线索需要 " + points + " 个额外行动点。是否继续？";
-        }
-        document.getElementById("clue_id").value = id;
-        unlock_modal.style.display = "block";
-    }
-    function close_unlock_modal() {
-        unlock_modal.style.display = "none";
-    }
-    function hide_background() {
-        var sections = document.getElementsByTagName("section");
-        for (var i = 0; i < sections.length; i++) {
-            sections[i].style.visibility = "hidden";
-        }
-    }
-    function show_background() {
-        var sections = document.getElementsByTagName("section");
-        for (var i = 0; i < sections.length; i++) {
-            sections[i].style.visibility = "visible";
-        }
-    }
-    window.onclick = function(event) {
-        if (event.target == img_modal) {
+        function close_img_modal() {
             img_modal.style.display = "none";
             show_background();
         }
-        if (event.target == delete_modal) {
-            delete_modal.style.display = "none";
-            show_background();
+        function open_delete_modal(id, location, position) {
+            document.getElementById("delete_modal_title").innerHTML = location + "：" + position;
+            document.getElementById("delete_clue_id").value = id;
+            delete_modal.style.display = "block";
         }
-    }
+        function close_delete_modal() {
+            delete_modal.style.display = "none";
+        }
+        function open_share_modal(id, location, position) {
+            document.getElementById("share_modal_title").innerHTML = location + "：" + position;
+            document.getElementById("share_clue_id").value = id;
+            share_modal.style.display = "block";
+        }
+        function close_share_modal() {
+            share_modal.style.display = "none";
+        }
+        function open_unlock_modal(id, location, position, points) {
+            document.getElementById("unlock_modal_title").innerHTML = location + "：" + position;
+            if (points > remain_points) {
+                document.getElementById("unlock_confirm").style.display = "none";
+                document.getElementById("unlock_modal_content").innerHTML = "解锁这个线索需要 " + points + " 个额外行动点。你的行动点不足。";
+            }
+            else {
+                document.getElementById("unlock_modal_content").innerHTML = "解锁这个线索需要 " + points + " 个额外行动点。是否继续？";
+            }
+            document.getElementById("clue_id").value = id;
+            unlock_modal.style.display = "block";
+        }
+        function close_unlock_modal() {
+            unlock_modal.style.display = "none";
+        }
+        function hide_background() {
+            var sections = document.getElementsByTagName("section");
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.visibility = "hidden";
+            }
+        }
+        function show_background() {
+            var sections = document.getElementsByTagName("section");
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.visibility = "visible";
+            }
+        }
+        window.onclick = function(event) {
+            if (event.target == img_modal) {
+                img_modal.style.display = "none";
+                show_background();
+            }
+            if (event.target == delete_modal) {
+                delete_modal.style.display = "none";
+                show_background();
+            }
+        }
     </script>

@@ -48,17 +48,16 @@ $pairs = array();
 $db_host = "localhost";
 $db_user = "root";
 $db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_name"];
+$db = "rp_".$_SESSION["script_id"];
 $conn = new mysqli($db_host, $db_user, $db_password, $db);
 if (mysqli_connect_errno()) {
     echo mysqli_connect_error();
 }
 $conn->set_charset("utf8");
 
-$sql = "SELECT * FROM players";
+$sql = "SELECT * FROM characters";
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
-    array_push($pairs, array($row["initial_name"], $row["chinese_name"]));
     if ($row["username"] == $_SESSION["username"]) {
         $user_information = $row;
     }

@@ -13,40 +13,40 @@
     </div>
     
     <script type="text/javascript">
-    var modal = document.getElementById("myModal");
-    var modal_title = document.getElementById("modal_title");
-    var modal_content = document.getElementById("modal_content");
-    var span = document.getElementsByClassName("close")[0];
-    var img = document.getElementById("modal_img");
-    function open_modal(id, position, content) {
-        modal.style.display = "block";
-        modal_title.innerHTML = "你的房间：" + position;
-        img.src = "files/clues/" + id + ".jpg";
-        modal_content.innerHTML = content;
-        hide_background();
-    }
-    function hide_background() {
-        var sections = document.getElementsByTagName("section");
-        for (var i = 0; i < sections.length; i++) {
-            sections[i].style.visibility = "hidden";
+        var modal = document.getElementById("myModal");
+        var modal_title = document.getElementById("modal_title");
+        var modal_content = document.getElementById("modal_content");
+        var span = document.getElementsByClassName("close")[0];
+        var img = document.getElementById("modal_img");
+        function open_modal(id, position, content) {
+            modal.style.display = "block";
+            modal_title.innerHTML = "你的房间：" + position;
+            img.src = "files/clues/" + id + ".jpg";
+            modal_content.innerHTML = content;
+            hide_background();
         }
-    }
-    function show_background() {
-        var sections = document.getElementsByTagName("section");
-        for (var i = 0; i < sections.length; i++) {
-            sections[i].style.visibility = "visible";
+        function hide_background() {
+            var sections = document.getElementsByTagName("section");
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.visibility = "hidden";
+            }
         }
-    }
-    span.onclick = function() {
-        modal.style.display = "none";
-        show_background();
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
+        function show_background() {
+            var sections = document.getElementsByTagName("section");
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].style.visibility = "visible";
+            }
+        }
+        span.onclick = function() {
             modal.style.display = "none";
             show_background();
         }
-    }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                show_background();
+            }
+        }
     </script>
 
     <br><br><br>

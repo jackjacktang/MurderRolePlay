@@ -1,4 +1,62 @@
 <!DOCTYPE html>
+<?php
+$db_host = "localhost";
+$db_user = "root";
+$db_password = "Lu636593";
+$db1 = "rp";
+$conn = new mysqli($db_host, $db_user, $db_password, $db1);
+if (mysqli_connect_errno()) {
+    echo mysqli_connect_error();
+}
+$conn->set_charset("utf8");
+
+session_start();
+if (isset($_POST["script_id"])) {
+    $_SESSION["script_id"] = $_POST["script_id"];
+    $sql = 'SELECT name FROM script_names WHERE id='.$_POST["script_id"];
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $_SESSION["script_name"] = $row["name"];
+    }
+    header("Location: public/index.php");
+}
+
+if (isset($_GET["submit"])) {
+    if ($_GET["password"] != "Lu@dashen666") {
+        echo '
+    <script type="text/javascript">
+        alert("密码不正确，创建剧本失败！");
+        window.location = "index.php";
+    </script>';
+    }
+    else {
+        $sql = 'INSERT INTO script_names(name) VALUES("'.$_GET["name"].'");';
+        $conn->query($sql);
+        $sql1 = 'SELECT id FROM script_names WHERE name="'.$_GET["name"].'"';
+        $result1 = $conn->query($sql1);
+        while ($row1 = $result1->fetch_assoc()) {
+            $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
+            $conn->query($sql2);
+            $db2 = "rp_".$row1["id"];
+            $conn2 = new mysqli($db_host, $db_user, $db_password, $db2);
+            $conn2->set_charset("utf8");
+            $sql2 = "
+            CREATE TABLE characters(
+                username VARCHAR(20) NOT NULL PRIMARY KEY,
+                password VARCHAR(20),
+                name VARCHAR(20),
+                preferred_name VARCHAR(20),
+                description VARCHAR(100),
+                points int DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
+            $sql2 = 'INSERT INTO characters(username, password, name) VALUES("admin", "admin", "组织者")';
+            $conn2->query($sql2);
+            $conn2->close();
+        }
+        header("Location: index.php");
+    }
+}
+?>
 <html lang="zxx" class="no-js">
 <head>
     <!-- Mobile Specific Meta -->
@@ -31,38 +89,17 @@
 </head>
 
 <body>
-
-<?php
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db = "rp";
-$conn = new mysqli($db_host, $db_user, $db_password, $db);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
-}
-$conn->set_charset("utf8");
-
-session_start();
-if (isset($_POST["script_name"])) {
-    $_SESSION["script_name"] = $_POST["script_name"];
-    $sql = 'Select * from rp WHERE english="'.$_POST["script_name"].'"';
-    $result = $conn->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $_SESSION["script_chinese"] = $row["chinese"];
-    }
-    header("Location: public/index.php");
-}
-?>
-
-
-
     <header id="header">
         <div class="container">
             <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
                     <a href="index.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
                 </div>
+                <nav id="nav-menu-container">
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="open_modal()">添加新剧本</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </header><!-- #header -->
@@ -77,13 +114,13 @@ if (isset($_POST["script_name"])) {
                             <img src="img/cover.jpg" style="width: 100%;"/>
                         </div>
                         <?php
-                        $sql = "SELECT * FROM rp";
+                        $sql = "SELECT * FROM script_names ORDER BY id ASC";
                         $result = $conn->query($sql);
                         $counter = 0;
                         while ($row = $result->fetch_assoc()) {
                             echo '
                         <div class="col-lg-4 col-md-4 col-sm-6 col-10" style="margin-top: 30px;">
-                            <button class="genric-btn info circle" style="width:100%; font-size: 16pt;" value="'.$row["english"].'" name="script_name">'.$row["chinese"].'</button>
+                            <button class="genric-btn info circle" style="width:100%; font-size: 16pt;" value="'.$row["id"].'" name="script_id">'.$row["name"].'</button>
                         </div>';
                             $counter = $counter + 1;
                         }
@@ -93,6 +130,46 @@ if (isset($_POST["script_name"])) {
             </div>
         </section>
     </form>
+
+    <form method="get" action="index.php">
+        <div id="myModal" class="modal" style="top: 30%;">
+            <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
+                <div class="modal-header">
+                    <h4 id="modal_title" class="modal-title"></h4>
+                    <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <center>
+                        <div style="margin-bottom: 15px; width: 50%;">
+                            <label style="width: 30%;">剧本名称：</label><input required name="name" style="width: 70%;" type="text">
+                        </div>
+                        <div style="margin-bottom: 15px; width: 50%;">
+                            <label style="width: 30%;">密码：</label><input required name="password" style="width: 70%;" type="password">
+                        </div>
+                    </center>
+                </div>
+                <div class="modal-footer justify-content-center" style="font-size: 14pt;">
+                    <button class="genric-btn info circle e-large" name="submit">确定</button>
+                    <button type="button" class="genric-btn info circle e-large" onclick="close_modal()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        var modal = document.getElementById("myModal");
+        function open_modal(id, position, points) {
+            modal.style.display = "block";
+        }
+        function close_modal() {
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 
     <?php
     $conn->close();

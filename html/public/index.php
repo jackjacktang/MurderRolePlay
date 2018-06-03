@@ -1,45 +1,10 @@
 <!DOCTYPE html>
 <?php
 session_start();
-?>
-<html lang="zxx" class="no-js">
-<head>
-	<!-- Mobile Specific Meta -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<!-- Favicon-->
-	<link rel="shortcut icon" href="img/fav.png">
-	<!-- Author Meta -->
-	<meta name="author" content="codepixer">
-	<!-- Meta Description -->
-	<meta name="description" content="">
-	<!-- Meta Keyword -->
-	<meta name="keywords" content="">
-	<!-- meta character set -->
-	<meta charset="UTF-8">
-	<!-- Site Title -->
-	<title><?php echo $_SESSION["script_chinese"]; ?></title>
-
-	<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
-			<!--
-			CSS
-			============================================= -->
-	<link rel="stylesheet" href="css/linearicons.css">
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/magnific-popup.css">
-	<link rel="stylesheet" href="css/nice-select.css">					
-	<link rel="stylesheet" href="css/animate.min.css">
-	<link rel="stylesheet" href="css/owl.carousel.css">
-	<link rel="stylesheet" href="css/main.css">
-</head>
-
-<body>
-
-<?php
 $db_host = "localhost";
 $db_user = "root";
 $db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_name"];
+$db = "rp_".$_SESSION["script_id"];
 $conn = new mysqli($db_host, $db_user, $db_password, $db);
 if (mysqli_connect_errno()) {
     echo mysqli_connect_error();
@@ -49,14 +14,14 @@ $conn->set_charset("utf8");
 if (isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $sql = 'SELECT password FROM players WHERE username="'.$username.'";';
+    $sql = 'SELECT password FROM characters WHERE username="'.$username.'";';
     $result = $conn->query($sql);
     if ($result->num_rows == 0) {
         echo '<script type="text/javascript">alert("该用户不存在！请重试！");window.location="index.php?username='.$username.'";</script>';
     }
     else {
         while ($row = $result->fetch_assoc()) {
-            if (strcmp($row["password"], $password) == 0) {
+            if ($row["password"] == $password) {
                 $_SESSION["username"] = $username;
             }
             else {
@@ -76,7 +41,38 @@ if (isset($_SESSION["username"])) {
     }
 }
 ?>
+<html lang="zxx" class="no-js">
+<head>
+	<!-- Mobile Specific Meta -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Favicon-->
+	<link rel="shortcut icon" href="img/fav.png">
+	<!-- Author Meta -->
+	<meta name="author" content="codepixer">
+	<!-- Meta Description -->
+	<meta name="description" content="">
+	<!-- Meta Keyword -->
+	<meta name="keywords" content="">
+	<!-- meta character set -->
+	<meta charset="UTF-8">
+	<!-- Site Title -->
+	<title><?php echo $_SESSION["script_name"]; ?></title>
 
+	<link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
+			<!--
+			CSS
+			============================================= -->
+	<link rel="stylesheet" href="css/linearicons.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/magnific-popup.css">
+	<link rel="stylesheet" href="css/nice-select.css">					
+	<link rel="stylesheet" href="css/animate.min.css">
+	<link rel="stylesheet" href="css/owl.carousel.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
     <header id="header">
 	    <div class="container">
 	        <div class="row align-items-center justify-content-between d-flex">

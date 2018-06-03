@@ -46,9 +46,7 @@
                                     }
                                     ?>
                                 </div>
-                                <center>
-                                    <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt;width: 50%;margin-top: 20px;">提交</button>
-                                </center>
+                                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 50%;margin-top: 20px;">提交</button>
                             </center>
                         </form>
                     </div>
