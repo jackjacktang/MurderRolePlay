@@ -18,7 +18,7 @@ if (isset($_POST["script_id"])) {
     while ($row = $result->fetch_assoc()) {
         $_SESSION["script_name"] = $row["name"];
     }
-    header("Location: public/index.php");
+    header("Location: public/login.php");
 }
 
 if (isset($_GET["submit"])) {
@@ -42,14 +42,15 @@ if (isset($_GET["submit"])) {
             $conn2->set_charset("utf8");
             $sql2 = "
             CREATE TABLE characters(
-                username VARCHAR(20) NOT NULL PRIMARY KEY,
+                id int PRIMARY KEY AUTO_INCREMENT,
+                username VARCHAR(20),
                 password VARCHAR(20),
                 name VARCHAR(20),
                 preferred_name VARCHAR(20),
                 description VARCHAR(100),
                 points int DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
-            $sql2 = 'INSERT INTO characters(username, password, name) VALUES("admin", "admin", "组织者")';
+            $sql2 = 'INSERT INTO characters(username, password, name, preferred_name, description, points) VALUES("admin", "admin", "组织者", "", "你是组织者，拥有至高无上的权力！", 0)';
             $conn2->query($sql2);
             $conn2->close();
         }

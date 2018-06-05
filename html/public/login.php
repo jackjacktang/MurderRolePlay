@@ -77,7 +77,7 @@ if (isset($_SESSION["username"])) {
 	    <div class="container">
 	        <div class="row align-items-center justify-content-between d-flex">
 		        <div id="logo">
-		            <a href="index.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+		            <a href="login.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
 			    </div>
 		    </div>
 	    </div>
@@ -87,7 +87,7 @@ if (isset($_SESSION["username"])) {
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-7 col-sm-9 col-11">
-                    <form action="index.php" method="post">
+                    <form action="login.php" method="post">
                         <div class="mt-10">
                             <input type="text" name="username" required placeholder="用户名" onfocus="this.placeholder=''" onblur="this.placeholder='用户名'" class="single-input" value="<?php echo (isset($_GET["username"])? $_GET["username"]:"") ?>">
                         </div>

@@ -3,7 +3,10 @@
 <?php
 session_start();
 if (!isset($_SESSION["username"])) {
-    header("Location: index.php");
+    header("Location: login.php");
+}
+else if ($_SESSION["username"] != "admin") {
+    header("Location: login.php");
 }
 ?>
 <head>
@@ -20,7 +23,7 @@ if (!isset($_SESSION["username"])) {
     <!-- meta character set -->
     <meta charset="UTF-8">
     <!-- Site Title -->
-    <title><?php echo $_SESSION["script_chinese"]; ?></title>
+    <title><?php echo $_SESSION["script_name"]; ?></title>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
             <!--
@@ -86,6 +89,13 @@ while ($row = $result->fetch_assoc()) {
     include("admin_tabs/".$tab.".php");
     $conn->close();
     ?>
+
+    <style type="text/css">
+        b {
+            color: black;
+            font-weight: bold;
+        }
+    </style>
 
     <script src="js/vendor/jquery-2.2.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
