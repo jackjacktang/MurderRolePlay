@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <?php
 session_start();
+
 $db_host = "localhost";
 $db_user = "root";
 $db_password = "Lu636593";
@@ -11,13 +12,18 @@ if (mysqli_connect_errno()) {
 }
 $conn->set_charset("utf8");
 
+if (!isset($_SESSION["script_id"])) {
+    $conn->close();
+    header("Location: ../index.php");
+}
+
 if (isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
     $sql = 'SELECT password FROM characters WHERE username="'.$username.'";';
     $result = $conn->query($sql);
     if ($result->num_rows == 0) {
-        echo '<script type="text/javascript">alert("该用户不存在！请重试！");window.location="index.php?username='.$username.'";</script>';
+        echo '<script type="text/javascript">alert("该用户不存在！请重试！");window.location="login.php?script_id='.$_GET["script_id"].'&script_name='.$_GET["script_name"].'&username='.$username.'";</script>';
     }
     else {
         while ($row = $result->fetch_assoc()) {
@@ -25,15 +31,15 @@ if (isset($_POST["login"])) {
                 $_SESSION["username"] = $username;
             }
             else {
-                echo '<script type="text/javascript">alert("密码不正确！请重试！");window.location="index.php?username='.$username.'";</script>';
+                echo '<script type="text/javascript">alert("密码不正确！请重试！");window.location="login.php?username='.$username.'";</script>';
             }
         }
     }
 }
 
 if (isset($_SESSION["username"])) {
+    $conn->close();
     if ($_SESSION["username"] != 'admin') {
-        // echo $_SESSION["username"];
         header("Location: home.php?tab=background");
     }
     else {
@@ -77,8 +83,13 @@ if (isset($_SESSION["username"])) {
 	    <div class="container">
 	        <div class="row align-items-center justify-content-between d-flex">
 		        <div id="logo">
-		            <a href="login.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+		            <a href="#"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
 			    </div>
+                <nav id="nav-menu-container">
+                    <ul class="nav-menu">
+                        <li><a href="return.php">返回主页</a></li>
+                    </ul>
+                </nav>
 		    </div>
 	    </div>
     </header><!-- #header -->
@@ -89,10 +100,10 @@ if (isset($_SESSION["username"])) {
                 <div class="col-lg-5 col-md-7 col-sm-9 col-11">
                     <form action="login.php" method="post">
                         <div class="mt-10">
-                            <input type="text" name="username" required placeholder="用户名" onfocus="this.placeholder=''" onblur="this.placeholder='用户名'" class="single-input" value="<?php echo (isset($_GET["username"])? $_GET["username"]:"") ?>">
+                            <input type="text" name="username" required placeholder="用户名" onfocus="this.placeholder=''" onblur="this.placeholder='用户名'" class="single-input" value="<?php echo (isset($_GET["username"])? $_GET["username"]:"") ?>" maxlength="20">
                         </div>
                         <div class="mt-10">
-                            <input type="password" name="password" required placeholder="密码" onfocus="this.placeholder=''" onblur="this.placeholder='密码'" class="single-input">
+                            <input type="password" name="password" required placeholder="密码" onfocus="this.placeholder=''" onblur="this.placeholder='密码'" class="single-input" maxlength="20">
                         </div>
                         <br/>
                         <br/>

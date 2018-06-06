@@ -2,7 +2,24 @@
 <html lang="zxx" class="no-js">
 <?php
 session_start();
+
+$db_host = "localhost";
+$db_user = "root";
+$db_password = "Lu636593";
+$db = "rp_".$_SESSION["script_id"];
+$conn = new mysqli($db_host, $db_user, $db_password, $db);
+if (mysqli_connect_errno()) {
+    echo mysqli_connect_error();
+}
+$conn->set_charset("utf8");
+
+if (!isset($_SESSION["script_id"])) {
+    $conn->close();
+    header("Location: ../index.php");
+}
+
 if (!isset($_SESSION["username"])) {
+    $conn->close();
     header("Location: login.php");
 }
 
@@ -52,16 +69,6 @@ function replace_text($pairs, $text) {
 $tab = $_GET["tab"];
 $pairs = array();
 
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_id"];
-$conn = new mysqli($db_host, $db_user, $db_password, $db);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
-}
-$conn->set_charset("utf8");
-
 // $sql = "SELECT * FROM status";
 // $result = $conn->query($sql);
 // while ($row = $result->fetch_assoc()) {
@@ -69,6 +76,7 @@ $conn->set_charset("utf8");
 // }
 // if ($status == 2) $murder = 1;
 // else $murder = 2;
+$status = 1;
 
 // $sql = "SELECT * FROM players";
 // $result = $conn->query($sql);

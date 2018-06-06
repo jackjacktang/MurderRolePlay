@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <?php
+session_start();
+
 $db_host = "localhost";
 $db_user = "root";
 $db_password = "Lu636593";
@@ -10,19 +12,22 @@ if (mysqli_connect_errno()) {
 }
 $conn->set_charset("utf8");
 
-session_start();
-if (isset($_POST["script_id"])) {
-    $_SESSION["script_id"] = $_POST["script_id"];
-    $sql = 'SELECT name FROM script_names WHERE id='.$_POST["script_id"];
+if (isset($_GET["script_id"])) {
+    $_SESSION["script_id"] = $_GET["script_id"];
+    $sql = 'SELECT name FROM script_names WHERE id='.$_GET["script_id"];
     $result = $conn->query($sql);
     while ($row = $result->fetch_assoc()) {
         $_SESSION["script_name"] = $row["name"];
     }
+}
+
+if (isset($_SESSION["script_id"])) {
+    $conn->close();
     header("Location: public/login.php");
 }
 
-if (isset($_GET["submit"])) {
-    if ($_GET["password"] != "Lu@dashen666") {
+if (isset($_POST["submit"])) {
+    if ($_POST["password"] != "Lu@dashen666") {
         echo '
     <script type="text/javascript">
         alert("密码不正确，创建剧本失败！");
@@ -30,9 +35,9 @@ if (isset($_GET["submit"])) {
     </script>';
     }
     else {
-        $sql = 'INSERT INTO script_names(name) VALUES("'.$_GET["name"].'");';
+        $sql = 'INSERT INTO script_names(name) VALUES("'.$_POST["name"].'");';
         $conn->query($sql);
-        $sql1 = 'SELECT id FROM script_names WHERE name="'.$_GET["name"].'"';
+        $sql1 = 'SELECT id FROM script_names WHERE name="'.$_POST["name"].'"';
         $result1 = $conn->query($sql1);
         while ($row1 = $result1->fetch_assoc()) {
             $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
@@ -54,6 +59,7 @@ if (isset($_GET["submit"])) {
             $conn2->query($sql2);
             $conn2->close();
         }
+        $conn->close();
         header("Location: index.php");
     }
 }
@@ -94,7 +100,7 @@ if (isset($_GET["submit"])) {
         <div class="container">
             <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
-                    <a href="index.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+                    <a href="#"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
@@ -106,7 +112,7 @@ if (isset($_GET["submit"])) {
     </header><!-- #header -->
 
     <br><br><br>
-    <form method="post" action="index.php">
+    <form method="get" action="index.php">
         <section>
             <div class="container">
                 <div class="section-top-border">
@@ -132,7 +138,7 @@ if (isset($_GET["submit"])) {
         </section>
     </form>
 
-    <form method="get" action="index.php">
+    <form method="post" action="index.php">
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                 <div class="modal-header">
@@ -142,7 +148,7 @@ if (isset($_GET["submit"])) {
                 <div class="modal-body">
                     <center>
                         <div style="margin-bottom: 15px; width: 50%;">
-                            <label style="width: 30%;">剧本名称：</label><input required name="name" style="width: 70%;" type="text">
+                            <label style="width: 30%;">剧本名称：</label><input required name="name" style="width: 70%;" type="text" maxlength="50">
                         </div>
                         <div style="margin-bottom: 15px; width: 50%;">
                             <label style="width: 30%;">密码：</label><input required name="password" style="width: 70%;" type="password">

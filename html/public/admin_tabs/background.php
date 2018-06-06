@@ -1,28 +1,4 @@
     <?php
-    if (isset($_GET["bg_story"])) {
-        $sql = 'INSERT INTO background(id, content) VALUES(0, "'.$_GET["bg_story"].'") ON DUPLICATE KEY UPDATE content="'.$_GET["bg_story"].'"';
-        $conn->query($sql);
-
-        for ($i = 1; $i < 200; $i++) {
-            if (isset($_GET["character".$i."_username"])) {
-                $username =  $_GET["character".$i."_username"];
-                $password = $_GET["character".$i."_password"];
-                $name = $_GET["character".$i."_name"];
-                $preferred_name = $_GET["character".$i."_preferred_name"];
-                $description = $_GET["character".$i."_description"];
-                $points = $_GET["points"];
-                $sql = 'INSERT INTO characters(id, username, password, name, preferred_name, description, points) VALUES('.$i.', "'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'", '.$points.') ON DUPLICATE KEY UPDATE username="'.$username.'", password="'.$password.'", name="'.$name.'", preferred_name="'.$preferred_name.'", description="'.$description.'", points='.$points;
-                $conn->query($sql);
-            }
-        }
-
-        if (isset($_GET["delete"])) {
-            $sql = 'DELETE FROM characters WHERE id='.$_GET["delete"];
-            $conn->query($sql);
-        }
-        header("Location: admin.php?tab=background");
-    }
-
     $sql = "CREATE TABLE IF NOT EXISTS background(id int PRIMARY KEY, content varchar(2000)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
     $conn->query($sql);
     $sql = "SELECT * FROM background";
@@ -104,7 +80,7 @@
                     <div class="col-lg-9 col-md-9 col-sm-10">
                         <img src="img/cover.jpg" style="width: 100%;"/>
                         <br><br>
-                        <form action="admin.php" method="get">
+                        <form action="admin_tabs/request.php" method="post">
                             <div id="myModal" class="modal" style="top: 30%;">
                                 <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                                     <div class="modal-header">
