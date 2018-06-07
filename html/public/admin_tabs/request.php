@@ -12,7 +12,7 @@ if (mysqli_connect_errno()) {
 $conn->set_charset("utf8");
 
 if ($_POST["tab"] == "background") {
-    $sql = 'INSERT INTO background(id, content) VALUES(0, "'.$_POST["bg_story"].'") ON DUPLICATE KEY UPDATE content="'.$_POST["bg_story"].'"';
+    $sql = "INSERT INTO background(id, content) VALUES(0, '".$_POST["bg_story"]."') ON DUPLICATE KEY UPDATE content='".$_POST["bg_story"]."'";
     $conn->query($sql);
 
     for ($i = 1; $i < 200; $i++) {

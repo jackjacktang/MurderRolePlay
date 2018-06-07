@@ -20,21 +20,21 @@
                 id = max + 1;
             }
             if (organizor) {
-                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：</label><input readonly style="width: 10%;" value="' + username + '" name="character1_username">';
+                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character1_username">';
             }
             else {
-                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：</label><input style="width: 10%;" value="' + username + '" name="character'+ id + '_username" maxlength=20>';
+                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value="' + username + '" name="character'+ id + '_username" maxlength=20>';
             }
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">密码：</label><input style="width: 10%;" value="' + password + '" name="character'+ id + '_password" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：</label><input style="width: 10%;" value="' + name + '" name="character'+ id + '_name" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：</label><input style="width: 10%;" value="' + preferred_name + '" name="character'+ id + '_preferred_name" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value="' + password + '" name="character'+ id + '_password" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value="' + name + '" name="character'+ id + '_name" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value="' + preferred_name + '" name="character'+ id + '_preferred_name" maxlength=20>';
             if (!organizor) {
                 li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'' + username + '\', \'' + name + '\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
             else {
                 li.innerHTML = li.innerHTML + '<div style="width: 15%;"></div>';
             }
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：</label><input style="width: 75%;" value="' + description + '" name="character'+ id + '_description" maxlength=100>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value="' + description + '" name="character'+ id + '_description" maxlength=100>';
             if (id > max) max = id;
         }
 
@@ -99,16 +99,18 @@
                             <input type="hidden" name="tab" value="background">
                             <center>
                                 <h3>添加/修改故事背景</h3><br>
-                                <input type="hidden" id="background_hide" required name="bg_story" value="<?php echo $background; ?>">
+                                <input id="background_hide" required name="bg_story" value='<?php echo $background; ?>'>
                                 <div onclick="copyHTML()" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand('bold',false,null);">B</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand('italic',false,null);">I</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand('underline',false,null);">U</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('fontSize',false,'5');">A+</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="change_font()">A-</button>
-                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand('justifyLeft',false,null);"><i class="fa fa-align-left"></i></button>
-                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand('justifyCenter',false,null);"><i class="fa fa-align-center"></i></button>
-                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand('justifyRight',false,null);"><i class="fa fa-align-right"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('justifyLeft',false,null);"><i class="fa fa-align-left"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('justifyCenter',false,null);"><i class="fa fa-align-center"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('justifyRight',false,null);"><i class="fa fa-align-right"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('insertOrderedList',false,null);"><i class="fa fa-align-right"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('insertUnorderedList',false,null);"><i class="fa fa-align-right"></i></button>
                                 </div> 
                                 <div id="background_show" style="width: 90%; height: 300px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML()"><?php echo $background; ?></div>
                                 <h3>添加/修改人物
@@ -118,7 +120,7 @@
                                 </h3>
                                 <br>
                                 <div>
-                                    <ul class="ordered-list" id="role_area">
+                                    <ol class="ordered-list" id="role_area" start="0">
                                     <?php
                                     $sql = "SELECT * FROM characters";
                                     $result = $conn->query($sql);
@@ -133,7 +135,7 @@
                                     echo '
                                         </script>';
                                     ?>
-                                    </ul>
+                                    </ol>
                                 </div>
                                 <h3>每个角色的初始行动点</h3>
                                 <input type="number" name="points" style="margin-top: 20px; margin-bottom: 20px;" value="<?php echo $points; ?>"><br>

@@ -1,2 +1,3 @@
-html/scripts/*
-html/Soccer
+html/scripts
+Soccer/*
+phpmyadmin
