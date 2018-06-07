@@ -39,6 +39,7 @@ else if ($_SESSION["username"] != "admin") {
     <link rel="stylesheet" href="css/main.css">
     <style>
         u {color: #777777;}
+        .ordered-list li {font-weight: 300;}
     </style>
 </head>
 

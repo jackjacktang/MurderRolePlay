@@ -45,12 +45,30 @@
         function change_font() {
             document.execCommand('fontSize',false,'7');
             var fontElements = document.getElementsByTagName("font");
-                for (var i = 0, len = fontElements.length; i < len; ++i) {
-                    if (fontElements[i].size == "7") {
-                        fontElements[i].removeAttribute("size");
-                        fontElements[i].style.fontSize = "14px";
-                    }
+            for (var i = 0, len = fontElements.length; i < len; ++i) {
+                if (fontElements[i].size == "7") {
+                    fontElements[i].removeAttribute("size");
+                    fontElements[i].style.fontSize = "14px";
                 }
+            }
+        }
+
+        function insertOl() {
+            document.execCommand('insertOrderedList',false,null);
+            var olElements = document.getElementsByTagName("ol");
+            for (var i = 0, len = olElements.length; i < len; ++i) {
+                olElements[i].setAttribute("class", "ordered-list");
+            }
+        }
+
+        function insertUl() {
+            document.execCommand('insertUnorderedList',false,null);
+            var ulElements = document.getElementsByTagName("ul");
+            for (var i = 0, len = ulElements.length; i < len; ++i) {
+                if (ulElements[i].className.indexOf("nav-menu") == -1) {
+                    ulElements[i].setAttribute("class", "unordered-list");
+                }
+            }
         }
 
         function open_modal(id, username, name) {
@@ -109,8 +127,8 @@
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('justifyLeft',false,null);"><i class="fa fa-align-left"></i></button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('justifyCenter',false,null);"><i class="fa fa-align-center"></i></button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('justifyRight',false,null);"><i class="fa fa-align-right"></i></button>
-                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('insertOrderedList',false,null);"><i class="fa fa-align-right"></i></button>
-                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand('insertUnorderedList',false,null);"><i class="fa fa-align-right"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()"><i class="fa fa-list-ol"></i></button>
+                                    <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>
                                 </div> 
                                 <div id="background_show" style="width: 90%; height: 300px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML()"><?php echo $background; ?></div>
                                 <h3>添加/修改人物
