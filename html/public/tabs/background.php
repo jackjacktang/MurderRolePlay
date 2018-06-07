@@ -29,7 +29,7 @@
                             <h3>角色</h3>
                         </center>
                         <br>
-                        <ul class="ordered-list">
+                        <ol class="ordered-list">
                             <?php
                             $sql = "SELECT id, name, description FROM characters ORDER BY id ASC";
                             $result = $conn->query($sql);
@@ -40,7 +40,7 @@
                                 }
                             }
                             ?>
-                        </ul>
+                        </ol>
                     </div>
                 </div>
             </div>

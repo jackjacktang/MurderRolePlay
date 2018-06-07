@@ -146,14 +146,10 @@ if (isset($_POST["submit"])) {
                     <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <center>
-                        <div style="margin-bottom: 15px; width: 50%;">
-                            <label style="width: 30%;">剧本名称：</label><input required name="name" style="width: 70%;" type="text" maxlength="50">
-                        </div>
-                        <div style="margin-bottom: 15px; width: 50%;">
-                            <label style="width: 30%;">密码：</label><input required name="password" style="width: 70%;" type="password">
-                        </div>
-                    </center>
+                    <div class="row justify-content-center">
+                        <label style="margin-bottom: 20px;" class="col-lg-4 col-md-10 col-sm-10">剧本名称：</label><input required name="name" style="margin-bottom: 20px;" type="text" maxlength="50" class="col-lg-6 col-md-7 col-sm-10">
+                        <label class="col-lg-4 col-md-10 col-sm-10">密码：</label><input required name="password" type="password" class="col-lg-6 col-md-7 col-sm-10">
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-center" style="font-size: 14pt;">
                     <button class="genric-btn info circle e-large" name="submit">确定</button>
