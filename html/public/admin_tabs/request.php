@@ -55,4 +55,42 @@ if ($_POST["tab"] == "sections") {
     $conn->close();
     header("Location: ../admin.php?tab=sections");
 }
+
+if ($_POST["tab"] == "scripts") {
+    $character_id = $_POST["character_id"];
+    $chapter = $_POST["chapter"];
+    $sql = "SELECT * FROM sections WHERE chapter=".$chapter;
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $section_id = $row["id"];
+        if ($row["type"] == 1) {
+            if (isset($_POST["section".$section_id."_content"])) {
+                $content = $_POST["section".$section_id."_content"];
+                $sql = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section_id;
+                $result = $conn->query($sql);
+                if ($result->num_rows == 0) {
+                    $sql1 = "INSERT INTO character_section(character_id, section_id, content) VALUES(".$character_id.", ".$section_id.", '".$content."')";
+                    $conn->query($sql1);
+                }
+                else {
+                    $sql1 = "UPDATE character_section SET content='".$content."' WHERE character_id=".$character_id." AND section_id=".$section_id;
+                    $conn->query($sql1);
+                }
+            }
+        }
+        if ($row["type"] == 2) {
+            for ($id = 1; $id <= $_POST["max_timeline"]; $id++) {
+                if (isset($_POST["timeline".$id."_hour"])) {
+                    $hour = $_POST["timeline".$id."_hour"];
+                    $minute = $_POST["timeline".$id."_minute"];
+                    $content = $_POST["timeline".$id."_content"];
+                    $sql1 = 'INSERT INTO timelines(id, character_id, chapter, hour, minute, content) VALUES('.$id.', '.$character_id.', '.$chapter.', '.$hour.', '.$minute.', "'.$content.'") ON DUPLICATE KEY UPDATE hour='.$hour.', minute='.$minute.', content="'.$content.'"';
+                    $conn->query($sql1);
+                }
+            }
+        }
+    }
+    $conn->close();
+    header("Location: ../admin.php?tab=scripts&character_id=".$character_id.'&chapter='.$chapter);
+}
 ?>

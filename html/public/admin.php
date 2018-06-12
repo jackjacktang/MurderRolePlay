@@ -2,10 +2,10 @@
 <html lang="zxx" class="no-js">
 <?php
 session_start();
-if (!isset($_SESSION["username"])) {
+if (!isset($_SESSION["character_id"])) {
     header("Location: login.php");
 }
-else if ($_SESSION["username"] != "admin") {
+else if ($_SESSION["character_id"] != 1) {
     header("Location: login.php");
 }
 ?>
@@ -58,14 +58,6 @@ if (mysqli_connect_errno()) {
     echo mysqli_connect_error();
 }
 $conn->set_charset("utf8");
-
-$sql = "SELECT * FROM characters";
-$result = $conn->query($sql);
-while ($row = $result->fetch_assoc()) {
-    if ($row["username"] == $_SESSION["username"]) {
-        $user_information = $row;
-    }
-}
 ?>
 
     <header id="header">
@@ -78,7 +70,7 @@ while ($row = $result->fetch_assoc()) {
                     <ul class="nav-menu">
                         <li><a href="<?php echo($tab=='background'? '#':'admin.php?tab=background'); ?>">故事背景</a></li>
                         <li><a href="<?php echo($tab=='sections'? '#':'admin.php?tab=sections'); ?>">章节管理</a></li>
-                        <li class="menu-has-children"><a href="#">剧本管理</a>
+                        <li class="menu-has-children"><a href="#">剧本管理（第一幕）</a>
                             <ul>
                                 <?php
                                 $sql = "SELECT id, name FROM characters ORDER BY id ASC";
@@ -87,7 +79,23 @@ while ($row = $result->fetch_assoc()) {
                                 while ($row = $result->fetch_assoc()) {
                                     if ($counter > 0) {
                                         echo '
-                                <li><a href="'.($tab=="scripts"? "#":"admin.php?tab=scripts&character_id=".$row["id"]).'">'.$counter.". ".$row["name"].'</a></li>';
+                                <li><a href="admin.php?tab=scripts&character_id='.$row["id"].'&chapter=1">'.$counter.". ".$row["name"].'</a></li>';
+                                    }
+                                    $counter++;
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <li class="menu-has-children"><a href="#">剧本管理（第二幕）</a>
+                            <ul>
+                                <?php
+                                $sql = "SELECT id, name FROM characters ORDER BY id ASC";
+                                $result = $conn->query($sql);
+                                $counter = 0;
+                                while ($row = $result->fetch_assoc()) {
+                                    if ($counter > 0) {
+                                        echo '
+                                <li><a href="admin.php?tab=scripts&character_id='.$row["id"].'&chapter=2">'.$counter.". ".$row["name"].'</a></li>';
                                     }
                                     $counter++;
                                 }

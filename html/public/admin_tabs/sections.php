@@ -12,10 +12,21 @@
             section_area.appendChild(div);
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">顺序：&nbsp;</label><input type="number" style="width: 5%;" value="' + sequence + '" name="section'+ id + '_sequence">';
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 20%;" value="' + title + '" name="section'+ id + '_title" id="section'+ id + '_title" maxlength="20">';
-            if (type == 1) type_chinese = "普通";
-            else if (type == 2) type_chinese = "时间线";
-            else if (type == 3) type_chinese = "房间线索";
-            else if (type == 4) type_chinese = "任务";
+            if (type == 1) {
+                type_chinese = "普通";
+            }
+            else if (type == 2) {
+                type_chinese = "时间线";
+                document.getElementById("button_" + chapter + "_2").style.display = "none";
+            }
+            else if (type == 3) {
+                type_chinese = "房间线索";
+                document.getElementById("button_" + chapter + "_3").style.display = "none";
+            }
+            else if (type == 4) {
+                type_chinese = "任务";
+                document.getElementById("button_" + chapter + "_4").style.display = "none";
+            }
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">类别：&nbsp;</label><label style="width: 10%; text-align: left;">' + type_chinese + '</label>';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             
@@ -27,7 +38,7 @@
                 document.getElementById("max_section").value = id;
             }
             if (sequence > maxs[chapter - 1]) {
-                maxs[chapter - 1] = id;
+                maxs[chapter - 1] = sequence;
             }
         }
 
@@ -78,10 +89,10 @@
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
                                 <h3 style="margin-bottom: 20px">第一幕</h3>
-                                <button type="button" onclick="add_section(1, -1, -1, 1, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
-                                <button type="button" onclick="add_section(1, -1, -1, 2, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
-                                <button type="button" onclick="add_section(1, -1, -1, 3, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
-                                <button type="button" onclick="add_section(1, -1, -1, 4, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
+                                <button type="button" id="button_1_1" onclick="add_section(1, -1, -1, 1, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
+                                <button type="button" id="button_1_2" onclick="add_section(1, -1, -1, 2, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
+                                <button type="button" id="button_1_3" onclick="add_section(1, -1, -1, 3, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
+                                <button type="button" id="button_1_4" onclick="add_section(1, -1, -1, 4, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
                                 <div id="section_area1">
                                     <?php
                                     $sql = "SELECT * FROM sections WHERE chapter=1 ORDER BY sequence ASC";
@@ -112,10 +123,10 @@
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
                                 <h3 style="margin-bottom: 20px">第二幕</h3>
-                                <button type="button" onclick="add_section(2, -1, -1, 1, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
-                                <button type="button" onclick="add_section(2, -1, -1, 2, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
-                                <button type="button" onclick="add_section(2, -1, -1, 3, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
-                                <button type="button" onclick="add_section(2, -1, -1, 4, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
+                                <button type="button" id="button_2_1" onclick="add_section(2, -1, -1, 1, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
+                                <button type="button" id="button_2_2" onclick="add_section(2, -1, -1, 2, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
+                                <button type="button" id="button_2_3" onclick="add_section(2, -1, -1, 3, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
+                                <button type="button" id="button_2_4" onclick="add_section(2, -1, -1, 4, '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
                                 <div id="section_area2">
                                     <?php
                                     $sql = "SELECT * FROM sections WHERE chapter=2 ORDER BY sequence ASC";

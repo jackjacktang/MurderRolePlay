@@ -20,7 +20,7 @@ if (!isset($_SESSION["script_id"])) {
 if (isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $sql = 'SELECT password FROM characters WHERE username="'.$username.'";';
+    $sql = 'SELECT id, password FROM characters WHERE username="'.$username.'";';
     $result = $conn->query($sql);
     if ($result->num_rows == 0) {
         echo '<script type="text/javascript">alert("该用户不存在！请重试！");window.location="login.php?script_id='.$_GET["script_id"].'&script_name='.$_GET["script_name"].'&username='.$username.'";</script>';
@@ -28,7 +28,7 @@ if (isset($_POST["login"])) {
     else {
         while ($row = $result->fetch_assoc()) {
             if ($row["password"] == $password) {
-                $_SESSION["username"] = $username;
+                $_SESSION["character_id"] = $row["id"];
             }
             else {
                 echo '<script type="text/javascript">alert("密码不正确！请重试！");window.location="login.php?username='.$username.'";</script>';
@@ -37,9 +37,9 @@ if (isset($_POST["login"])) {
     }
 }
 
-if (isset($_SESSION["username"])) {
+if (isset($_SESSION["character_id"])) {
     $conn->close();
-    if ($_SESSION["username"] != 'admin') {
+    if ($_SESSION["character_id"] != 1) {
         header("Location: home.php?tab=background");
     }
     else {

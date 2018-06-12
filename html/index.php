@@ -63,7 +63,7 @@ if (isset($_POST["submit"])) {
             $conn2->query($sql2);
             $sql2 = "CREATE TABLE status(id int PRIMARY KEY, value int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
-            $sql2 = "INSERT INTO status(id, value) VALUES(0, 0)";
+            $sql2 = "INSERT INTO status(id, value) VALUES(1, 1)";
             $conn2->query($sql2);
             $sql2 = "CREATE TABLE sections(id int PRIMARY KEY AUTO_INCREMENT, sequence int, type int, title VARCHAR(20), chapter int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
@@ -73,8 +73,18 @@ if (isset($_POST["submit"])) {
                 character_id int,
                 section_id int,
                 content VARCHAR(20000),
-                FOREIGN KEY (character_id) REFERENCES characters(id),
-                FOREIGN KEY (section_id) REFERENCES sections(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
+                FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE timelines(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                character_id int,
+                chapter int,
+                hour int,
+                minute int,
+                content VARCHAR(400),
+                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
             $conn2->close();
         }

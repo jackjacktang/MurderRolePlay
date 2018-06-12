@@ -18,9 +18,12 @@ if (!isset($_SESSION["script_id"])) {
     header("Location: ../index.php");
 }
 
-if (!isset($_SESSION["username"])) {
+if (!isset($_SESSION["character_id"])) {
     $conn->close();
     header("Location: login.php");
+}
+else {
+    $character_id = $_SESSION["character_id"];
 }
 
 function replace_text($pairs, $text) {
@@ -70,14 +73,20 @@ function replace_text($pairs, $text) {
 $tab = $_GET["tab"];
 $pairs = array();
 
-// $sql = "SELECT * FROM status";
-// $result = $conn->query($sql);
-// while ($row = $result->fetch_assoc()) {
-//     $status = $row["status"];
-// }
-// if ($status == 2) $murder = 1;
-// else $murder = 2;
-$status = 1;
+$sql = "SELECT * FROM status WHERE id=1";
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $status = $row["value"];
+}
+
+$sql = "SELECT * FROM sections WHERE chapter=2";
+$result = $conn->query($sql);
+if ($result->num_rows == 0) {
+    $chapter_two = False;
+}
+else {
+    $chapter_two = True;
+}
 
 // $sql = "SELECT * FROM players";
 // $result = $conn->query($sql);
@@ -98,7 +107,7 @@ $status = 1;
 			    <nav id="nav-menu-container">
 			        <ul class="nav-menu">
                         <li><a href="<?php echo($tab=='background'? '#':'home.php?tab=background'); ?>">故事背景</a></li>
-                        <li class="menu-has-children"><a href="<?php echo ($tab=='first'? '#':'home.php?tab=first'); ?>">第一幕</a>
+                        <li class="menu-has-children"><a href="<?php echo ($tab=='scripts'? '#':'home.php?tab=scripts&chapter=1'); ?>"><?php echo ($chapter_two? "第一幕":"你的剧本"); ?></a>
                             <ul>
                                 <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#story">你的故事</a></li>
                                 <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#recent">最近的事情</a></li>
@@ -130,13 +139,7 @@ $status = 1;
 
 
     <?php
-    if ($tab == "background") include("tabs/background.php");
-    if ($tab == "first") include("tabs/first.php");
-    if ($tab == "second") include("tabs/second.php");
-    if ($tab == "find_clue") include("tabs/find_clue.php");
-    if ($tab == "your_clue") include("tabs/your_clue.php");
-    if ($tab == "submit" && $status >= 4) include("tabs/submit.php");
-    if ($tab == "result" && $status >= 5) include("tabs/result.php");
+    include("tabs/".$tab.".php");
     $conn->close();
     ?>
 
