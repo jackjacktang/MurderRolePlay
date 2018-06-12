@@ -1,6 +1,4 @@
     <?php
-    $sql = "CREATE TABLE IF NOT EXISTS background(id int PRIMARY KEY, content varchar(2000)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-    $conn->query($sql);
     $sql = "SELECT * FROM background";
     $result = $conn->query($sql);
     $background = "";
@@ -23,19 +21,22 @@
                 li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character1_username">';
             }
             else {
-                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value="' + username + '" name="character'+ id + '_username" maxlength=20>';
+                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value="' + username + '" name="character'+ id + '_username" id="character'+ id + '_username" maxlength=20>';
             }
             li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value="' + password + '" name="character'+ id + '_password" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value="' + name + '" name="character'+ id + '_name" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value="' + name + '" name="character'+ id + '_name" id="character'+ id + '_name" maxlength=20>';
             li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value="' + preferred_name + '" name="character'+ id + '_preferred_name" maxlength=20>';
             if (!organizor) {
-                li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'' + username + '\', \'' + name + '\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
+                li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id +')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
             else {
                 li.innerHTML = li.innerHTML + '<div style="width: 15%;"></div>';
             }
             li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value="' + description + '" name="character'+ id + '_description" maxlength=100>';
-            if (id > max) max = id;
+            if (id > max) {
+                max = id;
+                document.getElementById("max_character").value = max;
+            }
         }
 
         function copyHTML() {
@@ -71,9 +72,11 @@
             }
         }
 
-        function open_modal(id, username, name) {
+        function open_modal(id) {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
+            var username = document.getElementById("character" + id + "_username").value;
+            var name = document.getElementById("character" + id + "_name").value;
             document.getElementById("modal_content").innerHTML = '用户名：' + username + '<br>姓名：' + name;
             document.getElementById("modal_confirm").value = id;
         }
@@ -91,33 +94,35 @@
         }
     </script>
 
-    <sectio>
-        <div class="container">
-            <div class="section-top-border">
-                <div class="row d-flex justify-content-center">
-                    <div class="col-lg-9 col-md-9 col-sm-10">
-                        <img src="img/cover.jpg" style="width: 100%;"/>
-                        <br><br>
-                        <form action="admin_tabs/request.php" method="post">
-                            <div id="myModal" class="modal" style="top: 30%;">
-                                <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">确认要删除这个玩家么？</h4>
-                                        <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p id="modal_content"></p>
-                                    </div>
-                                    <div class="modal-footer justify-content-center" style="font-size: 14pt;">
-                                        <button class="genric-btn info circle e-large" id="modal_confirm" name="delete">确定</button>
-                                        <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="tab" value="background">
+    <form action="admin_tabs/request.php" method="post">
+        <input type="hidden" name="tab" value="background">
+        <input type="hidden" name="max_character" value="1" id="max_character">
+        <div id="myModal" class="modal" style="top: 30%;">
+            <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
+                <div class="modal-header">
+                    <h4 class="modal-title">确认要删除这个玩家么？</h4>
+                    <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p id="modal_content"></p>
+                </div>
+                <div class="modal-footer justify-content-center" style="font-size: 14pt;">
+                    <button class="genric-btn info circle e-large" id="modal_confirm" name="delete">确定</button>
+                    <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
+                </div>
+            </div>
+        </div>
+        <section>
+            <div class="container">
+                <div class="section-top-border">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-9 col-md-9 col-sm-10">
+                            <img src="img/cover.jpg" style="width: 100%;"/>
+                            <br><br>
+                            
                             <center>
                                 <h3>添加/修改故事背景</h3><br>
-                                <input id="background_hide" required name="bg_story" value='<?php echo $background; ?>'>
+                                <input type="hidden" id="background_hide" required name="bg_story" value='<?php echo $background; ?>'>
                                 <div onclick="copyHTML()" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand('bold',false,null);">B</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand('italic',false,null);">I</button>
@@ -131,6 +136,19 @@
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>
                                 </div> 
                                 <div id="background_show" style="width: 90%; height: 300px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML()"><?php echo $background; ?></div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="section-top-border">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-9 col-md-9 col-sm-10">
+                            <center>
                                 <h3>添加/修改人物
                                     <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_role(-1,'','','','','',false)">
                                         <i class="fa fa-plus"></i>
@@ -157,14 +175,26 @@
                                 </div>
                                 <h3>每个角色的初始行动点</h3>
                                 <input type="number" name="points" style="margin-top: 20px; margin-bottom: 20px;" value="<?php echo $points; ?>"><br>
-                                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 50%;margin-top: 20px;">提交</button>
                             </center>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-    </section>
+        <section>
+            <div class="container">
+                <div class="section-top-border">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-9 col-md-9 col-sm-10">
+                            <center>
+                                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 50%;">保存</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
 
 

@@ -2,6 +2,7 @@
 <?php
 session_start();
 
+// Link to database
 $db_host = "localhost";
 $db_user = "root";
 $db_password = "Lu636593";
@@ -12,6 +13,7 @@ if (mysqli_connect_errno()) {
 }
 $conn->set_charset("utf8");
 
+// Handle click on the script
 if (isset($_GET["script_id"])) {
     $_SESSION["script_id"] = $_GET["script_id"];
     $sql = 'SELECT name FROM script_names WHERE id='.$_GET["script_id"];
@@ -20,12 +22,12 @@ if (isset($_GET["script_id"])) {
         $_SESSION["script_name"] = $row["name"];
     }
 }
-
 if (isset($_SESSION["script_id"])) {
     $conn->close();
     header("Location: public/login.php");
 }
 
+// Handle create new script
 if (isset($_POST["submit"])) {
     if ($_POST["password"] != "Lu@dashen666") {
         echo '
@@ -56,6 +58,23 @@ if (isset($_POST["submit"])) {
                 points int DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
             $sql2 = 'INSERT INTO characters(username, password, name, preferred_name, description, points) VALUES("admin", "admin", "组织者", "", "你是组织者，拥有至高无上的权力！", 0)';
+            $conn2->query($sql2);
+            $sql2 = "CREATE TABLE background(id int PRIMARY KEY, content varchar(3000)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
+            $sql2 = "CREATE TABLE status(id int PRIMARY KEY, value int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
+            $sql2 = "INSERT INTO status(id, value) VALUES(0, 0)";
+            $conn2->query($sql2);
+            $sql2 = "CREATE TABLE sections(id int PRIMARY KEY AUTO_INCREMENT, sequence int, type int, title VARCHAR(20), chapter int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE character_section(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                character_id int,
+                section_id int,
+                content VARCHAR(20000),
+                FOREIGN KEY (character_id) REFERENCES characters(id),
+                FOREIGN KEY (section_id) REFERENCES sections(id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
             $conn2->close();
         }
@@ -109,9 +128,10 @@ if (isset($_POST["submit"])) {
                 </nav>
             </div>
         </div>
-    </header><!-- #header -->
+    </header>
 
     <br><br><br>
+    <!-- Show all the script -->
     <form method="get" action="index.php">
         <section>
             <div class="container">
@@ -138,6 +158,7 @@ if (isset($_POST["submit"])) {
         </section>
     </form>
 
+    <!-- Modal for creating the new script -->
     <form method="post" action="index.php">
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
