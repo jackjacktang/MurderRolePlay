@@ -69,7 +69,7 @@ if ($_POST["tab"] == "scripts") {
                 $sql1 = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section_id;
                 $result1 = $conn->query($sql1);
                 if ($result1->num_rows == 0) {
-                    $sql12 = "INSERT INTO character_section(character_id, section_id, content) VALUES(".$character_id.", ".$section_id.", '".$content."')";
+                    $sql2 = "INSERT INTO character_section(character_id, section_id, content) VALUES(".$character_id.", ".$section_id.", '".$content."')";
                     $conn->query($sql2);
                 }
                 else {

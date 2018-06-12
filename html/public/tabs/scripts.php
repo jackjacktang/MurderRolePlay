@@ -16,8 +16,7 @@
             $sql = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section["id"];
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
-                echo '
-                        <p class="col-lg-9 col-md-9 col-sm-10">'.$row["content"].'</p>';
+                echo $row["content"];
             }
         }
         // 时间线
