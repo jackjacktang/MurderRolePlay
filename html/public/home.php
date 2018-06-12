@@ -79,23 +79,38 @@ while ($row = $result->fetch_assoc()) {
     $status = $row["value"];
 }
 
-$sql = "SELECT * FROM sections WHERE chapter=2";
-$result = $conn->query($sql);
-if ($result->num_rows == 0) {
-    $chapter_two = False;
+$sections = array(array(), array());
+foreach (array(1, 2) as $chapter) {
+    $sql = 'SELECT * FROM sections WHERE chapter='.$chapter.' ORDER BY sequence ASC';
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        // 普通线索
+        if ($row["type"] == 1) {
+            $sql1 = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$row["id"];
+            $result1 = $conn->query($sql1);
+            $content = "";
+            while ($row1 = $result1->fetch_assoc()) {
+                $content = $row1["content"];
+            }
+            if ($content != "") array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+        }
+        // 时间线
+        else if ($row["type"] == 2) {
+            $sql1 = 'SELECT * FROM timelines WHERE character_id='.$character_id.' AND chapter='.$chapter.' ORDER BY hour ASC, minute ASC';
+            $result1 = $conn->query($sql1);
+            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+        }
+        // 房间线索
+        else if ($row["type"] == 3) {
+        }
+        // 任务
+        else {
+            $sql1 = 'SELECT * FROM objectives WHERE character_id='.$character_id.' AND chapter='.$chapter.' ORDER BY id ASC';
+            $result1 = $conn->query($sql1);
+            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+        }
+    }
 }
-else {
-    $chapter_two = True;
-}
-
-// $sql = "SELECT * FROM players";
-// $result = $conn->query($sql);
-// while ($row = $result->fetch_assoc()) {
-//     array_push($pairs, array($row["initial_name"], $row["chinese_name"]));
-//     if ($row["username"] == $_SESSION["username"]) {
-//         $user_information = $row;
-//     }
-// }
 ?>
 
     <header id="header">
@@ -106,15 +121,15 @@ else {
 			    </div>
 			    <nav id="nav-menu-container">
 			        <ul class="nav-menu">
-                        <li><a href="<?php echo($tab=='background'? '#':'home.php?tab=background'); ?>">故事背景</a></li>
-                        <li class="menu-has-children"><a href="<?php echo ($tab=='scripts'? '#':'home.php?tab=scripts&chapter=1'); ?>"><?php echo ($chapter_two? "第一幕":"你的剧本"); ?></a>
+                        <li><a href="home.php?tab=background">故事背景</a></li>
+                        <li class="menu-has-children"><a href="home.php?tab=scripts&chapter=1"><?php echo (sizeof($sections[1])>0? "第一幕":"你的剧本"); ?></a>
                             <ul>
-                                <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#story">你的故事</a></li>
-                                <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#recent">最近的事情</a></li>
-                                <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#today1">今天（时逢立秋）</a></li>
-                                <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#people">你已经知道的其他人</a></li>
-                                <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#performance">你的表现</a></li>
-                                <li><a href="<?php echo ($tab=='first'? '':'home.php?tab=first'); ?>#objectives1">你的目的</a></li>
+                                <?php
+                                foreach ($sections[0] as $section) {
+                                    echo '
+                                <li><a href="home.php?tab=scripts&chapter=1#section'.$section["id"].'">'.$section["title"].'</a></li>';
+                                }
+                                ?>
                             </ul>
                         </li>
                         <li class="menu-has-children" style="display: <?php echo ($status>=3? "block":"none"); ?>"><a href="<?php echo ($tab=='second'? '#':'home.php?tab=second'); ?>">第二幕</a>

@@ -66,11 +66,11 @@ if ($_POST["tab"] == "scripts") {
         if ($row["type"] == 1) {
             if (isset($_POST["section".$section_id."_content"])) {
                 $content = $_POST["section".$section_id."_content"];
-                $sql = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section_id;
-                $result = $conn->query($sql);
-                if ($result->num_rows == 0) {
-                    $sql1 = "INSERT INTO character_section(character_id, section_id, content) VALUES(".$character_id.", ".$section_id.", '".$content."')";
-                    $conn->query($sql1);
+                $sql1 = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section_id;
+                $result1 = $conn->query($sql1);
+                if ($result1->num_rows == 0) {
+                    $sql12 = "INSERT INTO character_section(character_id, section_id, content) VALUES(".$character_id.", ".$section_id.", '".$content."')";
+                    $conn->query($sql2);
                 }
                 else {
                     $sql1 = "UPDATE character_section SET content='".$content."' WHERE character_id=".$character_id." AND section_id=".$section_id;
@@ -89,6 +89,25 @@ if ($_POST["tab"] == "scripts") {
                 }
             }
         }
+        if ($row["type"] == 4) {
+            for ($id = 1; $id <= $_POST["max_objective"]; $id++) {
+                if (isset($_POST["objective".$id."_content"])) {
+                    $content = $_POST["objective".$id."_content"];
+                    $points = $_POST["objective".$id."_points"];
+                    $sql1 = 'INSERT INTO objectives(id, character_id, chapter, content, points) VALUES('.$id.', '.$character_id.', '.$chapter.', "'.$content.'", '.$points.') ON DUPLICATE KEY UPDATE content="'.$content.'", points='.$points;
+                    $conn->query($sql1);
+                }
+            }
+        }
+    }
+
+    if (isset($_POST["delete_timeline"])) {
+        $sql = 'DELETE FROM timelines WHERE id='.$_POST["delete_timeline"];
+        $conn->query($sql);
+    }
+    if (isset($_POST["delete_objective"])) {
+        $sql = 'DELETE FROM objectives WHERE id='.$_POST["delete_objective"];
+        $conn->query($sql);
     }
     $conn->close();
     header("Location: ../admin.php?tab=scripts&character_id=".$character_id.'&chapter='.$chapter);

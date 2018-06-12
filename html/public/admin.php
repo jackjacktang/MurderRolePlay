@@ -68,8 +68,8 @@ $conn->set_charset("utf8");
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
-                        <li><a href="<?php echo($tab=='background'? '#':'admin.php?tab=background'); ?>">故事背景</a></li>
-                        <li><a href="<?php echo($tab=='sections'? '#':'admin.php?tab=sections'); ?>">章节管理</a></li>
+                        <li><a href="admin.php?tab=background">故事背景</a></li>
+                        <li><a href="admin.php?tab=sections">章节管理</a></li>
                         <li class="menu-has-children"><a href="#">剧本管理（第一幕）</a>
                             <ul>
                                 <?php
@@ -102,7 +102,7 @@ $conn->set_charset("utf8");
                                 ?>
                             </ul>
                         </li>
-                        <li><a href="<?php echo($tab=='clues'? '#':'admin.php?tab=clues'); ?>">线索管理</a></li>
+                        <li><a href="admin.php?tab=clues">线索管理</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>
                 </nav>

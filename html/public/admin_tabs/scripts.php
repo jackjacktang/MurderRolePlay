@@ -7,13 +7,32 @@
             if (id == -1) {
                 id = max_timeline + 1;
             }
-            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline'+ id + '_hour" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;">';
-            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline'+ id + '_minute" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;">';
-            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">内容：&nbsp;</label><input style="width: 35%;" value="' + content + '" name="timeline'+ id + '_content">';
+            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline'+ id + '_hour" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ id + '_hour">';
+            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline'+ id + '_minute" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ id + '_minute">';
+            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">内容：&nbsp;</label><input style="width: 35%;" value="' + content + '" name="timeline'+ id + '_content" id="timeline'+ id + '_content">';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'timeline\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
 
             if (id > max_timeline) {
                 max_timeline = id;
                 document.getElementById("max_timeline").value = id;
+            }
+        }
+
+        function add_objective(id, content, points) {
+            var objective_area = document.getElementById("objective_area");
+            var div = document.createElement("div");
+            div.style.marginTop = "20px";
+            objective_area.appendChild(div);
+            if (id == -1) {
+                id = max_objective + 1;
+            }
+            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">内容：&nbsp;</label><input style="width: 35%;" value="' + content + '" name="objective'+ id + '_content" id="objective'+ id + '_content">';
+            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective'+ id + '_points" id="objective'+ id + '_points">';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'objective\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+
+            if (id > max_objective) {
+                max_objective = id;
+                document.getElementById("max_objective").value = id;
             }
         }
 
@@ -49,6 +68,38 @@
                 }
             }
         }
+
+        function open_modal(id, section) {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+            if (section == "timeline") {
+                document.getElementById("modal_title").innerHTML = "确认要删除这条时间线么？";
+                var hour = document.getElementById("timeline" + id + "_hour").value;
+                var minute = document.getElementById("timeline" + id + "_minute").value;
+                var content = document.getElementById("timeline" + id + "_content").value;
+                document.getElementById("modal_content").innerHTML = hour + ":" + minute + "，" + content;
+            }
+            else {
+                document.getElementById("modal_title").innerHTML = "确认要删除这个玩家任务么？";
+                var content = document.getElementById("objective" + id + "_content").value;
+                document.getElementById("modal_content").innerHTML = content;
+            }
+            
+            document.getElementById("modal_confirm").value = id;
+            document.getElementById("modal_confirm").setAttribute("name", "delete_" + section);
+        }
+
+        function close_modal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 
     <br><br><br>
@@ -57,6 +108,22 @@
         <input type="hidden" name="character_id" value="<?php echo $_GET["character_id"]; ?>">
         <input type="hidden" name="chapter" value="<?php echo $_GET["chapter"]; ?>">
         <input type="hidden" name="max_timeline" id="max_timeline" value="0">
+        <input type="hidden" name="max_objective" id="max_objective" value="0">
+        <div id="myModal" class="modal" style="top: 30%;">
+            <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal_title">确认要删除这条时间线么？</h4>
+                    <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <p id="modal_content"></p>
+                </div>
+                <div class="modal-footer justify-content-center" style="font-size: 14pt;">
+                    <button class="genric-btn info circle e-large" id="modal_confirm" name="">确定</button>
+                    <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
+                </div>
+            </div>
+        </div>
 		<?php
 		$sql = 'SELECT * FROM sections WHERE chapter='.$_GET["chapter"].' ORDER BY sequence ASC';
 		$result = $conn->query($sql);
@@ -119,12 +186,26 @@
                                 </div>';
             }
             else if ($row["type"] == 3) {
-                echo '
-                                </h3>';
+                
             }
             else {
                 echo '
-                                </h3>';
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_objective(-1, \'\', -1)">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </h3>
+                                <div id="objective_area">
+                                    <script type="text/javascript">
+                                        var max_objective = 0;';
+                $sql1 = 'SELECT * FROM objectives WHERE character_id='.$_GET["character_id"].' AND chapter='.$_GET["chapter"].' ORDER BY id ASC';
+                $result1 = $conn->query($sql1);
+                while ($row1 = $result1->fetch_assoc()) {
+                    echo '
+                                        add_objective('.$row1["id"].', "'.$row1["content"].'", '.$row1["points"].');';
+                }
+                echo '
+                                    </script>
+                                </div>';
             }
 
             echo '

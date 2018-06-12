@@ -86,6 +86,15 @@ if (isset($_POST["submit"])) {
                 content VARCHAR(400),
                 FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE objectives(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                character_id int,
+                chapter int,
+                content varchar (400),
+                points int,
+                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
             $conn2->close();
         }
         $conn->close();
