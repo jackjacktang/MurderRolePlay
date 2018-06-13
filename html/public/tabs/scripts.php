@@ -16,7 +16,7 @@
             $sql = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section["id"];
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
-                echo $row["content"];
+                echo replace_text($pairs, $row["content"]);
             }
         }
         // 时间线
@@ -27,7 +27,7 @@
             	$hour = ($row["hour"] < 10? ("0".$row["hour"]):$row["hour"]);
                 $minute = ($row["minute"] < 10? ("0".$row["minute"]):$row["minute"]);
                 echo '
-                		<p><b>'.$hour.":".$minute.'</b>，'.$row["content"].'</p>';
+                		<p><b>'.$hour.":".$minute.'</b>，'.replace_text($pairs, $row["content"]).'</p>';
             }
         }
         // 房间线索
@@ -44,7 +44,7 @@
             while ($row = $result->fetch_assoc()) {
                 $points = $row["points"];
                 echo '
-                            <li>'.$row["content"].($points>0? ("（".$points."分）"):"").'。</li>';
+                            <li>'.replace_text($pairs, $row["content"]).($points>0? ("（".$points."分）"):"").'。</li>';
             }
             echo '
                         </ul>';
