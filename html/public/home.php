@@ -86,7 +86,15 @@ $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     array_push($pairs, array($row["name"], $row["preferred_name"]));
 }
-print_r($pairs);
+
+$sql = "SELECT * FROM maps";
+$result = $conn->query($sql);
+if ($result->num_rows == 0) {
+    $maps = False;
+}
+else {
+    $maps = True;
+}
 
 $sections = array(array(), array());
 foreach (array(1, 2) as $chapter) {
@@ -131,6 +139,12 @@ foreach (array(1, 2) as $chapter) {
 			    <nav id="nav-menu-container">
 			        <ul class="nav-menu">
                         <li><a href="home.php?tab=background">故事背景</a></li>
+                        <?php
+                        if ($maps) {
+                            echo '
+                        <li><a href="home.php?tab=maps">地图</a></li>';
+                        }
+                        ?>
                         <li class="menu-has-children"><a href="home.php?tab=scripts&chapter=1"><?php echo (sizeof($sections[1])>0? "第一幕":"你的剧本"); ?></a>
                             <ul>
                                 <?php

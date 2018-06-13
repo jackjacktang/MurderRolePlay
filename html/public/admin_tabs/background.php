@@ -27,7 +27,7 @@
             li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value="' + name + '" name="character'+ id + '_name" id="character'+ id + '_name" maxlength=20>';
             li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value="' + preferred_name + '" name="character'+ id + '_preferred_name" maxlength=20>';
             if (!organizor) {
-                li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id +')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
+                li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
             else {
                 li.innerHTML = li.innerHTML + '<div style="width: 15%;"></div>';
@@ -39,7 +39,7 @@
             }
         }
 
-        function add_map(id, description) {
+        function add_map(id, description, file_path) {
             var map_area = document.getElementById("map_area");
             var div = document.createElement("div");
             div.style.textAlign = "left";
@@ -48,8 +48,10 @@
             if (id == -1) {
                 id = max_map + 1;
             }
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 35%;" value="" name="map'+ id + '_description" maxlength=20>';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value="' + description + '" name="map'+ id + '_description" maxlength=20 id="map'+ id + '_description">';
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map'+ id + '_image">';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML = div.innerHTML + '<center style="margin-top: 20px;"><img src="'+ file_path + '"></center>';
             if (id > max_map) {
                 max_map = id;
                 document.getElementById("max_map").value = max_map;
@@ -89,13 +91,22 @@
             }
         }
 
-        function open_modal(id) {
+        function open_modal(id, section) {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
-            var username = document.getElementById("character" + id + "_username").value;
-            var name = document.getElementById("character" + id + "_name").value;
-            document.getElementById("modal_content").innerHTML = '用户名：' + username + '<br>姓名：' + name;
+            if (section == "character") {
+                document.getElementById("modal_title").innerHTML = "确认要删除这名玩家么？";
+                var username = document.getElementById("character" + id + "_username").value;
+                var name = document.getElementById("character" + id + "_name").value;
+                document.getElementById("modal_content").innerHTML = '用户名：' + username + '<br>姓名：' + name;
+            }
+            else{
+                document.getElementById("modal_title").innerHTML = "确认要删除这张图片么？";
+                var description = document.getElementById("map" + id + "_description").value;
+                document.getElementById("modal_content").innerHTML = description;
+            }
             document.getElementById("modal_confirm").value = id;
+            document.getElementById("modal_confirm").setAttribute("name", "delete_" + section);
         }
 
         function close_modal() {
@@ -118,14 +129,14 @@
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                 <div class="modal-header">
-                    <h4 class="modal-title">确认要删除这个玩家么？</h4>
+                    <h4 class="modal-title" id="modal_title"></h4>
                     <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
                 </div>
                 <div class="modal-body">
                     <p id="modal_content"></p>
                 </div>
                 <div class="modal-footer justify-content-center" style="font-size: 14pt;">
-                    <button class="genric-btn info circle e-large" id="modal_confirm" name="delete">确定</button>
+                    <button class="genric-btn info circle e-large" id="modal_confirm">确定</button>
                     <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
                 </div>
             </div>
@@ -207,7 +218,7 @@
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
                                 <h3>添加/修改图片（地图、案发现场图等）
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_map(-1, '')">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_map(-1, '', '')">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
@@ -219,9 +230,8 @@
                                         <script type="text/javascript">
                                             var max_map = 0;';
                                     while ($row = $result->fetch_assoc()) {
-                                        $points = $row["points"];
                                         echo '
-                                            add_map('.$row["id"].', "'.$row["description"].'");';
+                                            add_map('.$row["id"].', "'.$row["description"].'", "'.$row["file_path"].'");';
                                     }
                                     echo '
                                         </script>';

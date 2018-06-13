@@ -17,9 +17,17 @@ if ($_POST["tab"] == "background") {
 
     for ($id = 0; $id <= $_POST["max_map"]; $id++) {
         if (isset($_POST["map".$id."_description"])) {
-            $target = '../../scripts/'.$_SESSION["script_id"].'/maps/'.basename($_FILES["map".$id."_image"]["name"]);
-            if (move_uploaded_file($_FILES["map".$id."_image"]["tmp_name"], $target)) {
+            $extension = pathinfo($_FILES["map".$id."_image"]["name"], PATHINFO_EXTENSION);
+            $description = $_POST["map".$id."_description"];
+            $target = '../../scripts/'.$_SESSION["script_id"].'/maps/'.$id.'.'.$extension;
+            $file_path = '../scripts/'.$_SESSION["script_id"].'/maps/'.$id.'.'.$extension;
+            if ($extension == "jpg" || $extension == "png") {
+                if (move_uploaded_file($_FILES["map".$id."_image"]["tmp_name"], $target)) {
+                    $sql = 'INSERT INTO maps(id, description, file_path) VALUES('.$id.', "'.$description.'", "'.$file_path.'") ON DUPLICATE KEY UPDATE description="'.$description.'", file_path="'.$file_path.'"';
+                    $conn->query($sql);
+                }
             }
+            $sql = 'UPDATE maps SET description="'.$description.'" WHERE id='.$id;
         }
     }
 
@@ -36,8 +44,17 @@ if ($_POST["tab"] == "background") {
         }
     }
 
-    if (isset($_POST["delete"])) {
-        $sql = 'DELETE FROM characters WHERE id='.$_POST["delete"];
+    if (isset($_POST["delete_character"])) {
+        $sql = 'DELETE FROM characters WHERE id='.$_POST["delete_character"];
+        $conn->query($sql);
+    }
+    if (isset($_POST["delete_map"])) {
+        $sql = 'SELECT * FROM maps WHERE id='.$_POST["delete_map"];
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            unlink("../".$row["file_path"]);
+        }
+        $sql = 'DELETE FROM maps WHERE id='.$_POST["delete_map"];
         $conn->query($sql);
     }
     $conn->close();

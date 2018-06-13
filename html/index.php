@@ -13,6 +13,15 @@ if (mysqli_connect_errno()) {
 }
 $conn->set_charset("utf8");
 
+function removeDirectory($path) {
+    $files = glob($path . '/*');
+    foreach ($files as $file) {
+        is_dir($file) ? removeDirectory($file) : unlink($file);
+    }
+    rmdir($path);
+    return;
+}
+
 // Handle click on the script
 if (isset($_GET["script_id"])) {
     $_SESSION["script_id"] = $_GET["script_id"];
@@ -28,7 +37,7 @@ if (isset($_SESSION["script_id"])) {
 }
 
 // Handle create new script
-if (isset($_POST["submit"])) {
+if (isset($_POST["submit1"])) {
     if ($_POST["password"] != "Lu@dashen666") {
         echo '
     <script type="text/javascript">
@@ -101,11 +110,33 @@ if (isset($_POST["submit"])) {
             $sql2 = "
             CREATE TABLE maps(
                 id int PRIMARY KEY AUTO_INCREMENT,
-                description varchar (20)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+                description varchar (20),
+                file_path varchar(50)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
             $conn2->close();
         }
         $conn->close();
+        header("Location: index.php");
+    }
+}
+
+// handle delete script(s)
+if (isset($_POST["submit2"])) {
+    if ($_POST["password"] != "Lu@dashen666") {
+        echo '
+    <script type="text/javascript">
+        alert("密码不正确，创建剧本失败！");
+        window.location = "index.php";
+    </script>';
+    }
+    else {
+        foreach ($_POST["script_ids"] as $script_id) {
+            $sql = "DELETE FROM script_names WHERE id=".$script_id;
+            $conn->query($sql);
+            $sql = "DROP DATABASE rp_".$script_id;
+            $conn->query($sql);
+            removeDirectory("scripts/".$script_id);
+        }
         header("Location: index.php");
     }
 }
@@ -150,7 +181,8 @@ if (isset($_POST["submit"])) {
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
-                        <li><a href="#" onclick="open_modal()">添加新剧本</a></li>
+                        <li><a href="#" onclick="open_modal1()">添加新剧本</a></li>
+                        <li><a href="#" onclick="open_modal2()">删除剧本</a></li>
                     </ul>
                 </nav>
             </div>
@@ -187,37 +219,82 @@ if (isset($_POST["submit"])) {
 
     <!-- Modal for creating the new script -->
     <form method="post" action="index.php">
-        <div id="myModal" class="modal" style="top: 30%;">
+        <div id="myModal1" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                 <div class="modal-header">
-                    <h4 id="modal_title" class="modal-title"></h4>
-                    <span class="close" style="float: right;" onclick="close_modal()">&times;</span>
+                    <h4 id="modal_title" class="modal-title">添加新剧本</h4>
+                    <span class="close" style="float: right;" onclick="close_modal1()">&times;</span>
                 </div>
                 <div class="modal-body">
-                    <div class="row justify-content-center">
-                        <label style="margin-bottom: 20px;" class="col-lg-4 col-md-10 col-sm-10">剧本名称：</label><input required name="name" style="margin-bottom: 20px;" type="text" maxlength="50" class="col-lg-6 col-md-7 col-sm-10">
-                        <label class="col-lg-4 col-md-10 col-sm-10">密码：</label><input required name="password" type="password" class="col-lg-6 col-md-7 col-sm-10">
-                    </div>
+                    <center style="width: 100%;">
+                        <label style="margin-bottom: 20px; text-align: left; width: 80px;">剧本名称：</label><input required name="name" style="margin-bottom: 20px; width: 200px;" type="text" maxlength="50">
+                        <br>
+                        <label style="text-align: left; width: 80px;">密码：</label><input style="width: 200px;" required name="password" type="password">
+                    </center>
                 </div>
                 <div class="modal-footer justify-content-center" style="font-size: 14pt;">
-                    <button class="genric-btn info circle e-large" name="submit">确定</button>
-                    <button type="button" class="genric-btn info circle e-large" onclick="close_modal()">关闭</button>
+                    <button class="genric-btn info circle e-large" name="submit1">确定</button>
+                    <button type="button" class="genric-btn info circle e-large" onclick="close_modal1()">关闭</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Modal for deleting the script -->
+    <form method="post" action="index.php">
+        <div id="myModal2" class="modal" style="top: 30%;">
+            <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
+                <div class="modal-header">
+                    <h4 id="modal_title" class="modal-title">删除剧本</h4>
+                    <span class="close" style="float: right;" onclick="close_modal2()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <center style="width: 100%;">
+                        <label style="margin-bottom: 10px; width: 280px; text-align: left;">剧本名称：</label>
+                        <?php
+                        $sql = "SELECT * FROM script_names";
+                        $result = $conn->query($sql);
+                        while ($row = $result->fetch_assoc()) {
+                            echo '
+                        <div style="text-align: left; width: 280px; margin-bottom: 10px;">
+                            <input type="checkbox" name="script_ids[]" value="'.$row["id"].'">&nbsp;'.$row["name"].'
+                        </div>';
+                        }
+                        ?>
+                        <br><label style="text-align: left; width: 80px; margin-top: 20px;">密码：</label><input style="width: 200px;" required name="password" type="password">
+                    </center>
+                </div>
+                <div class="modal-footer justify-content-center" style="font-size: 14pt;">
+                    <button class="genric-btn info circle e-large" name="submit2">确定</button>
+                    <button type="button" class="genric-btn info circle e-large" onclick="close_modal2()">关闭</button>
                 </div>
             </div>
         </div>
     </form>
 
     <script type="text/javascript">
-        var modal = document.getElementById("myModal");
-        function open_modal(id, position, points) {
-            modal.style.display = "block";
+        var modal1 = document.getElementById("myModal1");
+        var modal2 = document.getElementById("myModal2");
+        function open_modal1(id, position, points) {
+            modal1.style.display = "block";
+            modal2.style.display = "none";
         }
-        function close_modal() {
-            modal.style.display = "none";
+        function close_modal1() {
+            modal1.style.display = "none";
+        }
+        function open_modal2(id, position, points) {
+            modal2.style.display = "block";
+            modal1.style.display = "none";
+        }
+        function close_modal2() {
+            modal2.style.display = "none";
         }
         window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+            if (event.target == modal1) {
+                modal1.style.display = "none";
+            }
+            if (event.target == modal2) {
+                modal2.style.display = "none";
             }
         }
     </script>
