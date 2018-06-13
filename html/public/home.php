@@ -28,7 +28,9 @@ else {
 
 function replace_text($pairs, $text) {
     foreach ($pairs as $pair) {
-        $text = str_replace($pair[0], $pair[1], $text);
+        if ($pair[1] != "") {
+            $text = str_replace($pair[0], $pair[1], $text);
+        }
     }
     return $text;
 }
@@ -37,7 +39,7 @@ function replace_text($pairs, $text) {
 	<!-- Mobile Specific Meta -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Favicon-->
-	<link rel="shortcut icon" href="img/fav.png">
+	<link rel="shortcut icon" href="img/icon.png">
 	<!-- Author Meta -->
 	<meta name="author" content="codepixer">
 	<!-- Meta Description -->
@@ -78,6 +80,13 @@ $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     $status = $row["value"];
 }
+
+$sql = "SELECT * FROM characters";
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    array_push($pairs, array($row["name"], $row["preferred_name"]));
+}
+print_r($pairs);
 
 $sections = array(array(), array());
 foreach (array(1, 2) as $chapter) {

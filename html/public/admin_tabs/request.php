@@ -15,6 +15,14 @@ if ($_POST["tab"] == "background") {
     $sql = "INSERT INTO background(id, content) VALUES(0, '".$_POST["bg_story"]."') ON DUPLICATE KEY UPDATE content='".$_POST["bg_story"]."'";
     $conn->query($sql);
 
+    for ($id = 0; $id <= $_POST["max_map"]; $id++) {
+        if (isset($_POST["map".$id."_description"])) {
+            $target = '../../scripts/'.$_SESSION["script_id"].'/map/'.basename($_FILES["map".$id."_image"]["name"]);
+            if (move_uploaded_file($_FILES["map".$id."_image"]["tmp_name"], $target)) {
+            }
+        }
+    }
+
     for ($id = 0; $id <= $_POST["max_character"]; $id++) {
         if (isset($_POST["character".$id."_username"])) {
             $username =  $_POST["character".$id."_username"];
@@ -33,7 +41,7 @@ if ($_POST["tab"] == "background") {
         $conn->query($sql);
     }
     $conn->close();
-    header("Location: ../admin.php?tab=background");
+    // header("Location: ../admin.php?tab=background");
 }
 
 if ($_POST["tab"] == "sections") {

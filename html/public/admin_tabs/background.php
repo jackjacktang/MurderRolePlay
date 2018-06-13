@@ -15,7 +15,7 @@
             li.style.marginBottom = "20px";
             role_area.appendChild(li);
             if (id == -1) {
-                id = max + 1;
+                id = max_character + 1;
             }
             if (organizor) {
                 li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character1_username">';
@@ -33,9 +33,26 @@
                 li.innerHTML = li.innerHTML + '<div style="width: 15%;"></div>';
             }
             li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value="' + description + '" name="character'+ id + '_description" maxlength=100>';
-            if (id > max) {
-                max = id;
-                document.getElementById("max_character").value = max;
+            if (id > max_character) {
+                max_character = id;
+                document.getElementById("max_character").value = max_character;
+            }
+        }
+
+        function add_map(id, description) {
+            var map_area = document.getElementById("map_area");
+            var div = document.createElement("div");
+            div.style.textAlign = "left";
+            div.style.marginTop = "20px";
+            map_area.appendChild(div);
+            if (id == -1) {
+                id = max_map + 1;
+            }
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 35%;" value="" name="map'+ id + '_description" maxlength=20>';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map'+ id + '_image">';
+            if (id > max_map) {
+                max_map = id;
+                document.getElementById("max_map").value = max_map;
             }
         }
 
@@ -94,9 +111,10 @@
         }
     </script>
 
-    <form action="admin_tabs/request.php" method="post">
+    <form action="admin_tabs/request.php" method="post" enctype="multipart/form-data">
         <input type="hidden" name="tab" value="background">
         <input type="hidden" name="max_character" value="1" id="max_character">
+        <input type="hidden" name="max_map" value="0" id="max_map">
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                 <div class="modal-header">
@@ -162,7 +180,7 @@
                                     $result = $conn->query($sql);
                                     echo '
                                         <script type="text/javascript">
-                                            var max = 1;';
+                                            var max_character = 1;';
                                     while ($row = $result->fetch_assoc()) {
                                         $points = $row["points"];
                                         echo '
@@ -188,13 +206,32 @@
                     <div class="row d-flex justify-content-center">
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
-                                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 50%;">保存</button>
+                                <h3>添加/修改图片（地图、案发现场图等）
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_map(-1, '')">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </h3>
+                                <div id="map_area">
+                                    <?php
+                                    $sql = "SELECT * FROM maps";
+                                    $result = $conn->query($sql);
+                                    echo '
+                                        <script type="text/javascript">
+                                            var max_map = 0;';
+                                    while ($row = $result->fetch_assoc()) {
+                                        $points = $row["points"];
+                                        echo '
+                                            add_map('.$row["id"].', "'.$row["description"].'");';
+                                    }
+                                    echo '
+                                        </script>';
+                                    ?>
+                                </div>
                             </center>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    </form>
 
 

@@ -1,4 +1,4 @@
-    <sectio>
+    <section>
         <div class="container">
             <div class="section-top-border">
                 <div class="row d-flex justify-content-center">
@@ -36,7 +36,7 @@
                             while ($row = $result->fetch_assoc()) {
                                 if ($row["id"] > 1) {
                                     echo '
-                            <li>&nbsp;'.$row["name"]."：".$row["description"].'</li>';
+                            <li>&nbsp;'.replace_text($pairs, $row["name"])."：".replace_text($pairs, $row["description"]).'</li>';
                                 }
                             }
                             ?>

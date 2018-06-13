@@ -13,7 +13,7 @@ else if ($_SESSION["character_id"] != 1) {
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/fav.png">
+    <link rel="shortcut icon" href="img/icon.png">
     <!-- Author Meta -->
     <meta name="author" content="codepixer">
     <!-- Meta Description -->
@@ -115,6 +115,17 @@ $conn->set_charset("utf8");
     include("admin_tabs/".$tab.".php");
     $conn->close();
     ?>
+        <section>
+            <div class="container">
+                <div class="section-top-border"></div>
+            </div>
+        </section>
+        <section style="position: fixed; left: 0; bottom: 0px; width: 100%; background-color: white;">
+            <center>
+                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 30%; margin-bottom: 30px;">保存</button>
+            </center>
+        </section>
+    </form>
 
     <style type="text/css">
         b {

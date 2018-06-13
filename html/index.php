@@ -42,6 +42,9 @@ if (isset($_POST["submit"])) {
         $sql1 = 'SELECT id FROM script_names WHERE name="'.$_POST["name"].'"';
         $result1 = $conn->query($sql1);
         while ($row1 = $result1->fetch_assoc()) {
+            mkdir("scripts/".$row1["id"]);
+            mkdir("scripts/".$row1["id"].'/maps');
+            mkdir("scripts/".$row1["id"].'/clues');
             $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
             $conn->query($sql2);
             $db2 = "rp_".$row1["id"];
@@ -95,6 +98,11 @@ if (isset($_POST["submit"])) {
                 points int,
                 FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE maps(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                description varchar (20)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
             $conn2->close();
         }
         $conn->close();
@@ -107,7 +115,7 @@ if (isset($_POST["submit"])) {
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Favicon-->
-    <link rel="shortcut icon" href="img/fav.png">
+    <link rel="shortcut icon" href="public/img/icon.png">
     <!-- Author Meta -->
     <meta name="author" content="codepixer">
     <!-- Meta Description -->
@@ -123,14 +131,14 @@ if (isset($_POST["submit"])) {
             <!--
             CSS
             ============================================= -->
-    <link rel="stylesheet" href="css/linearicons.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" href="css/nice-select.css">                  
-    <link rel="stylesheet" href="css/animate.min.css">
-    <link rel="stylesheet" href="css/owl.carousel.css">
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="public/css/linearicons.css">
+    <link rel="stylesheet" href="public/css/font-awesome.min.css">
+    <link rel="stylesheet" href="public/css/bootstrap.css">
+    <link rel="stylesheet" href="public/css/magnific-popup.css">
+    <link rel="stylesheet" href="public/css/nice-select.css">                  
+    <link rel="stylesheet" href="public/css/animate.min.css">
+    <link rel="stylesheet" href="public/css/owl.carousel.css">
+    <link rel="stylesheet" href="public/css/main.css">
 </head>
 
 <body>
@@ -138,7 +146,7 @@ if (isset($_POST["submit"])) {
         <div class="container">
             <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
-                    <a href="#"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+                    <a href="#"><img src="public/img/logo.png" style="height: 50px;"  alt="" title="" /></a>
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
@@ -157,7 +165,7 @@ if (isset($_POST["submit"])) {
                 <div class="section-top-border">
                     <div class="row justify-content-center">
                         <div class="col-lg-9 col-md0 col-sm-10">
-                            <img src="img/cover.jpg" style="width: 100%;"/>
+                            <img src="public/img/cover.jpg" style="width: 100%;"/>
                         </div>
                         <?php
                         $sql = "SELECT * FROM script_names ORDER BY id ASC";
@@ -218,21 +226,21 @@ if (isset($_POST["submit"])) {
     $conn->close();
     ?>
 
-    <script src="js/vendor/jquery-2.2.4.min.js"></script>
+    <script src="public/js/vendor/jquery-2.2.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="public/js/vendor/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhOdIF3Y9382fqJYt5I_sswSrEw5eihAA"></script>
-    <script src="js/easing.min.js"></script>
-    <script src="js/hoverIntent.js"></script>
-    <script src="js/superfish.min.js"></script>
-    <script src="js/jquery.ajaxchimp.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.sticky.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/parallax.min.js"></script>
-    <script src="js/mail-script.js"></script>
-    <script src="js/main.js"></script>
+    <script src="public/js/easing.min.js"></script>
+    <script src="public/js/hoverIntent.js"></script>
+    <script src="public/js/superfish.min.js"></script>
+    <script src="public/js/jquery.ajaxchimp.min.js"></script>
+    <script src="public/js/jquery.magnific-popup.min.js"></script>
+    <script src="public/js/owl.carousel.min.js"></script>
+    <script src="public/js/jquery.sticky.js"></script>
+    <script src="public/js/jquery.nice-select.min.js"></script>
+    <script src="public/js/parallax.min.js"></script>
+    <script src="public/js/mail-script.js"></script>
+    <script src="public/js/main.js"></script>
 
 </body>
 </html>

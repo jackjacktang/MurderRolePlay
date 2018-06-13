@@ -217,18 +217,3 @@
         </section>';
 		}
 		?>
-
-		<section>
-            <div class="container">
-                <div class="section-top-border">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-lg-9 col-md-9 col-sm-10">
-                            <center>
-                                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 50%;">保存</button>
-                            </center>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-	</form>
