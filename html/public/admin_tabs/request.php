@@ -17,7 +17,7 @@ if ($_POST["tab"] == "background") {
 
     for ($id = 0; $id <= $_POST["max_map"]; $id++) {
         if (isset($_POST["map".$id."_description"])) {
-            $target = '../../scripts/'.$_SESSION["script_id"].'/map/'.basename($_FILES["map".$id."_image"]["name"]);
+            $target = '../../scripts/'.$_SESSION["script_id"].'/maps/'.basename($_FILES["map".$id."_image"]["name"]);
             if (move_uploaded_file($_FILES["map".$id."_image"]["tmp_name"], $target)) {
             }
         }
@@ -41,7 +41,7 @@ if ($_POST["tab"] == "background") {
         $conn->query($sql);
     }
     $conn->close();
-    // header("Location: ../admin.php?tab=background");
+    header("Location: ../admin.php?tab=background");
 }
 
 if ($_POST["tab"] == "sections") {

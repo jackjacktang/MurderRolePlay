@@ -42,9 +42,9 @@ if (isset($_POST["submit"])) {
         $sql1 = 'SELECT id FROM script_names WHERE name="'.$_POST["name"].'"';
         $result1 = $conn->query($sql1);
         while ($row1 = $result1->fetch_assoc()) {
-            mkdir("scripts/".$row1["id"]);
-            mkdir("scripts/".$row1["id"].'/maps');
-            mkdir("scripts/".$row1["id"].'/clues');
+            mkdir("scripts/".$row1["id"], 0777, true);
+            mkdir("scripts/".$row1["id"].'/maps', 0777, true);
+            mkdir("scripts/".$row1["id"].'/clues', 0777, true);
             $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
             $conn->query($sql2);
             $db2 = "rp_".$row1["id"];
