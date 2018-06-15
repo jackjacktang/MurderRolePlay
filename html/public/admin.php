@@ -69,8 +69,8 @@ $conn->set_charset("utf8");
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
                         <li><a href="admin.php?tab=background">故事背景</a></li>
-                        <li><a href="admin.php?tab=sections">章节管理</a></li>
-                        <li class="menu-has-children"><a href="#">剧本管理（第一幕）</a>
+                        <li><a href="admin.php?tab=sections">章节</a></li>
+                        <li class="menu-has-children"><a href="#">剧本（第一幕）</a>
                             <ul>
                                 <?php
                                 $sql = "SELECT id, name FROM characters ORDER BY id ASC";
@@ -86,7 +86,7 @@ $conn->set_charset("utf8");
                                 ?>
                             </ul>
                         </li>
-                        <li class="menu-has-children"><a href="#">剧本管理（第二幕）</a>
+                        <li class="menu-has-children"><a href="#">（第二幕）</a>
                             <ul>
                                 <?php
                                 $sql = "SELECT id, name FROM characters ORDER BY id ASC";
@@ -102,7 +102,9 @@ $conn->set_charset("utf8");
                                 ?>
                             </ul>
                         </li>
-                        <li><a href="admin.php?tab=clues">线索管理</a></li>
+                        <li><a href="admin.php?tab=locations">地点</a></li>
+                        <li><a href="admin.php?tab=clues&chapter=1">线索（第一幕）</a></li>
+                        <li><a href="admin.php?tab=clues&chapter=2">（第二幕）</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>
                 </nav>

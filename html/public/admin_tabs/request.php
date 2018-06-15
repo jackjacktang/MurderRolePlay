@@ -23,11 +23,19 @@ if ($_POST["tab"] == "background") {
             $file_path = '../scripts/'.$_SESSION["script_id"].'/maps/'.$id.'.'.$extension;
             if ($extension == "jpg" || $extension == "png") {
                 if (move_uploaded_file($_FILES["map".$id."_image"]["tmp_name"], $target)) {
+                    $sql = 'SELECT file_path FROM maps WHERE id='.$id;
+                    $result = $conn->query($sql);
+                    while ($row = $result->fetch_assoc()) {
+                        if ($row["file_path"] != $file_path) {
+                            unlink("../".$row["file_path"]);
+                        }
+                    }
                     $sql = 'INSERT INTO maps(id, description, file_path) VALUES('.$id.', "'.$description.'", "'.$file_path.'") ON DUPLICATE KEY UPDATE description="'.$description.'", file_path="'.$file_path.'"';
                     $conn->query($sql);
                 }
             }
             $sql = 'UPDATE maps SET description="'.$description.'" WHERE id='.$id;
+            $conn->query($sql);
         }
     }
 
@@ -41,6 +49,11 @@ if ($_POST["tab"] == "background") {
             $points = $_POST["points"];
             $sql = 'INSERT INTO characters(id, username, password, name, preferred_name, description, points) VALUES('.$id.', "'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'", '.$points.') ON DUPLICATE KEY UPDATE username="'.$username.'", password="'.$password.'", name="'.$name.'", preferred_name="'.$preferred_name.'", description="'.$description.'", points='.$points;
             $conn->query($sql);
+            if ($id != 1) {
+                $location_name = "【".$name."】的房间";
+                $sql = 'INSERT INTO locations(id, name) VALUES('.(-$id).', "'.$location_name.'") ON DUPLICATE KEY UPDATE name="'.$location_name.'"';
+                $conn->query($sql);
+            }
         }
     }
 
@@ -136,5 +149,69 @@ if ($_POST["tab"] == "scripts") {
     }
     $conn->close();
     header("Location: ../admin.php?tab=scripts&character_id=".$character_id.'&chapter='.$chapter);
+}
+
+if ($_POST["tab"] == "locations") {
+    for ($id = 1; $id <= $_POST["max_location"]; $id++) {
+        if (isset($_POST["location".$id."_name"])) {
+            $location_name = $_POST["location".$id."_name"];
+            $sql = 'INSERT INTO locations(id, name) VALUES('.$id.', "'.$location_name.'") ON DUPLICATE KEY UPDATE name="'.$location_name.'"';
+            $conn->query($sql);
+        }
+    }
+
+    if (isset($_POST["delete"])) {
+        $sql = 'DELETE FROM locations WHERE id='.$_POST["delete"];
+        $conn->query($sql);
+    }
+    $conn->close();
+    header("Location: ../admin.php?tab=locations");
+}
+
+if ($_POST["tab"] == "clues") {
+    if (isset($_POST["submit1"])) {
+        $chapter = $_POST["chapter"];
+        $location_id = $_POST["location_id"];
+        $position = $_POST["position"];
+        $points = $_POST["points"];
+        $self_description = $_POST["self_description"];
+        $description = $_POST["description"];
+        $unlock_id = $_POST["unlock_id"];
+        $unlock_characters = "";
+        if (isset($_POST["unlock_characters"])) {
+            foreach ($_POST["unlock_characters"] as $unlock_character) {
+                $unlock_characters = $unlock_characters.$unlock_character.",";
+            }
+        }
+        if ($_POST["id"] == -1) {
+            $sql = 'INSERT INTO clues(chapter, location_id, position, points, self_description, description, unlock_id, unlock_characters) VALUES('.$chapter.', '.$location_id.', "'.$position.'", '.$points.', "'.$self_description.'", "'.$description.'", '.$unlock_id.', "'.$unlock_characters.'")';
+            $conn->query($sql);
+            $id = $conn->insert_id;
+        }
+        else {
+            $id = $_POST["id"];
+        }
+        $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+        $target = '../../scripts/'.$_SESSION["script_id"].'/clues/'.$id.'.'.$extension;
+        $file_path = '../scripts/'.$_SESSION["script_id"].'/clues/'.$id.'.'.$extension;
+        if ($extension == "jpg" || $extension == "png") {
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target)) {
+                $sql = 'SELECT file_path FROM clues WHERE id='.$id;
+                $result = $conn->query($sql);
+                while ($row = $result->fetch_assoc()) {
+                    if ($row["file_path"] != $file_path) {
+                        unlink("../".$row["file_path"]);
+                    }
+                }
+                $sql = 'UPDATE clues SET file_path="'.$file_path.'" WHERE id='.$id;
+                $conn->query($sql);
+            }
+        }
+        $sql = 'UPDATE clues SET position="'.$position.'", points='.$points.', self_description="'.$self_description.'", description="'.$description.'", unlock_id='.$unlock_id.', unlock_characters="'.$unlock_characters.'" WHERE id='.$id;
+        $conn->query($sql);
+    }
+
+    $conn->close();
+    header("Location: ../admin.php?tab=clues&chapter=".$chapter);
 }
 ?>

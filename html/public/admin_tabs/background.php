@@ -49,13 +49,17 @@
                 id = max_map + 1;
             }
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value="' + description + '" name="map'+ id + '_description" maxlength=20 id="map'+ id + '_description">';
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map'+ id + '_image">';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map'+ id + '_image" onchange="preview(this, ' + id + ')">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
-            div.innerHTML = div.innerHTML + '<center style="margin-top: 20px;"><img src="'+ file_path + '"></center>';
+            div.innerHTML = div.innerHTML + '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
             if (id > max_map) {
                 max_map = id;
                 document.getElementById("max_map").value = max_map;
             }
+        }
+
+        function preview(input, id) {
+            document.getElementById("map" + id + "_preview").src = URL.createObjectURL(input.files[0]);
         }
 
         function copyHTML() {

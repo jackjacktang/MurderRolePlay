@@ -113,6 +113,27 @@ if (isset($_POST["submit1"])) {
                 description varchar (20),
                 file_path varchar(50)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE locations(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                name varchar (20)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
+            $sql2 = 'INSERT INTO locations(id, name) VALUES(0, "秘密线索")';
+            $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE clues(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                chapter int,
+                location_id int,
+                position varchar(20),
+                points int,
+                self_description varchar(300),
+                description varchar(300),
+                file_path varchar(50),
+                unlock_id int,
+                unlock_characters varchar(30),
+                FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
             $conn2->close();
         }
         $conn->close();
