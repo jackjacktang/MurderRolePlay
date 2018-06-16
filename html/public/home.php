@@ -155,19 +155,20 @@ foreach (array(1, 2) as $chapter) {
                                 ?>
                             </ul>
                         </li>
-                        <li class="menu-has-children" style="display: <?php echo ($status>=3? "block":"none"); ?>"><a href="<?php echo ($tab=='second'? '#':'home.php?tab=second'); ?>">第二幕</a>
+                        <li class="menu-has-children" style="display: <?php echo ($status>=3? "block":"none"); ?>"><a href="home.php?tab=scripts&chapter=2">第二幕</a>
                             <ul>
-                                <li><a href="<?php echo ($tab=='second'? '':'home.php?tab=second'); ?>#background2">背景故事</a></li>
-                                <li><a href="<?php echo ($tab=='second'? '':'home.php?tab=second'); ?>#story2">你的故事</a></li>
-                                <li><a href="<?php echo ($tab=='second'? '':'home.php?tab=second'); ?>#timeline2">你的时间线</a></li>
-                                <li><a href="<?php echo ($tab=='second'? '':'home.php?tab=second'); ?>#clues2">你房间的线索</a></li>
-                                <li><a href="<?php echo ($tab=='second'? '':'home.php?tab=second'); ?>#objectives2">你的任务</a></li>
+                                <?php
+                                foreach ($sections[1] as $section) {
+                                    echo '
+                                <li><a href="home.php?tab=scripts&chapter=2#section'.$section["id"].'">'.$section["title"].'</a></li>';
+                                }
+                                ?>
                             </ul>
                         </li>
                         <li style="display: <?php echo ($status>=2? "block":"none"); ?>;"><a href="<?php echo ($tab=='find_clue'? '#':'home.php?tab=find_clue') ?>">调查线索</a></li>
                         <li><a href="<?php echo ($tab=='your_clue'? '#':'home.php?tab=your_clue') ?>">你的线索</a></li>
-                        <li style="display: <?php echo ($status>=4? "block":"none"); ?>;"><a href="<?php echo ($tab=='submit'? '#':'home.php?tab=submit') ?>">指认凶手</a></li>
-                        <li style="display: <?php echo ($status>=5? "block":"none"); ?>;"><a href="<?php echo ($tab=='result'? '#':'home.php?tab=result') ?>">最终得分</a></li>
+                        <li style="display: <?php echo ($status>=5? "block":"none"); ?>;"><a href="<?php echo ($tab=='submit'? '#':'home.php?tab=submit') ?>">指认凶手</a></li>
+                        <li style="display: <?php echo ($status>=6? "block":"none"); ?>;"><a href="<?php echo ($tab=='result'? '#':'home.php?tab=result') ?>">最终得分</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>
                 </nav>
