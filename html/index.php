@@ -77,6 +77,8 @@ if (isset($_POST["submit1"])) {
             $conn2->query($sql2);
             $sql2 = "INSERT INTO status(id, value) VALUES(1, 1)";
             $conn2->query($sql2);
+            $sql2 = "INSERT INTO status(id, value) VALUES(2, 0)";
+            $conn2->query($sql2);
             $sql2 = "CREATE TABLE sections(id int PRIMARY KEY AUTO_INCREMENT, sequence int, type int, title VARCHAR(20), chapter int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
             $sql2 = "
@@ -115,7 +117,7 @@ if (isset($_POST["submit1"])) {
             $conn2->query($sql2);
             $sql2 = "
             CREATE TABLE locations(
-                id int PRIMARY KEY AUTO_INCREMENT,
+                id int PRIMARY KEY,
                 name varchar (20)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
             $sql2 = 'INSERT INTO locations(id, name) VALUES(0, "秘密线索")';

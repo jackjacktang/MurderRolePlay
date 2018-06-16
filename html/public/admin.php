@@ -134,6 +134,9 @@ $conn->set_charset("utf8");
             color: black;
             font-weight: bold;
         }
+        .modal {
+            overflow: auto;
+        }
     </style>
 
     <script src="js/vendor/jquery-2.2.4.min.js"></script>

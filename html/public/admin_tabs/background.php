@@ -155,7 +155,7 @@
                             
                             <center>
                                 <h3>添加/修改故事背景</h3><br>
-                                <input type="hidden" id="background_hide" name="bg_story" value='<?php echo $background; ?>'>
+                                <input type="hidden" id="background_hide" name="bg_story" value="<?php echo $background; ?>">
                                 <div onclick="copyHTML()" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand('bold',false,null);">B</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand('italic',false,null);">I</button>

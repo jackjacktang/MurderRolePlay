@@ -62,6 +62,32 @@
                 </div>
             </div>
         </div>
+        <section>
+            <div class="container">
+                <div class="section-top-border">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-lg-9 col-md-9 col-sm-10">
+                            <center>
+                                <h3>是否允许重复查找线索？</h3>
+                                <div class="switch-wrap" style="margin-top: 20px;">
+                                    <div class="confirm-switch">
+                                        <?php
+                                        $sql = "SELECT * FROM status WHERE id=2";
+                                        $result = $conn->query($sql);
+                                        while ($row = $result->fetch_assoc()) {
+                                            $duplicate = $row["value"];
+                                        }
+                                        ?>
+                                        <input type="checkbox" name="duplicate" id="confirm-switch" <?php echo ($duplicate==0? "":"checked"); ?>>
+                                        <label for="confirm-switch"></label>
+                                    </div>
+                                </div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 		<section>
             <div class="container">
                 <div class="section-top-border">
