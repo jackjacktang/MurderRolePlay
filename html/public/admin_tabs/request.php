@@ -12,14 +12,14 @@ if (mysqli_connect_errno()) {
 $conn->set_charset("utf8");
 
 function remove_quote($text) {
-    $text = str_replace('"', '&quot;', $text);
-    $text = str_replace("'", "&apos;", $text);
+    $text = str_replace('"', '\"', $text);
+    $text = str_replace("'", '&apos;', $text);
     return $text;
 }
 
 if ($_POST["tab"] == "background") {
     $bg_story = remove_quote($_POST["bg_story"]);
-    $sql = "INSERT INTO background(id, content) VALUES(0, '".$bg_story."') ON DUPLICATE KEY UPDATE content='".$bg_story."'";
+    $sql = 'INSERT INTO background(id, content) VALUES(0, "'.$bg_story.'") ON DUPLICATE KEY UPDATE content="'.$bg_story.'"';
     $conn->query($sql);
 
     for ($id = 0; $id <= $_POST["max_map"]; $id++) {
@@ -274,6 +274,11 @@ if ($_POST["tab"] == "clues") {
     }
 
     if (isset($_POST["submit2"])) {
+        $sql = 'SELECT file_path FROM clues WHERE id='.$_POST["id"];
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            unlink("../".$row["file_path"]);
+        }
         $sql = 'DELETE FROM clues WHERE id='.$_POST["id"];
         $conn->query($sql);
     }

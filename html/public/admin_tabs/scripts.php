@@ -1,4 +1,22 @@
 	<script type="text/javascript">
+        var clue_information = [];
+        var location_information = [];
+        <?php
+        $sql = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"];
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            echo '
+        clue_information['.$row["id"].'] = [\''.$row["name"].'\', \''.$row["position"].'\', '.$row["points"].', \''.$row["self_description"].'\', \''.$row["description"].'\', \''.$row["file_path"].'\', '.$row["unlock_id"].', \''.$row["unlock_characters"].'\'];';
+        }
+        $sql = 'SELECT * FROM locations';
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            echo '
+        location_information['.$row["id"].'] = \''.$row["name"].'\';';
+        }
+        ?>
+        clue_information[-1] = ["", "",  1, "", "", "", "", ""];
+
         function add_timeline(id, hour, minute, content) {
             var timeline_area = document.getElementById("timeline_area");
             var div = document.createElement("div");
@@ -106,7 +124,7 @@
             modal.style.display = "none";
         }
 
-        function open_modal1(id, location_id, location_name, position, points, self_description, description, file_path, unlock_id, unlock_characters) {
+        function open_modal1(id, location_id) {
             var modal = document.getElementById("myModal");
             var modal1 = document.getElementById("myModal1");
             var modal2 = document.getElementById("myModal2");
@@ -121,23 +139,23 @@
             }
             document.getElementById("clue_id").value = id;
             document.getElementById("location_id").value = location_id;
-            document.getElementById("modal_title1").innerHTML = location_name;
-            document.getElementById("position").value = position;
-            document.getElementById("points").value = points;
-            document.getElementById("self_description_hidden").value = self_description;
-            document.getElementById("self_description_show").innerHTML = self_description;
-            document.getElementById("description_hidden").value = description;
-            document.getElementById("description_show").innerHTML = description;
-            if (file_path == "") {
+            document.getElementById("modal_title1").innerHTML = location_information[location_id];
+            document.getElementById("position").value = clue_information[id][1];
+            document.getElementById("points").value = clue_information[id][2];
+            document.getElementById("self_description_hidden").value = clue_information[id][3];
+            document.getElementById("self_description_show").innerHTML = clue_information[id][3];
+            document.getElementById("description_hidden").value = clue_information[id][4];
+            document.getElementById("description_show").innerHTML = clue_information[id][4];
+            if (clue_information[id][5] == "") {
                 document.getElementById("image").src = "img/alt.png";
             }
             else {
-                document.getElementById("image").src = file_path;
+                document.getElementById("image").src = clue_information[id][5];
             }
 
             var options = document.getElementsByClassName("options");
             for (var i = 0; i < options.length; i++) {
-                if (options[i].value == unlock_id) {
+                if (options[i].value == clue_information[id][6]) {
                     options[i].selected = true;
                 }
                 else {
@@ -146,7 +164,7 @@
             }
 
             var checkboxes = document.getElementsByClassName("checkboxes");
-            var unlock_characters = unlock_characters.split(",");
+            var unlock_characters = clue_information[id][7].split(",");
             for (var i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].checked = false;
                 for (var j = 0; j < unlock_characters.length; j++) {
@@ -162,7 +180,7 @@
             modal1.style.display = "none";
         }
 
-        function open_modal2(id, location_name, position) {
+        function open_modal2(id) {
             var modal = document.getElementById("myModal");
             var modal1 = document.getElementById("myModal1");
             var modal2 = document.getElementById("myModal2");
@@ -170,7 +188,7 @@
             modal2.style.display = "block";
             modal.style.display = "none";
             document.getElementById("clue_id").value = id;
-            document.getElementById("modal_content2").innerHTML = location_name + "：" + position;
+            document.getElementById("modal_content2").innerHTML = clue_information[id][0] + "：" + clue_information[id][1];
         }
 
         function close_modal2() {
@@ -329,7 +347,7 @@
                 }
                 echo '
                                 </h3>
-                                <input type="hidden" id="section'.$row["id"].'_hide" name="section'.$row["id"].'_content" value="'.$content.'">
+                                <input type="hidden" id="section'.$row["id"].'_hide" name="section'.$row["id"].'_content" value=\''.$content.'\'>
                                 <div onclick="copyHTML('.$row["id"].')" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand(\'bold\',false,null);">B</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand(\'italic\',false,null);">I</button>
@@ -372,7 +390,7 @@
             }
             else if ($row["type"] == 3) {
                 echo '
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1, '.(-$_GET["character_id"]).', \'你的房间\', \'\', 1, \'\', \'\', \'\', 0, \'\')">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1, '.(-$_GET["character_id"]).')">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
@@ -387,7 +405,7 @@
                     echo '
                             <div class="col-lg-5 offset-lg-'.$offset.' col-md-5 offset-md-'.$offset.' col-sm-10 offset-sm-1">
                                 <div class="row" style="border-top: 1px solid #BBBBBB; border-bottom: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
-                                    <div class="col-3" style="padding: 0px 0px 0px 5px; border-left: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].', \''.$row1["name"].'\', \''.$row1["position"].'\', '.$row1["points"].', \''.$row1["self_description"].'\', \''.$row1["description"].'\', \''.$row1["file_path"].'\', '.$row1["unlock_id"].', \''.$row1["unlock_characters"].'\')">';
+                                    <div class="col-3" style="padding: 0px 0px 0px 5px; border-left: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">';
                     if (!file_exists($row1["file_path"])) {
                         echo '
                                         <img style="width: 100%;" src="img/alt.png">';
@@ -398,12 +416,12 @@
                     }
                     echo '
                                     </div>
-                                    <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].', \''.$row1["name"].'\', \''.$row1["position"].'\', '.$row1["points"].', \''.$row1["self_description"].'\', \''.$row1["description"].'\', \''.$row1["file_path"].'\', '.$row1["unlock_id"].', \''.$row1["unlock_characters"].'\')">
+                                    <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">
                                         <h4>'.$row1["position"].'</h4>
                                         <p>'.$row1["description"].'</p>
                                     </div>
                                     <div class="col-1" style="padding: 0px 0px 0px 0px; border-right: 1px solid #BBBBBB; text-align: center;">
-                                        <button type="button" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;" onclick="open_modal2('.$row1["id"].', \''.$row1["name"].'\', \''.$row1["position"].'\')">
+                                        <button type="button" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;" onclick="open_modal2('.$row1["id"].')">
                                             <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
