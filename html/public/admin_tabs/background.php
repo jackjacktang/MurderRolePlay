@@ -24,16 +24,16 @@
                 li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character_usernames[]">';
             }
             else {
-                li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value=\'' + username + '\' name="character_usernames[]" id="character'+ id + '_username" maxlength=20>';
+                li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value=\'' + username + '\' name="character_usernames[]" id="character'+ character_counter + '_username" maxlength=20>';
             }
             li.innerHTML += '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value=\'' + password + '\' name="character_passwords[]" maxlength=20>';
-            li.innerHTML += '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value=\'' + name + '\' name="character_names[]" id="character' + id + '_name" maxlength=20>';
+            li.innerHTML += '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value=\'' + name + '\' name="character_names[]" id="character' + character_counter + '_name" maxlength=20>';
             li.innerHTML += '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value=\'' + preferred_name + '\' name="character_preferred_names[]" maxlength=20>';
             if (id == 1) {
                 li.innerHTML += '<div style="width: 15%;"></div>';
             }
             else {
-                li.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + character_counter + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
+                li.innerHTML += '<button type="button" onclick="open_modal(' + character_counter + ', ' + character_counter + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
             li.innerHTML += '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value=\'' + description + '\' name="character_descriptions[]" maxlength=100>';
             character_counter += 1;
@@ -47,9 +47,9 @@
             div.style.marginTop = "20px";
             map_area.appendChild(div);
             div.innerHTML += '<input type="hidden" name="map_ids[]" value="' + id + '">';
-            div.innerHTML += '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map_descriptions[]" maxlength=20 id="map'+ id + '_description">';
-            div.innerHTML += '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map_images[]" onchange="preview(this, ' + id + ')">';
-            div.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + map_counter + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML += '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map_descriptions[]" maxlength=20 id="map'+ map_counter + '_description">';
+            div.innerHTML += '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map_images[]" onchange="preview(this, ' + map_counter + ')">';
+            div.innerHTML += '<button type="button" onclick="open_modal(' + map_counter + ', ' + map_counter + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
             div.innerHTML += '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
         }
 

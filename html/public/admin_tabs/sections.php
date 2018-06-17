@@ -8,13 +8,16 @@
                 sequence = maxs[chapter - 1] + 1;
                 maxs[chapter - 1] = sequence;
             }
+            else {
+                maxs[chapter - 1] = sequence;
+            }
             var div = document.createElement("div");
             div.setAttribute("id", "section" + section_counter);
             div.style.marginTop = "20px";
             section_area.appendChild(div);
             div.innerHTML = div.innerHTML + '<input type="hidden" name="section_ids[]" value="' + id + '">';
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">顺序：&nbsp;</label><input type="number" style="width: 5%;" value="' + sequence + '" name="section_sequences[]">';
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 20%;" value=\'' + title + '\' name="section_titles[]" id="section'+ id + '_title" maxlength="30">';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 20%;" value=\'' + title + '\' name="section_titles[]" id="section'+ section_counter + '_title" maxlength="30">';
             if (type == 1) {
                 type_chinese = "普通";
             }
@@ -31,7 +34,7 @@
                 document.getElementById("button_" + chapter + "_4").style.display = "none";
             }
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">类别：&nbsp;</label><label style="width: 10%; text-align: left;">' + type_chinese + '</label>';
-            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + section_counter + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + section_counter +', ' + section_counter + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             
             div.innerHTML = div.innerHTML + '<input type="hidden" value="' + chapter + '" name="section_chapters[]">';
             div.innerHTML = div.innerHTML + '<input type="hidden" value="' + type + '" name="section_types[]">';

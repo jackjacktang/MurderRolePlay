@@ -28,13 +28,13 @@
             div.style.marginTop = "20px";
             timeline_area.appendChild(div);
             div.innerHTML += '<input type="hidden" name="timeline_ids[]" value="' + id + '">';
-            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline_hours[]" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ id + '_hour">';
-            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline_minutes[]" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ id + '_minute">';
-            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="timeline_contents[]" id="timeline'+ id + '_hide">';
+            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline_hours[]" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ timeline_counter + '_hour">';
+            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline_minutes[]" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ timeline_counter + '_minute">';
+            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="timeline_contents[]" id="timeline'+ timeline_counter + '_hide">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + timeline_counter + ', \'timeline\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             var div1 = document.createElement("div");
             div.appendChild(div1);
-            div1.setAttribute("id", "menu_bar" + id);
+            div1.setAttribute("id", "menu_bar" + timeline_counter);
             div1.style.width = "50%";
             div1.style.height = "40px";
             div1.style.border = "1px solid #BBBBBB";
@@ -44,8 +44,8 @@
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand(\'underline\',false,null);">U</button>';
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()"><i class="fa fa-list-ol"></i></button>';
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>';
-            div.innerHTML = div.innerHTML + '<div id="timeline' + id + '_show" style="width: 50%; height: 100px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'timeline\', ' + id + ')">' + content + '</div>';
-            document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("timeline", id)});
+            div.innerHTML = div.innerHTML + '<div id="timeline' + timeline_counter + '_show" style="width: 50%; height: 50px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'timeline\', ' + timeline_counter + ')">' + content + '</div>';
+            document.getElementById("menu_bar" + timeline_counter).addEventListener("click", function() {copyHTML("timeline", id)});
             timeline_counter += 1;
         }
 
@@ -56,8 +56,8 @@
             objective_area.appendChild(div);
             div.setAttribute("id", "objective" + objective_counter);
             div.innerHTML += '<input type="hidden" name="objective_ids[]" value="' + id + '">';
-            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="objective_contents[]" id="objective'+ id + '_hide">';
-            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective_pointses[]" id="objective'+ id + '_points">';
+            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="objective_contents[]" id="objective'+ objective_counter + '_hide">';
+            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective_pointses[]" id="objective'+ objective_counter + '_points">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + objective_counter + ', \'objective\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             var div1 = document.createElement("div");
             div1.setAttribute("id", "menu_bar" + id);
@@ -71,7 +71,7 @@
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand(\'underline\',false,null);">U</button>';
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()"><i class="fa fa-list-ol"></i></button>';
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>';
-            div.innerHTML = div.innerHTML + '<div id="objective' + id + '_show" style="width: 50%; height: 100px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'objective\', ' + id + ')">' + content + '</div>';
+            div.innerHTML = div.innerHTML + '<div id="objective' + objective_counter + '_show" style="width: 50%; height: 50px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'objective\', ' + objective_counter + ')">' + content + '</div>';
             document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("objective", id)});
             objective_counter += 1;
         }
@@ -129,14 +129,14 @@
             window.section = section;
             if (section == "timeline") {
                 document.getElementById("modal_title").innerHTML = "确认要删除这条时间线么？";
-                var hour = document.getElementById("timeline" + id + "_hour").value;
-                var minute = document.getElementById("timeline" + id + "_minute").value;
-                var content = document.getElementById("timeline" + id + "_show").innerHTML;
+                var hour = document.getElementById("timeline" + counter + "_hour").value;
+                var minute = document.getElementById("timeline" + counter + "_minute").value;
+                var content = document.getElementById("timeline" + counter + "_show").innerHTML;
                 document.getElementById("modal_content").innerHTML = hour + ":" + minute + "，" + content;
             }
             else {
                 document.getElementById("modal_title").innerHTML = "确认要删除这个玩家任务么？";
-                var content = document.getElementById("objective" + id + "_show").innerHTML;
+                var content = document.getElementById("objective" + counter + "_show").innerHTML;
                 document.getElementById("modal_content").innerHTML = content;
             }
         }

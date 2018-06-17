@@ -153,6 +153,7 @@ if ($_POST["tab"] == "scripts") {
                 else {
                     $sql1 = 'INSERT INTO timelines(character_id, chapter, hour, minute, content) VALUES('.$character_id.', '.$chapter.', '.$hour.', '.$minute.', "'.$content.'")';
                     $conn->query($sql1);
+                    echo $sql1;
                 }
             }
         }
@@ -223,14 +224,10 @@ if ($_POST["tab"] == "scripts") {
         $sql = 'DELETE FROM timelines WHERE id='.$_POST["delete_id"];
         $conn->query($sql);
     }
-    else if ($_POST["delete_section"] == "map") {
-        $sql = 'SELECT * FROM maps WHERE id='.$_POST["delete_id"];
-        $result = $conn->query($sql);
-        while ($row = $result->fetch_assoc()) {
-            unlink("../".$row["file_path"]);
-        }
-        $sql = 'DELETE FROM maps WHERE id='.$_POST["delete_id"];
+    else if ($_POST["delete_section"] == "objective") {
+        $sql = 'DELETE FROM objectives WHERE id='.$_POST["delete_id"];
         $conn->query($sql);
+        echo $sql;
     }
 
     $conn->close();
