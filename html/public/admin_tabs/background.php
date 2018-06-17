@@ -21,18 +21,18 @@
                 li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character1_username">';
             }
             else {
-                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value="' + username + '" name="character'+ id + '_username" id="character'+ id + '_username" maxlength=20>';
+                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value=\'' + username + '\' name="character'+ id + '_username" id="character'+ id + '_username" maxlength=20>';
             }
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value="' + password + '" name="character'+ id + '_password" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value="' + name + '" name="character'+ id + '_name" id="character'+ id + '_name" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value="' + preferred_name + '" name="character'+ id + '_preferred_name" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value=\'' + password + '\' name="character'+ id + '_password" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value=\'' + name + '\' name="character'+ id + '_name" id="character'+ id + '_name" maxlength=20>';
+            li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value=\'' + preferred_name + '\' name="character'+ id + '_preferred_name" maxlength=20>';
             if (!organizor) {
                 li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
             else {
                 li.innerHTML = li.innerHTML + '<div style="width: 15%;"></div>';
             }
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value="' + description + '" name="character'+ id + '_description" maxlength=100>';
+            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value=\'' + description + '\' name="character'+ id + '_description" maxlength=100>';
             if (id > max_character) {
                 max_character = id;
                 document.getElementById("max_character").value = max_character;
@@ -48,7 +48,7 @@
             if (id == -1) {
                 id = max_map + 1;
             }
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value="' + description + '" name="map'+ id + '_description" maxlength=20 id="map'+ id + '_description">';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map'+ id + '_description" maxlength=20 id="map'+ id + '_description">';
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map'+ id + '_image" onchange="preview(this, ' + id + ')">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
             div.innerHTML = div.innerHTML + '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
@@ -199,7 +199,7 @@
                                     while ($row = $result->fetch_assoc()) {
                                         $points = $row["points"];
                                         echo '
-                                            add_role('.$row["id"].', "'.$row["username"].'", "'.$row["password"].'", "'.$row["name"].'", "'.$row["preferred_name"].'", "'.$row["description"].'", '.($row["id"]==1? "true":"false").');';
+                                            add_role('.$row["id"].', \''.$row["username"].'\', \''.$row["password"].'\', \''.$row["name"].'\', \''.$row["preferred_name"].'\', \''.$row["description"].'\', '.($row["id"]==1? "true":"false").');';
                                     }
                                     echo '
                                         </script>';
@@ -235,7 +235,7 @@
                                             var max_map = 0;';
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
-                                            add_map('.$row["id"].', "'.$row["description"].'", "'.$row["file_path"].'");';
+                                            add_map('.$row["id"].', \''.$row["description"].'\', "'.$row["file_path"].'");';
                                     }
                                     echo '
                                         </script>';

@@ -11,7 +11,7 @@
             div.style.marginTop = "20px";
             section_area.appendChild(div);
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">顺序：&nbsp;</label><input type="number" style="width: 5%;" value="' + sequence + '" name="section'+ id + '_sequence">';
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 20%;" value="' + title + '" name="section'+ id + '_title" id="section'+ id + '_title" maxlength="30">';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 20%;" value=\'' + title + '\' name="section'+ id + '_title" id="section'+ id + '_title" maxlength="30">';
             if (type == 1) {
                 type_chinese = "普通";
             }
@@ -135,7 +135,7 @@
                                     <script type="text/javascript">';
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
-                                        add_section(2, '.$row["id"].', '.$row["sequence"].', '.$row["type"].', "'.$row["title"].'");';
+                                        add_section(2, '.$row["id"].', '.$row["sequence"].', '.$row["type"].', \''.$row["title"].'\');';
                                     }
                                     echo '
                                     </script>';

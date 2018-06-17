@@ -10,11 +10,11 @@
             }
             
             if (id <= 0) {
-            	div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input readonly style="width: 30%; border: 0px;" value="' + name + '" name="location'+ id + '_name" maxlength=20 id="location'+ id + '_name">';
+            	div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input readonly style="width: 30%; border: 0px;" value=\'' + name + '\' name="location'+ id + '_name" maxlength=20 id="location'+ id + '_name">';
             	var visibility = "hidden";
             }
             else {
-            	div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input style="width: 30%;" value="' + name + '" name="location'+ id + '_name" maxlength=20 id="location'+ id + '_name">';
+            	div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input style="width: 30%;" value=\'' + name + '\' name="location'+ id + '_name" maxlength=20 id="location'+ id + '_name">';
             	var visibility = "visible";
             }
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 50px; visibility: ' + visibility + ';"><i class="fa fa-minus"></i></button>';
@@ -109,13 +109,13 @@
                                     $result = $conn->query($sql);
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
-                                            add_location('.$row["id"].', "'.$row["name"].'");';
+                                            add_location('.$row["id"].', \''.$row["name"].'\');';
                                     }
                                     $sql = "SELECT * FROM locations WHERE id>0 ORDER BY id ASC";
                                     $result = $conn->query($sql);
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
-                                            add_location('.$row["id"].', "'.$row["name"].'");';
+                                            add_location('.$row["id"].', \''.$row["name"].'\');';
                                     }
                                     echo '
                                         </script>';

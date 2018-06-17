@@ -27,8 +27,22 @@
             }
             div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline'+ id + '_hour" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ id + '_hour">';
             div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline'+ id + '_minute" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ id + '_minute">';
-            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">内容：&nbsp;</label><input style="width: 35%;" value="' + content + '" name="timeline'+ id + '_content" id="timeline'+ id + '_content">';
+            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="timeline'+ id + '_content" id="timeline'+ id + '_hide">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'timeline\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+            var div1 = document.createElement("div");
+            div.appendChild(div1);
+            div1.setAttribute("id", "menu_bar" + id);
+            div1.style.width = "50%";
+            div1.style.height = "40px";
+            div1.style.border = "1px solid #BBBBBB";
+            div1.style.textAlign = "left";
+            div1.style.fontSize = "14px";
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand(\'italic\',false,null);">I</button>';
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand(\'underline\',false,null);">U</button>';
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()"><i class="fa fa-list-ol"></i></button>';
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>';
+            div.innerHTML = div.innerHTML + '<div id="timeline' + id + '_show" style="width: 50%; height: 100px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'timeline\', ' + id + ')">' + content + '</div>';
+            document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("timeline", id)});
 
             if (id > max_timeline) {
                 max_timeline = id;
@@ -44,9 +58,23 @@
             if (id == -1) {
                 id = max_objective + 1;
             }
-            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">内容：&nbsp;</label><input style="width: 35%;" value="' + content + '" name="objective'+ id + '_content" id="objective'+ id + '_content">';
+            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="objective'+ id + '_content" id="objective'+ id + '_hide">';
             div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective'+ id + '_points" id="objective'+ id + '_points">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'objective\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+            var div1 = document.createElement("div");
+            div1.setAttribute("id", "menu_bar" + id);
+            div.appendChild(div1);
+            div1.style.width = "50%";
+            div1.style.height = "40px";
+            div1.style.border = "1px solid #BBBBBB";
+            div1.style.textAlign = "left";
+            div1.style.fontSize = "14px";
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand(\'italic\',false,null);">I</button>';
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand(\'underline\',false,null);">U</button>';
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()"><i class="fa fa-list-ol"></i></button>';
+            div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>';
+            div.innerHTML = div.innerHTML + '<div id="objective' + id + '_show" style="width: 50%; height: 100px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'objective\', ' + id + ')">' + content + '</div>';
+            document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("objective", id)});
 
             if (id > max_objective) {
                 max_objective = id;
@@ -54,8 +82,8 @@
             }
         }
 
-        function copyHTML(id) {
-            document.getElementById("section" + id + "_hide").value = document.getElementById("section" + id + "_show").innerHTML;
+        function copyHTML(type, id) {
+            document.getElementById(type + id + "_hide").value = document.getElementById(type + id + "_show").innerHTML;
         }
 
         function copyHTML1() {
@@ -106,12 +134,12 @@
                 document.getElementById("modal_title").innerHTML = "确认要删除这条时间线么？";
                 var hour = document.getElementById("timeline" + id + "_hour").value;
                 var minute = document.getElementById("timeline" + id + "_minute").value;
-                var content = document.getElementById("timeline" + id + "_content").value;
+                var content = document.getElementById("timeline" + id + "_show").innerHTML;
                 document.getElementById("modal_content").innerHTML = hour + ":" + minute + "，" + content;
             }
             else {
                 document.getElementById("modal_title").innerHTML = "确认要删除这个玩家任务么？";
-                var content = document.getElementById("objective" + id + "_content").value;
+                var content = document.getElementById("objective" + id + "_show").innerHTML;
                 document.getElementById("modal_content").innerHTML = content;
             }
             
@@ -348,7 +376,7 @@
                 echo '
                                 </h3>
                                 <input type="hidden" id="section'.$row["id"].'_hide" name="section'.$row["id"].'_content" value=\''.$content.'\'>
-                                <div onclick="copyHTML('.$row["id"].')" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
+                                <div onclick="copyHTML(\'section\', '.$row["id"].')" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand(\'bold\',false,null);">B</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-style: italic;" onclick="document.execCommand(\'italic\',false,null);">I</button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; text-decoration: underline;" onclick="document.execCommand(\'underline\',false,null);">U</button>
@@ -360,7 +388,7 @@
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()"><i class="fa fa-list-ol"></i></button>
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>
                                 </div> 
-                                <div id="section'.$row["id"].'_show" style="width: 90%; height: 300px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML('.$row["id"].')">'.$content.'</div>
+                                <div id="section'.$row["id"].'_show" style="width: 90%; height: 300px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'section\', '.$row["id"].')">'.$content.'</div>
                             </center>
                         </div>';
             }
@@ -380,7 +408,7 @@
                     $hour = ($row1["hour"] < 10? ("0".$row1["hour"]):$row1["hour"]);
                     $minute = ($row1["minute"] < 10? ("0".$row1["minute"]):$row1["minute"]);
                     echo '
-                                        add_timeline('.$row1["id"].', "'.$hour.'", "'.$minute.'", "'.$row1["content"].'");';
+                                        add_timeline('.$row1["id"].', "'.$hour.'", "'.$minute.'", \''.$row1["content"].'\');';
                 }
                 echo '
                                     </script>
@@ -448,7 +476,7 @@
                 $result1 = $conn->query($sql1);
                 while ($row1 = $result1->fetch_assoc()) {
                     echo '
-                                        add_objective('.$row1["id"].', "'.$row1["content"].'", '.$row1["points"].');';
+                                        add_objective('.$row1["id"].', \''.$row1["content"].'\', '.$row1["points"].');';
                 }
                 echo '
                                     </script>
