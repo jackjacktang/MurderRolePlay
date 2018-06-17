@@ -8,54 +8,49 @@
     ?>
     
     <script type="text/javascript">
-        function add_role(id, username, password, name, preferred_name, description, organizor) {
+        var id;
+        var counter;
+        var section;
+
+        function add_role(id, username, password, name, preferred_name, description) {
             var role_area = document.getElementById("role_area");
             var li = document.createElement("li");
+            li.setAttribute("id", "character" + character_counter);
             li.style.textAlign = "left";
             li.style.marginBottom = "20px";
             role_area.appendChild(li);
-            if (id == -1) {
-                id = max_character + 1;
-            }
-            if (organizor) {
-                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character1_username">';
+            li.innerHTML = li.innerHTML + '<input type="hidden" name="character_ids[]" value="' + id + '">';
+            if (id == 1) {
+                li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character_usernames[]">';
             }
             else {
-                li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value=\'' + username + '\' name="character'+ id + '_username" id="character'+ id + '_username" maxlength=20>';
+                li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value=\'' + username + '\' name="character_usernames[]" id="character'+ id + '_username" maxlength=20>';
             }
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value=\'' + password + '\' name="character'+ id + '_password" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value=\'' + name + '\' name="character'+ id + '_name" id="character'+ id + '_name" maxlength=20>';
-            li.innerHTML = li.innerHTML + '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value=\'' + preferred_name + '\' name="character'+ id + '_preferred_name" maxlength=20>';
-            if (!organizor) {
-                li.innerHTML = li.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
+            li.innerHTML += '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value=\'' + password + '\' name="character_passwords[]" maxlength=20>';
+            li.innerHTML += '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value=\'' + name + '\' name="character_names[]" id="character' + id + '_name" maxlength=20>';
+            li.innerHTML += '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value=\'' + preferred_name + '\' name="character_preferred_names[]" maxlength=20>';
+            if (id == 1) {
+                li.innerHTML += '<div style="width: 15%;"></div>';
             }
             else {
-                li.innerHTML = li.innerHTML + '<div style="width: 15%;"></div>';
+                li.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + character_counter + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
-            li.innerHTML = li.innerHTML + '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value=\'' + description + '\' name="character'+ id + '_description" maxlength=100>';
-            if (id > max_character) {
-                max_character = id;
-                document.getElementById("max_character").value = max_character;
-            }
+            li.innerHTML += '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value=\'' + description + '\' name="character_descriptions[]" maxlength=100>';
+            character_counter += 1;
         }
 
         function add_map(id, description, file_path) {
             var map_area = document.getElementById("map_area");
             var div = document.createElement("div");
+            div.setAttribute("id", "map" + map_counter);
             div.style.textAlign = "left";
             div.style.marginTop = "20px";
             map_area.appendChild(div);
-            if (id == -1) {
-                id = max_map + 1;
-            }
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map'+ id + '_description" maxlength=20 id="map'+ id + '_description">';
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map'+ id + '_image" onchange="preview(this, ' + id + ')">';
-            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
-            div.innerHTML = div.innerHTML + '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
-            if (id > max_map) {
-                max_map = id;
-                document.getElementById("max_map").value = max_map;
-            }
+            div.innerHTML += '<input type="hidden" name="map_ids[]" value="' + id + '">';
+            div.innerHTML += '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map_descriptions[]" maxlength=20 id="map'+ id + '_description">';
+            div.innerHTML += '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map_images[]" onchange="preview(this, ' + id + ')">';
+            div.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + map_counter + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML += '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
         }
 
         function preview(input, id) {
@@ -95,9 +90,12 @@
             }
         }
 
-        function open_modal(id, section) {
+        function open_modal(id, counter, section) {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
+            window.id = id;
+            window.counter = counter;
+            window.section = section;
             if (section == "character") {
                 document.getElementById("modal_title").innerHTML = "确认要删除这名玩家么？";
                 var username = document.getElementById("character" + id + "_username").value;
@@ -109,13 +107,13 @@
                 var description = document.getElementById("map" + id + "_description").value;
                 document.getElementById("modal_content").innerHTML = description;
             }
-            document.getElementById("modal_confirm").value = id;
-            document.getElementById("modal_confirm").setAttribute("name", "delete_" + section);
         }
 
         function close_modal() {
             var modal = document.getElementById("myModal");
             modal.style.display = "none";
+            document.getElementById("delete_section").value = "";
+            document.getElementById("delete_id").value = -1;
         }
 
         window.onclick = function(event) {
@@ -124,12 +122,25 @@
                 modal.style.display = "none";
             }
         }
+
+        function delete_modal() {
+            if (id < 0) {
+                var delete_li = document.getElementById(section + counter);
+                delete_li.parentNode.removeChild(delete_li);
+                close_modal();
+            }
+            else {
+                document.getElementById("delete_section").value = section;
+                document.getElementById("delete_id").value = id;
+                document.getElementById("myform").submit();
+            }
+        }
     </script>
 
-    <form action="admin_tabs/request.php" method="post" enctype="multipart/form-data">
+    <form id="myform" action="admin_tabs/request.php" method="post" enctype="multipart/form-data">
         <input type="hidden" name="tab" value="background">
-        <input type="hidden" name="max_character" value="1" id="max_character">
-        <input type="hidden" name="max_map" value="0" id="max_map">
+        <input type="hidden" name="delete_section" id="delete_section" value="">
+        <input type="hidden" name="delete_id" id="delete_id" value="-1">
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                 <div class="modal-header">
@@ -140,7 +151,7 @@
                     <p id="modal_content"></p>
                 </div>
                 <div class="modal-footer justify-content-center" style="font-size: 14pt;">
-                    <button class="genric-btn info circle e-large" id="modal_confirm">确定</button>
+                    <button class="genric-btn info circle e-large" type="button" onclick="delete_modal()">确定</button>
                     <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
                 </div>
             </div>
@@ -183,7 +194,7 @@
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
                                 <h3>添加/修改人物
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_role(-1,'','','','','',false)">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_role(-1,'','','','','')">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
@@ -195,11 +206,11 @@
                                     $result = $conn->query($sql);
                                     echo '
                                         <script type="text/javascript">
-                                            var max_character = 1;';
+                                            var character_counter = 0;';
                                     while ($row = $result->fetch_assoc()) {
                                         $points = $row["points"];
                                         echo '
-                                            add_role('.$row["id"].', \''.$row["username"].'\', \''.$row["password"].'\', \''.$row["name"].'\', \''.$row["preferred_name"].'\', \''.$row["description"].'\', '.($row["id"]==1? "true":"false").');';
+                                            add_role('.$row["id"].', \''.$row["username"].'\', \''.$row["password"].'\', \''.$row["name"].'\', \''.$row["preferred_name"].'\', \''.$row["description"].'\');';
                                     }
                                     echo '
                                         </script>';
@@ -232,7 +243,7 @@
                                     $result = $conn->query($sql);
                                     echo '
                                         <script type="text/javascript">
-                                            var max_map = 0;';
+                                            var map_counter = 0;';
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
                                             add_map('.$row["id"].', \''.$row["description"].'\', "'.$row["file_path"].'");';

@@ -124,7 +124,7 @@ $conn->set_charset("utf8");
         </section>
         <section style="position: fixed; left: 0; bottom: 0px; width: 100%; background-color: white;">
             <center>
-                <button type="submit" name="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 30%; margin-bottom: 30px;">保存</button>
+                <button type="submit" class="genric-btn info circle e-large col-10" style="font-size: 14pt; width: 30%; margin-bottom: 30px;">保存</button>
             </center>
         </section>
     </form>

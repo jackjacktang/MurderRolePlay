@@ -17,18 +17,21 @@
         ?>
         clue_information[-1] = ["", "",  1, "", "", "", "", ""];
 
+        var id;
+        var counter;
+        var section;
+
         function add_timeline(id, hour, minute, content) {
             var timeline_area = document.getElementById("timeline_area");
             var div = document.createElement("div");
+            div.setAttribute("id", "timeline" + timeline_counter);
             div.style.marginTop = "20px";
             timeline_area.appendChild(div);
-            if (id == -1) {
-                id = max_timeline + 1;
-            }
-            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline'+ id + '_hour" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ id + '_hour">';
-            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline'+ id + '_minute" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ id + '_minute">';
-            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="timeline'+ id + '_content" id="timeline'+ id + '_hide">';
-            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'timeline\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML += '<input type="hidden" name="timeline_ids[]" value="' + id + '">';
+            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline_hours[]" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ id + '_hour">';
+            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline_minutes[]" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ id + '_minute">';
+            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="timeline_contents[]" id="timeline'+ id + '_hide">';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + timeline_counter + ', \'timeline\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             var div1 = document.createElement("div");
             div.appendChild(div1);
             div1.setAttribute("id", "menu_bar" + id);
@@ -43,11 +46,7 @@
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>';
             div.innerHTML = div.innerHTML + '<div id="timeline' + id + '_show" style="width: 50%; height: 100px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'timeline\', ' + id + ')">' + content + '</div>';
             document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("timeline", id)});
-
-            if (id > max_timeline) {
-                max_timeline = id;
-                document.getElementById("max_timeline").value = id;
-            }
+            timeline_counter += 1;
         }
 
         function add_objective(id, content, points) {
@@ -55,12 +54,11 @@
             var div = document.createElement("div");
             div.style.marginTop = "20px";
             objective_area.appendChild(div);
-            if (id == -1) {
-                id = max_objective + 1;
-            }
-            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="objective'+ id + '_content" id="objective'+ id + '_hide">';
-            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective'+ id + '_points" id="objective'+ id + '_points">';
-            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', \'objective\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+            div.setAttribute("id", "objective" + objective_counter);
+            div.innerHTML += '<input type="hidden" name="objective_ids[]" value="' + id + '">';
+            div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="objective_contents[]" id="objective'+ id + '_hide">';
+            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective_pointses[]" id="objective'+ id + '_points">';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + objective_counter + ', \'objective\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             var div1 = document.createElement("div");
             div1.setAttribute("id", "menu_bar" + id);
             div.appendChild(div1);
@@ -75,11 +73,7 @@
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()"><i class="fa fa-list-ul"></i></button>';
             div.innerHTML = div.innerHTML + '<div id="objective' + id + '_show" style="width: 50%; height: 100px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'objective\', ' + id + ')">' + content + '</div>';
             document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("objective", id)});
-
-            if (id > max_objective) {
-                max_objective = id;
-                document.getElementById("max_objective").value = id;
-            }
+            objective_counter += 1;
         }
 
         function copyHTML(type, id) {
@@ -123,13 +117,16 @@
             }
         }
 
-        function open_modal(id, section) {
+        function open_modal(id, counter, section) {
             var modal = document.getElementById("myModal");
             var modal1 = document.getElementById("myModal1");
             var modal2 = document.getElementById("myModal2");
             modal1.style.display = "none";
             modal2.style.display = "none";
             modal.style.display = "block";
+            window.id = id;
+            window.counter = counter;
+            window.section = section;
             if (section == "timeline") {
                 document.getElementById("modal_title").innerHTML = "确认要删除这条时间线么？";
                 var hour = document.getElementById("timeline" + id + "_hour").value;
@@ -142,9 +139,6 @@
                 var content = document.getElementById("objective" + id + "_show").innerHTML;
                 document.getElementById("modal_content").innerHTML = content;
             }
-            
-            document.getElementById("modal_confirm").value = id;
-            document.getElementById("modal_confirm").setAttribute("name", "delete_" + section);
         }
 
         function close_modal() {
@@ -238,15 +232,28 @@
                 modal2.style.display = "none";
             }
         }
+
+        function delete_modal() {
+            if (id < 0) {
+                var delete_li = document.getElementById(section + counter);
+                delete_li.parentNode.removeChild(delete_li);
+                close_modal();
+            }
+            else {
+                document.getElementById("delete_section").value = section;
+                document.getElementById("delete_id").value = id;
+                document.getElementById("myform").submit();
+            }
+        }
     </script>
 
     <br><br><br>
-	<form action="admin_tabs/request.php" method="post">
+	<form id="myform" action="admin_tabs/request.php" method="post">
         <input type="hidden" name="tab" value="scripts">
         <input type="hidden" name="character_id" value="<?php echo $_GET["character_id"]; ?>">
         <input type="hidden" name="chapter" value="<?php echo $_GET["chapter"]; ?>">
-        <input type="hidden" name="max_timeline" id="max_timeline" value="0">
-        <input type="hidden" name="max_objective" id="max_objective" value="0">
+        <input type="hidden" name="delete_section" id="delete_section" value="">
+        <input type="hidden" name="delete_id" id="delete_id" value="-1">
         <input type="hidden" name="clue_id" id="clue_id">
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
@@ -258,7 +265,7 @@
                     <p id="modal_content"></p>
                 </div>
                 <div class="modal-footer justify-content-center" style="font-size: 14pt;">
-                    <button class="genric-btn info circle e-large" id="modal_confirm" name="">确定</button>
+                    <button class="genric-btn info circle e-large" type="button" onclick="delete_modal()">确定</button>
                     <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
                 </div>
             </div>
@@ -401,7 +408,7 @@
                                 </h3>
                                 <div id="timeline_area">
                                     <script type="text/javascript">
-                                        var max_timeline = 0;';
+                                        var timeline_counter = 0;';
                 $sql1 = 'SELECT * FROM timelines WHERE character_id='.$_GET["character_id"].' AND chapter='.$_GET["chapter"].' ORDER BY hour ASC, minute ASC';
                 $result1 = $conn->query($sql1);
                 while ($row1 = $result1->fetch_assoc()) {
@@ -471,7 +478,7 @@
                                 </h3>
                                 <div id="objective_area">
                                     <script type="text/javascript">
-                                        var max_objective = 0;';
+                                        var objective_counter = 0;';
                 $sql1 = 'SELECT * FROM objectives WHERE character_id='.$_GET["character_id"].' AND chapter='.$_GET["chapter"].' ORDER BY id ASC';
                 $result1 = $conn->query($sql1);
                 while ($row1 = $result1->fetch_assoc()) {
