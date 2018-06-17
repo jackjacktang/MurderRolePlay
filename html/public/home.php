@@ -187,6 +187,9 @@ foreach (array(1, 2) as $chapter) {
             color: black;
             font-weight: bold;
         }
+        ul {
+            list-style-type: none;
+        }
     </style>
 
 	<script src="js/vendor/jquery-2.2.4.min.js"></script>
