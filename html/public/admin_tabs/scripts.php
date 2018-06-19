@@ -443,8 +443,8 @@
                     else $offset = 1;
                     echo '
                             <div class="col-lg-5 offset-lg-'.$offset.' col-md-5 offset-md-'.$offset.' col-sm-10 offset-sm-1">
-                                <div class="row" style="border-top: 1px solid #BBBBBB; border-bottom: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
-                                    <div class="col-3" style="padding: 0px 0px 0px 5px; border-left: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">';
+                                <div class="row" style="border: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
+                                    <div class="col-3" style="padding: 0px 0px 0px 5px; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">';
                     if (!file_exists($row1["file_path"])) {
                         echo '
                                         <img style="width: 100%;" src="img/alt.png">';
@@ -459,7 +459,7 @@
                                         <h4>'.$row1["position"].'</h4>
                                         <p>'.$row1["self_description"].'</p>
                                     </div>
-                                    <div class="col-1" style="padding: 0px 0px 0px 0px; border-right: 1px solid #BBBBBB; text-align: center;">
+                                    <div class="col-1" style="padding: 0px 0px 0px 0px; text-align: center;">
                                         <button type="button" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;" onclick="open_modal2('.$row1["id"].')">
                                             <i class="fa fa-minus"></i>
                                         </button>

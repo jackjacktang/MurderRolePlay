@@ -119,6 +119,9 @@ foreach (array(1, 2) as $chapter) {
         }
         // 房间线索
         else if ($row["type"] == 3) {
+            $sql1 = 'SELECT * FROM clues WHERE location_id='.(-$character_id).' AND chapter='.$chapter.' ORDER BY id ASC';
+            $result1 = $conn->query($sql1);
+            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
         }
         // 任务
         else {
