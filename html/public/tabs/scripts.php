@@ -60,7 +60,7 @@
             }
         }
         // 普通
-        if ($section["type"] == 1) {
+        else if ($section["type"] == 1) {
             $sql = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section["id"];
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
