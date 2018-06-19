@@ -79,6 +79,8 @@ if ($_POST["tab"] == "background") {
     if ($_POST["delete_section"] == "character") {
         $sql = 'DELETE FROM characters WHERE id='.$_POST["delete_id"];
         $conn->query($sql);
+        $sql = 'DELETE FROM locations WHERE id='.(-$_POST["delete_id"]);
+        $conn->query($sql);
     }
     else if ($_POST["delete_section"] == "map") {
         $sql = 'SELECT * FROM maps WHERE id='.$_POST["delete_id"];
