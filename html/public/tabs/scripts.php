@@ -66,12 +66,15 @@
             	$hour = ($row["hour"] < 10? ("0".$row["hour"]):$row["hour"]);
                 $minute = ($row["minute"] < 10? ("0".$row["minute"]):$row["minute"]);
                 echo '
-                		<p><b>'.$hour.":".$minute.'</b>，'.replace_text($pairs, $row["content"]).'</p>
-                    </div>';
+                		<p><b>'.$hour.":".$minute.'</b>，'.replace_text($pairs, $row["content"]).'</p>';
             }
+            echo '
+                    </div>';
         }
         // 房间线索
         else if ($section["type"] == 3) {
+            echo '
+                    </div>';
             $sql = 'SELECT * FROM clues WHERE location_id='.(-$character_id).' AND chapter='.$_GET["chapter"].' ORDER BY id ASC';
             $result = $conn->query($sql);
             $counter = 0;
@@ -79,7 +82,6 @@
                 if ($counter % 2 == 0) $offset = 0;
                 else $offset = 1;
                 echo '
-                    </div>
                     <div class="col-lg-5 offset-lg-'.$offset.' col-md-5 offset-md-'.$offset.' col-sm-10 offset-sm-1" onclick="open_modal('.$row["id"].')">
                         <div class="row" style="border: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
                             <div class="col-3" style="padding: 0px 0px 0px 5px; cursor: pointer;">';
@@ -103,8 +105,8 @@
             }
             if ($counter % 2 == 1) {
                 echo '
-                        <div class="col-lg-5 offset-lg-1 col-md-5 offset-md-1 col-0">
-                        </div>';
+                    <div class="col-lg-5 offset-lg-1 col-md-5 offset-md-1 col-0">
+                    </div>';
             }
         }
         // 任务
