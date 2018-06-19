@@ -33,7 +33,7 @@
                 li.innerHTML += '<div style="width: 15%;"></div>';
             }
             else {
-                li.innerHTML += '<button type="button" onclick="open_modal(' + character_counter + ', ' + character_counter + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
+                li.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + character_counter + ', \'character\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 10%;"><i class="fa fa-minus"></i></button>';
             }
             li.innerHTML += '<label style="width: 10%; text-align: right;">简介：&nbsp;</label><input style="width: 75%;" value=\'' + description + '\' name="character_descriptions[]" maxlength=100>';
             character_counter += 1;
@@ -49,8 +49,9 @@
             div.innerHTML += '<input type="hidden" name="map_ids[]" value="' + id + '">';
             div.innerHTML += '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map_descriptions[]" maxlength=20 id="map'+ map_counter + '_description">';
             div.innerHTML += '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map_images[]" onchange="preview(this, ' + map_counter + ')">';
-            div.innerHTML += '<button type="button" onclick="open_modal(' + map_counter + ', ' + map_counter + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + map_counter + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;"><i class="fa fa-minus"></i></button>';
             div.innerHTML += '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
+            map_counter += 1;
         }
 
         function preview(input, id) {
@@ -98,13 +99,13 @@
             window.section = section;
             if (section == "character") {
                 document.getElementById("modal_title").innerHTML = "确认要删除这名玩家么？";
-                var username = document.getElementById("character" + id + "_username").value;
-                var name = document.getElementById("character" + id + "_name").value;
+                var username = document.getElementById("character" + counter + "_username").value;
+                var name = document.getElementById("character" + counter + "_name").value;
                 document.getElementById("modal_content").innerHTML = '用户名：' + username + '<br>姓名：' + name;
             }
             else{
                 document.getElementById("modal_title").innerHTML = "确认要删除这张图片么？";
-                var description = document.getElementById("map" + id + "_description").value;
+                var description = document.getElementById("map" + counter + "_description").value;
                 document.getElementById("modal_content").innerHTML = description;
             }
         }

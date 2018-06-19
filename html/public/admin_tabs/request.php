@@ -197,6 +197,7 @@ if ($_POST["tab"] == "scripts") {
         else {
             $id = $_POST["clue_id"];
         }
+        print_r($_FILES);
         $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
         $target = '../../scripts/'.$_SESSION["script_id"].'/clues/'.$id.'.'.$extension;
         $file_path = '../scripts/'.$_SESSION["script_id"].'/clues/'.$id.'.'.$extension;
@@ -218,6 +219,11 @@ if ($_POST["tab"] == "scripts") {
     }
 
     if (isset($_POST["submit2"])) {
+        $sql = 'SELECT file_path FROM clues WHERE id='.$_POST["clue_id"];
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            unlink("../".$row["file_path"]);
+        }
         $sql = 'DELETE FROM clues WHERE id='.$_POST["clue_id"];
         $conn->query($sql);
     }

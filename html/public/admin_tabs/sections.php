@@ -34,7 +34,7 @@
                 document.getElementById("button_" + chapter + "_4").style.display = "none";
             }
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">类别：&nbsp;</label><label style="width: 10%; text-align: left;">' + type_chinese + '</label>';
-            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + section_counter +', ' + section_counter + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + section_counter + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;"><i class="fa fa-minus"></i></button>';
             
             div.innerHTML = div.innerHTML + '<input type="hidden" value="' + chapter + '" name="section_chapters[]">';
             div.innerHTML = div.innerHTML + '<input type="hidden" value="' + type + '" name="section_types[]">';
@@ -46,7 +46,7 @@
             modal.style.display = "block";
             window.id = id;
             window.counter = counter;
-            var title = document.getElementById("section" + id + "_title").value;
+            var title = document.getElementById("section" + counter + "_title").value;
             document.getElementById("modal_content").innerHTML = '标题：' + title;
             document.getElementById("modal_confirm").value = id;
         }

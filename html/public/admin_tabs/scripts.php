@@ -117,6 +117,10 @@
             }
         }
 
+        function preview(input) {
+            document.getElementById("image").src = URL.createObjectURL(input.files[0]);
+        }
+
         function open_modal(id, counter, section) {
             var modal = document.getElementById("myModal");
             var modal1 = document.getElementById("myModal1");
@@ -248,7 +252,7 @@
     </script>
 
     <br><br><br>
-	<form id="myform" action="admin_tabs/request.php" method="post">
+	<form id="myform" action="admin_tabs/request.php" method="post" enctype="multipart/form-data">
         <input type="hidden" name="tab" value="scripts">
         <input type="hidden" name="character_id" value="<?php echo $_GET["character_id"]; ?>">
         <input type="hidden" name="chapter" value="<?php echo $_GET["chapter"]; ?>">
