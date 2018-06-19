@@ -129,7 +129,7 @@
             while ($row = $result->fetch_assoc()) {
                 $points = $row["points"];
                 echo '
-                            <li>'.replace_text($pairs, $row["content"]).($points>0? ("（".$points."分）"):"").'。</li>';
+                            <li>'.replace_text($pairs, $row["content"]).($points>0? ("（".$points."分）。"):"").'</li>';
             }
             echo '
                         </ul>
