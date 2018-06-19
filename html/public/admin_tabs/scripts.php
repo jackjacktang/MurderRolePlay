@@ -457,7 +457,7 @@
                                     </div>
                                     <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">
                                         <h4>'.$row1["position"].'</h4>
-                                        <p>'.$row1["description"].'</p>
+                                        <p>'.$row1["self_description"].'</p>
                                     </div>
                                     <div class="col-1" style="padding: 0px 0px 0px 0px; border-right: 1px solid #BBBBBB; text-align: center;">
                                         <button type="button" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;" onclick="open_modal2('.$row1["id"].')">
