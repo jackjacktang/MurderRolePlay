@@ -47,7 +47,7 @@
                 var div1 = document.createElement("div");
                 div.appendChild(div1);
                 div1.setAttribute("id", "menu_bar" + section_counter);
-                div1.style.width = "70%";
+                div1.style.width = "600px";
                 div1.style.height = "40px";
                 div1.style.border = "1px solid #BBBBBB";
                 div1.style.textAlign = "left";
@@ -62,7 +62,7 @@
                 div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="document.execCommand(\'justifyRight\',false,null);" tabindex="-1"><i class="fa fa-align-right"></i></button>';
                 div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()" tabindex="-1"><i class="fa fa-list-ol"></i></button>';
                 div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()" tabindex="-1"><i class="fa fa-list-ul"></i></button>';
-                div.innerHTML = div.innerHTML + '<div id="section' + section_counter + '_show" style="width: 70%; height: 200px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(' + section_counter + ')">' + content + '</div>';
+                div.innerHTML = div.innerHTML + '<div id="section' + section_counter + '_show" style="width: 600px; height: 200px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(' + section_counter + ')">' + content + '</div>';
                 copy_counter = section_counter;
                 document.getElementById("menu_bar" + section_counter).addEventListener("click", function() {copyHTML(copy_counter)});
             }
