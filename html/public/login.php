@@ -100,7 +100,7 @@ if (isset($_SESSION["character_id"])) {
                 <div class="col-lg-5 col-md-7 col-sm-9 col-11">
                     <form action="login.php" method="post">
                         <div class="mt-10">
-                            <input type="text" name="username" required placeholder="用户名" onfocus="this.placeholder=''" onblur="this.placeholder='用户名'" class="single-input" value="<?php echo (isset($_GET["username"])? $_GET["username"]:"") ?>" maxlength="20">
+                            <input type="text" name="username" required placeholder="用户名" onfocus="this.placeholder=''" onblur="this.placeholder='用户名'" class="single-input" value="<?php echo (isset($_GET["username"])? $_GET["username"]:"") ?>" maxlength="20" autofocus>
                         </div>
                         <div class="mt-10">
                             <input type="password" name="password" required placeholder="密码" onfocus="this.placeholder=''" onblur="this.placeholder='密码'" class="single-input" maxlength="20">

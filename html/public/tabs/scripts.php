@@ -132,7 +132,7 @@
 	}
 	?>
 
-    <div id="myModal" class="modal" style="top: 20%;">
+    <div id="myModal" class="modal" style="top: 18%;">
         <div class="modal-content col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
             <div class="modal-header">
                 <h4 id="modal_title" class="modal-title"></h4>
