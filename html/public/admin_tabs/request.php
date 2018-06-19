@@ -102,13 +102,24 @@ if ($_POST["tab"] == "sections") {
         $type = $_POST["section_types"][$i];
         $title = remove_quote($_POST["section_titles"][$i]);
         $chapter = $_POST["section_chapters"][$i];
+        $content = remove_quote($_POST["section_contents"][$i]);
         if ($id < 0) {
             $sql = 'INSERT INTO sections(sequence, type, title, chapter) VALUES('.$sequence.', '.$type.', "'.$title.'", '.$chapter.')';
             $conn->query($sql);
+            $id = $conn->insert_id;
+            if ($type == 0) {
+                $sql = 'INSERT INTO character_section(character_id, section_id, content) VALUES(1, '.$id.', "'.$content.'");';
+                $conn->query($sql);
+                echo $sql;
+            }
         }
         else {
             $sql = 'UPDATE sections SET sequence='.$sequence.', type='.$type.', title="'.$title.'", chapter='.$chapter.' WHERE id='.$id;
             $conn->query($sql);
+            if ($type == 0) {
+                $sql = 'UPDATE character_section SET content="'.$content.'" WHERE character_id=1 AND section_id='.$id;
+                $conn->query($sql);
+            }
         }
         
     }

@@ -45,7 +45,8 @@
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()" tabindex="-1"><i class="fa fa-list-ol"></i></button>';
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()" tabindex="-1"><i class="fa fa-list-ul"></i></button>';
             div.innerHTML = div.innerHTML + '<div id="timeline' + timeline_counter + '_show" style="width: 50%; height: 50px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'timeline\', ' + timeline_counter + ')">' + content + '</div>';
-            document.getElementById("menu_bar" + timeline_counter).addEventListener("click", function() {copyHTML("timeline", id)});
+            copy_counter = timeline_counter;
+            document.getElementById("menu_bar" + timeline_counter).addEventListener("click", function() {copyHTML("timeline", copy_counter)});
             timeline_counter += 1;
         }
 
@@ -72,7 +73,8 @@
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertOl()" tabindex="-1"><i class="fa fa-list-ol"></i></button>';
             div1.innerHTML = div1.innerHTML + '<button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px;" onclick="insertUl()" tabindex="-1"><i class="fa fa-list-ul"></i></button>';
             div.innerHTML = div.innerHTML + '<div id="objective' + objective_counter + '_show" style="width: 50%; height: 50px; margin-bottom: 20px; border: 1px solid #BBBBBB; text-align: left; overflow: auto; font-size: 14px;" contenteditable="true" onkeyup="copyHTML(\'objective\', ' + objective_counter + ')">' + content + '</div>';
-            document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("objective", id)});
+            copy_counter = objective_counter;
+            document.getElementById("menu_bar" + id).addEventListener("click", function() {copyHTML("objective", copy_counter)});
             objective_counter += 1;
         }
 
@@ -376,7 +378,22 @@
                                 <h3 style="margin-bottom: 20px;">
                                     '.$row["title"];
 
-            // 普通线索
+
+            //公共
+            if ($row["type"] == 0) {
+                $sql1 = 'SELECT content FROM character_section WHERE character_id=1 AND section_id='.$row["id"];
+                $result1 = $conn->query($sql1);
+                while ($row1 = $result1->fetch_assoc()) {
+                    $content = $row1["content"];
+                }
+                echo '
+                                </h3>
+                            </center>
+                            '.$content.'
+                        </div>';
+            }
+
+            // 普通
             if ($row["type"] == 1) {
                 $sql1 = 'SELECT * FROM character_section WHERE character_id='.$_GET["character_id"].' AND section_id='.$row["id"];
                 $result1 = $conn->query($sql1);

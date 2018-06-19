@@ -48,7 +48,18 @@
                         <center>
                             <h3 style="margin-bottom: 20px;">'.$section["title"].'</h3>
                         </center>';
-        // 普通线索
+
+        // 公共
+        if ($section["type"] == 0) {
+            $sql = 'SELECT * FROM character_section WHERE character_id=1 AND section_id='.$section["id"];
+            $result = $conn->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                echo replace_text($pairs, $row["content"]);
+                echo '
+                    </div>';
+            }
+        }
+        // 普通
         if ($section["type"] == 1) {
             $sql = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section["id"];
             $result = $conn->query($sql);
