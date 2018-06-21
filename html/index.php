@@ -136,6 +136,16 @@ if (isset($_POST["submit1"])) {
                 unlock_characters varchar(30),
                 FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
             $conn2->query($sql2);
+            $sql2 = "
+            CREATE TABLE character_clue(
+                id int PRIMARY KEY AUTO_INCREMENT,
+                character_id int,
+                clue_id int,
+                owner int,
+                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
+                FOREIGN KEY (clue_id) REFERENCES clues(id) ON DELETE CASCADE,
+                UNIQUE KEY (character_id, clue_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+            $conn2->query($sql2);
             $conn2->close();
         }
         $conn->close();

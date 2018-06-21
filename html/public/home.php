@@ -72,7 +72,6 @@ function replace_text($pairs, $text) {
 <body>
 
 <?php
-$tab = $_GET["tab"];
 $pairs = array();
 
 $sql = "SELECT * FROM status WHERE id=1";
@@ -85,6 +84,9 @@ $sql = "SELECT * FROM characters";
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     array_push($pairs, array($row["name"], $row["preferred_name"]));
+    if ($row["id"] == $_SESSION["character_id"]) {
+        $user_information = $row;
+    }
 }
 
 $sql = "SELECT * FROM maps";
@@ -131,6 +133,18 @@ foreach (array(1, 2) as $chapter) {
         }
     }
 }
+
+$sql = 'SELECT * FROM status WHERE id=2';
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    if ($row["value"] == 0) $duplicate = False;
+    else $duplicate = True;
+}
+
+if (isset($_POST["tab"])) {
+    include("tabs/request.php");
+}
+$tab = $_GET["tab"];
 ?>
 
     <header id="header">

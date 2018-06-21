@@ -18,6 +18,7 @@ function remove_quote($text) {
 }
 
 if ($_POST["tab"] == "background") {
+    $points = $_POST["points"];
     $bg_story = remove_quote($_POST["bg_story"]);
     $sql = 'INSERT INTO background(id, content) VALUES(0, "'.$bg_story.'") ON DUPLICATE KEY UPDATE content="'.$bg_story.'"';
     $conn->query($sql);
@@ -62,13 +63,13 @@ if ($_POST["tab"] == "background") {
         $preferred_name = remove_quote($_POST["character_preferred_names"][$i]);
         $description = remove_quote($_POST["character_descriptions"][$i]);
         if ($id > 0) {
-            $sql = 'UPDATE characters SET username="'.$username.'", password="'.$password.'", name="'.$name.'", preferred_name="'.$preferred_name.'", description="'.$description.'" WHERE id='.$id;
+            $sql = 'UPDATE characters SET username="'.$username.'", password="'.$password.'", name="'.$name.'", preferred_name="'.$preferred_name.'", description="'.$description.'", points='.$points.' WHERE id='.$id;
             $conn->query($sql);
             $sql = 'UPDATE locations SET name="【'.$name.'】的房间" WHERE id='.(-$id);
             $conn->query($sql);
         }
         else {
-            $sql = 'INSERT INTO characters(username, password, name, preferred_name, description) VALUES("'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'")';
+            $sql = 'INSERT INTO characters(username, password, name, preferred_name, description, points) VALUES("'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'", '.$points.')';
             $conn->query($sql);
             $id = $conn->insert_id;
             $sql = 'INSERT INTO locations(id, name) VALUES('.(-$id).', "【'.$name.'】的房间")';

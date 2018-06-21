@@ -105,6 +105,7 @@ $conn->set_charset("utf8");
                         <li><a href="admin.php?tab=locations">地点</a></li>
                         <li><a href="admin.php?tab=clues&chapter=1">线索（第一幕）</a></li>
                         <li><a href="admin.php?tab=clues&chapter=2">（第二幕）</a></li>
+                        <li><a href="admin.php?tab=truth">真相</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>
                 </nav>

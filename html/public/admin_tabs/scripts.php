@@ -444,6 +444,7 @@
                             </center>
                         </div>';
             }
+            // 房间线索
             else if ($row["type"] == 3) {
                 echo '
                                     <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1, '.(-$_GET["character_id"]).')">
@@ -456,19 +457,30 @@
                 $result1 = $conn->query($sql1);
                 $counter = 0;
                 while ($row1 = $result1->fetch_assoc()) {
+                    if ($row1["unlock_id"] > 0) {
+                        $sql2 = 'SELECT file_path FROM clues WHERE id='.$row1["unlock_id"];
+                        $result2 = $conn->query($sql2);
+                        while ($row2 = $result2->fetch_assoc()) {
+                            $file_path = $row2["file_path"];
+                        }
+                    }
+                    else {
+                        $file_path = $row1["file_path"];
+                    }
+
                     if ($counter % 2 == 0) $offset = 0;
                     else $offset = 1;
                     echo '
                             <div class="col-lg-5 offset-lg-'.$offset.' col-md-5 offset-md-'.$offset.' col-sm-10 offset-sm-1">
                                 <div class="row" style="border: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
                                     <div class="col-3" style="padding: 0px 0px 0px 5px; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">';
-                    if (!file_exists($row1["file_path"])) {
+                    if (!file_exists($file_path)) {
                         echo '
                                         <img style="width: 100%;" src="img/alt.png">';
                     }
                     else {
                         echo '
-                                        <img style="width: 100%;" src="'.$row1["file_path"].'">';
+                                        <img style="width: 100%;" src="'.$file_path.'">';
                     }
                     echo '
                                     </div>

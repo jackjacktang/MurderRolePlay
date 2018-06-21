@@ -1,4 +1,10 @@
-	<br><br><br>
+	<?php
+    if ($status <= 2 && $_GET["chapter"] == 2) {
+        header("Location: home.php?tab=scripts&chapter=1");
+    }
+    ?>
+
+    <br><br><br>
 
     <script type="text/javascript">
         var clue_information = [];
@@ -6,8 +12,18 @@
         $sql = 'SELECT * FROM clues WHERE location_id='.(-$character_id).' AND chapter='.$_GET["chapter"].' ORDER BY id ASC';
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
+            if ($row["unlock_id"] > 0) {
+                $sql2 = 'SELECT file_path FROM clues WHERE id='.$row["unlock_id"];
+                $result2 = $conn->query($sql2);
+                while ($row2 = $result2->fetch_assoc()) {
+                    $file_path = $row2["file_path"];
+                }
+            }
+            else {
+                $file_path = $row["file_path"];
+            }
             echo '
-        clue_information['.$row["id"].'] = [\''.$row["position"].'\', \''.$row["self_description"].'\', \''.$row["file_path"].'\'];';
+        clue_information['.$row["id"].'] = [\''.$row["position"].'\', \''.replace_text($pairs, $row["self_description"]).'\', \''.$file_path.'\'];';
         }
         ?>
 
@@ -90,19 +106,30 @@
             $result = $conn->query($sql);
             $counter = 0;
             while ($row = $result->fetch_assoc()) {
+                if ($row["unlock_id"] > 0) {
+                    $sql2 = 'SELECT file_path FROM clues WHERE id='.$row["unlock_id"];
+                    $result2 = $conn->query($sql2);
+                    while ($row2 = $result2->fetch_assoc()) {
+                        $file_path = $row2["file_path"];
+                    }
+                }
+                else {
+                    $file_path = $row["file_path"];
+                }
+
                 if ($counter % 2 == 0) $offset = 0;
                 else $offset = 1;
                 echo '
                     <div class="col-lg-5 offset-lg-'.$offset.' col-md-5 offset-md-'.$offset.' col-sm-10 offset-sm-1" onclick="open_modal('.$row["id"].')">
                         <div class="row" style="border: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
                             <div class="col-3" style="padding: 0px 0px 0px 5px; cursor: pointer;">';
-                if (!file_exists($row["file_path"])) {
+                if (!file_exists($file_path)) {
                     echo '
                                 <img style="width: 100%;" src="img/alt.png">';
                 }
                 else {
                     echo '
-                                <img style="width: 100%;" src="'.$row["file_path"].'">';
+                                <img style="width: 100%;" src="'.$file_path.'">';
                 }
                 echo '
                             </div>
