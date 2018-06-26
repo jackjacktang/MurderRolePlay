@@ -1,3 +1,9 @@
+    <?php
+    if ($status == 1) {
+        header("Location: home.php?tab=scripts&chapter=1");
+    }
+    ?>
+
     <section class="section-gap" style="display: <?php echo ((isset($_GET["clue_id"]))? "none":"block"); ?>;">
         <div class="container">
             <h4>你的剩余行动点：<?php echo $user_information["points"]; ?>&nbsp;&nbsp;&nbsp;<button class="genric-btn info circle small" onclick="open_share_modal()">赠送</button></h4>

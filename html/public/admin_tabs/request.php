@@ -336,4 +336,11 @@ if ($_POST["tab"] == "clues") {
     $conn->close();
     header("Location: ../admin.php?tab=clues&chapter=".$chapter);
 }
+
+if ($_POST["tab"] == "truth") {
+    $truth = remove_quote($_POST["truth"]);
+    $sql = 'INSERT INTO background(id, content) VALUES(1, "'.$truth.'") ON DUPLICATE KEY UPDATE content="'.$truth.'"';
+    $conn->query($sql);
+    header("Location: ../admin.php?tab=truth");
+}
 ?>

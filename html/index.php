@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 session_start();
 
@@ -174,6 +173,8 @@ if (isset($_POST["submit2"])) {
     }
 }
 ?>
+
+<!DOCTYPE html>
 <html lang="zxx" class="no-js">
 <head>
     <!-- Mobile Specific Meta -->
