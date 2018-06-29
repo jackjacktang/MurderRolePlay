@@ -1,7 +1,7 @@
     <br><br><br>
 
 	<?php
-    $sql = "SELECT * FROM maps";
+    $sql = 'SELECT * FROM maps WHERE script_id='.$script_id;
     $result = $conn->query($sql);
 	while ($row = $result->fetch_assoc()) {
         echo '

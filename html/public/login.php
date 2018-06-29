@@ -1,16 +1,5 @@
-<!DOCTYPE html>
 <?php
-session_start();
-
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_id"];
-$conn = new mysqli($db_host, $db_user, $db_password, $db);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
-}
-$conn->set_charset("utf8");
+include("connection.php");
 
 if (!isset($_SESSION["script_id"])) {
     $conn->close();
@@ -20,10 +9,10 @@ if (!isset($_SESSION["script_id"])) {
 if (isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $sql = 'SELECT id, password FROM characters WHERE username="'.$username.'";';
+    $sql = 'SELECT id, password FROM characters WHERE username="'.$username.'" AND script_id='.$_SESSION["script_id"].' ORDER BY id ASC';
     $result = $conn->query($sql);
     if ($result->num_rows == 0) {
-        echo '<script type="text/javascript">alert("该用户不存在！请重试！");window.location="login.php?script_id='.$_GET["script_id"].'&script_name='.$_GET["script_name"].'&username='.$username.'";</script>';
+        echo '<script type="text/javascript">alert("该用户不存在！请重试！");window.location="login.php?username='.$username.'";</script>';
     }
     else {
         while ($row = $result->fetch_assoc()) {
@@ -38,8 +27,13 @@ if (isset($_POST["login"])) {
 }
 
 if (isset($_SESSION["character_id"])) {
+    $sql = 'SELECT MIN(id) AS admin FROM characters WHERE script_id='.$_SESSION["script_id"];
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $admin = $row["admin"];
+    }
     $conn->close();
-    if ($_SESSION["character_id"] != 1) {
+    if ($_SESSION["character_id"] != $admin) {
         header("Location: home.php?tab=background");
     }
     else {
@@ -47,6 +41,8 @@ if (isset($_SESSION["character_id"])) {
     }
 }
 ?>
+
+<!DOCTYPE html>
 <html lang="zxx" class="no-js">
 <head>
 	<!-- Mobile Specific Meta -->

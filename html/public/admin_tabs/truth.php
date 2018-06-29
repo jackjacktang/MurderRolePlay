@@ -54,14 +54,17 @@
                             <br><br>
                             <?php
                             $content = "";
-                            $sql = 'SELECT * FROM background WHERE id=1';
+                            $sql = 'SELECT * FROM background WHERE type=2 AND script_id='.$script_id;
                             $result = $conn->query($sql);
+                            $truth_id = -1;
                             while ($row = $result->fetch_assoc()) {
                                 $content = $row["content"];
+                                $truth_id = $row["id"];
                             }
                             ?>
                             <center>
                                 <h3>添加/修改真相</h3><br>
+                                <input type="hidden" name="truth_id" value="<?php echo $truth_id; ?>">
                                 <input type="hidden" id="truth_hide" name="truth" value='<?php echo $content; ?>'>
                                 <div onclick="copyHTML()" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand('bold',false,null);" tabindex="-1">B</button>
@@ -85,10 +88,10 @@
 
     	<?php
     	$chapters = array();
-    	$sql = 'SELECT * FROM sections WHERE type=2 AND chapter=1';
+    	$sql = 'SELECT * FROM sections WHERE type=2 AND chapter=1 AND script_id='.$script_id;
     	$result = $conn->query($sql);
     	if ($result->num_rows > 0) array_push($chapters, 1);
-    	$sql = 'SELECT * FROM sections WHERE type=2 AND chapter=2';
+    	$sql = 'SELECT * FROM sections WHERE type=2 AND chapter=2 AND script_id='.$script_id;
     	$result = $conn->query($sql);
     	if ($result->num_rows > 0) array_push($chapters, 2);
     	foreach ($chapters as $chapter) {
@@ -113,7 +116,7 @@
                             <tr>
                             	<th></th>';
             $character_ids = array();
-            $sql = 'SELECT * FROM characters';
+            $sql = 'SELECT * FROM characters WHERE script_id='.$script_id;
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
             	if ($row["id"] != 1) {
@@ -125,7 +128,7 @@
             echo '
                             </tr>';
 
-            $sql = 'SELECT hour, minute FROM timelines WHERE chapter='.$chapter.' GROUP BY hour, minute ORDER BY hour ASC, minute ASC';
+            $sql = 'SELECT hour, minute FROM timelines WHERE chapter='.$chapter.' AND script_id='.$script_id.' GROUP BY hour, minute ORDER BY hour ASC, minute ASC';
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
             	$hour = $row["hour"];

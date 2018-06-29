@@ -1,15 +1,13 @@
 <?php
-session_start();
+include("../connection.php");
 
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_id"];
-$conn = new mysqli($db_host, $db_user, $db_password, $db);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
+$sql = 'SELECT MIN(id) AS admin FROM characters WHERE script_id='.$_SESSION["script_id"];
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $admin = $row["admin"];
 }
-$conn->set_charset("utf8");
+
+$script_id = $_SESSION["script_id"];
 
 function remove_quote($text) {
     $text = str_replace('"', '\"', $text);
@@ -20,7 +18,13 @@ function remove_quote($text) {
 if ($_POST["tab"] == "background") {
     $points = $_POST["points"];
     $bg_story = remove_quote($_POST["bg_story"]);
-    $sql = 'INSERT INTO background(id, content) VALUES(0, "'.$bg_story.'") ON DUPLICATE KEY UPDATE content="'.$bg_story.'"';
+
+    if ($_POST["background_id"] < 0) {
+        $sql = 'INSERT INTO background(script_id, type, content) VALUES('.$script_id.', 1, "'.$bg_story.'")';
+    }
+    else {
+        $sql = 'UPDATE background SET content="'.$bg_story.'" WHERE id='.$_POST["background_id"];
+    }
     $conn->query($sql);
 
     for ($i = 0; $i < count($_POST["map_ids"]); $i++) {
@@ -29,7 +33,7 @@ if ($_POST["tab"] == "background") {
         $description = remove_quote($_POST["map_descriptions"][$i]);
 
         if ($id < 0) {
-            $sql = 'INSERT INTO maps(description, file_path) VALUES("'.$description.'", "")';
+            $sql = 'INSERT INTO maps(script_id, description, file_path) VALUES('.$script_id.', "'.$description.'", "")';
             $conn->query($sql);
             $id = $conn->insert_id;
         }
@@ -38,14 +42,14 @@ if ($_POST["tab"] == "background") {
             $conn->query($sql);
         }
 
-        $target = '../../scripts/'.$_SESSION["script_id"].'/maps/'.$id.'.'.$extension;
-        $file_path = '../scripts/'.$_SESSION["script_id"].'/maps/'.$id.'.'.$extension;
+        $target = '../../scripts/'.$script_id.'/maps/'.$id.'.'.$extension;
+        $file_path = '../scripts/'.$script_id.'/maps/'.$id.'.'.$extension;
         if ($extension == "jpg" || $extension == "png") {
             if (move_uploaded_file($_FILES["map_images"]["tmp_name"][$i], $target)) {
                 $sql = 'SELECT file_path FROM maps WHERE id='.$id;
                 $result = $conn->query($sql);
                 while ($row = $result->fetch_assoc()) {
-                    if ($orw["file_path"] != "" && $row["file_path"] != $file_path) {
+                    if ($row["file_path"] != "" && $row["file_path"] != $file_path) {
                         unlink("../".$row["file_path"]);
                     }
                 }
@@ -65,22 +69,22 @@ if ($_POST["tab"] == "background") {
         if ($id > 0) {
             $sql = 'UPDATE characters SET username="'.$username.'", password="'.$password.'", name="'.$name.'", preferred_name="'.$preferred_name.'", description="'.$description.'", points='.$points.' WHERE id='.$id;
             $conn->query($sql);
-            $sql = 'UPDATE locations SET name="【'.$name.'】的房间" WHERE id='.(-$id);
-            $conn->query($sql);
+            if ($id != $admin) {
+                $sql = 'UPDATE locations SET name="【'.$name.'】的房间" WHERE script_id='.$script_id.' AND character_id='.$id;
+                $conn->query($sql);
+            }
         }
         else {
-            $sql = 'INSERT INTO characters(username, password, name, preferred_name, description, points) VALUES("'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'", '.$points.')';
+            $sql = 'INSERT INTO characters(script_id, username, password, name, preferred_name, description, points) VALUES('.$script_id.', "'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'", '.$points.')';
             $conn->query($sql);
             $id = $conn->insert_id;
-            $sql = 'INSERT INTO locations(id, name) VALUES('.(-$id).', "【'.$name.'】的房间")';
+            $sql = 'INSERT INTO locations(script_id, character_id, name) VALUES('.$script_id.', '.$id.', "【'.$name.'】的房间")';
             $conn->query($sql);
         }
     }
 
     if ($_POST["delete_section"] == "character") {
         $sql = 'DELETE FROM characters WHERE id='.$_POST["delete_id"];
-        $conn->query($sql);
-        $sql = 'DELETE FROM locations WHERE id='.(-$_POST["delete_id"]);
         $conn->query($sql);
     }
     else if ($_POST["delete_section"] == "map") {
@@ -102,23 +106,23 @@ if ($_POST["tab"] == "sections") {
         $sequence = $_POST["section_sequences"][$i];
         $type = $_POST["section_types"][$i];
         $title = remove_quote($_POST["section_titles"][$i]);
+        $sub_title = remove_quote($_POST["section_sub_titles"][$i]);
         $chapter = $_POST["section_chapters"][$i];
         $content = remove_quote($_POST["section_contents"][$i]);
         if ($id < 0) {
-            $sql = 'INSERT INTO sections(sequence, type, title, chapter) VALUES('.$sequence.', '.$type.', "'.$title.'", '.$chapter.')';
+            $sql = 'INSERT INTO sections(script_id, sequence, type, title, sub_title, chapter) VALUES('.$script_id.', '.$sequence.', '.$type.', "'.$title.'", "'.$sub_title.'", '.$chapter.')';
             $conn->query($sql);
             $id = $conn->insert_id;
             if ($type == 0) {
-                $sql = 'INSERT INTO character_section(character_id, section_id, content) VALUES(1, '.$id.', "'.$content.'");';
+                $sql = 'INSERT INTO character_section(script_id, character_id, section_id, content) VALUES('.$script_id.', '.$admin.', '.$id.', "'.$content.'");';
                 $conn->query($sql);
-                echo $sql;
             }
         }
         else {
-            $sql = 'UPDATE sections SET sequence='.$sequence.', type='.$type.', title="'.$title.'", chapter='.$chapter.' WHERE id='.$id;
+            $sql = 'UPDATE sections SET sequence='.$sequence.', type='.$type.', title="'.$title.'", sub_title="'.$sub_title.'", chapter='.$chapter.' WHERE id='.$id;
             $conn->query($sql);
             if ($type == 0) {
-                $sql = 'UPDATE character_section SET content="'.$content.'" WHERE character_id=1 AND section_id='.$id;
+                $sql = 'UPDATE character_section SET content="'.$content.'" WHERE character_id='.$admin.' AND section_id='.$id;
                 $conn->query($sql);
             }
         }
@@ -135,7 +139,7 @@ if ($_POST["tab"] == "sections") {
 if ($_POST["tab"] == "scripts") {
     $character_id = $_POST["character_id"];
     $chapter = $_POST["chapter"];
-    $sql = "SELECT * FROM sections WHERE chapter=".$chapter;
+    $sql = 'SELECT * FROM sections WHERE script_id='.$script_id.' AND chapter='.$chapter;
     $result = $conn->query($sql);
     while ($row = $result->fetch_assoc()) {
         $section_id = $row["id"];
@@ -145,11 +149,11 @@ if ($_POST["tab"] == "scripts") {
                 $sql1 = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$section_id;
                 $result1 = $conn->query($sql1);
                 if ($result1->num_rows == 0) {
-                    $sql2 = "INSERT INTO character_section(character_id, section_id, content) VALUES(".$character_id.", ".$section_id.", '".$content."')";
+                    $sql2 = 'INSERT INTO character_section(script_id, character_id, section_id, content) VALUES('.$script_id.', '.$character_id.', '.$section_id.', "'.$content.'")';
                     $conn->query($sql2);
                 }
                 else {
-                    $sql1 = "UPDATE character_section SET content='".$content."' WHERE character_id=".$character_id." AND section_id=".$section_id;
+                    $sql1 = 'UPDATE character_section SET content="'.$content.'" WHERE character_id='.$character_id.' AND section_id='.$section_id;
                     $conn->query($sql1);
                 }
             }
@@ -165,9 +169,8 @@ if ($_POST["tab"] == "scripts") {
                     $conn->query($sql1);
                 }
                 else {
-                    $sql1 = 'INSERT INTO timelines(character_id, chapter, hour, minute, content) VALUES('.$character_id.', '.$chapter.', '.$hour.', '.$minute.', "'.$content.'")';
+                    $sql1 = 'INSERT INTO timelines(script_id, character_id, chapter, hour, minute, content) VALUES('.$script_id.', '.$character_id.', '.$chapter.', '.$hour.', '.$minute.', "'.$content.'")';
                     $conn->query($sql1);
-                    echo $sql1;
                 }
             }
         }
@@ -181,7 +184,7 @@ if ($_POST["tab"] == "scripts") {
                     $conn->query($sql1);
                 }
                 else {
-                    $sql1 = 'INSERT INTO objectives(character_id, chapter, content, points) VALUES('.$character_id.', '.$chapter.', "'.$content.'", '.$points.')';
+                    $sql1 = 'INSERT INTO objectives(script_id, character_id, chapter, content, points) VALUES('.$script_id.', '.$character_id.', '.$chapter.', "'.$content.'", '.$points.')';
                     $conn->query($sql1);
                 }
             }
@@ -202,14 +205,13 @@ if ($_POST["tab"] == "scripts") {
             }
         }
         if ($_POST["clue_id"] == -1) {
-            $sql = 'INSERT INTO clues(chapter, location_id, position, points, self_description, description, unlock_id, unlock_characters) VALUES('.$chapter.', '.$location_id.', "'.$position.'", '.$points.', "'.$self_description.'", "'.$description.'", '.$unlock_id.', "'.$unlock_characters.'")';
+            $sql = 'INSERT INTO clues(script_id, chapter, location_id, position, points, self_description, description, unlock_id, unlock_characters) VALUES('.$script_id.', '.$chapter.', '.$location_id.', "'.$position.'", '.$points.', "'.$self_description.'", "'.$description.'", '.$unlock_id.', "'.$unlock_characters.'")';
             $conn->query($sql);
             $id = $conn->insert_id;
         }
         else {
             $id = $_POST["clue_id"];
         }
-        print_r($_FILES);
         $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
         $target = '../../scripts/'.$_SESSION["script_id"].'/clues/'.$id.'.'.$extension;
         $file_path = '../scripts/'.$_SESSION["script_id"].'/clues/'.$id.'.'.$extension;
@@ -247,7 +249,6 @@ if ($_POST["tab"] == "scripts") {
     else if ($_POST["delete_section"] == "objective") {
         $sql = 'DELETE FROM objectives WHERE id='.$_POST["delete_id"];
         $conn->query($sql);
-        echo $sql;
     }
 
     $conn->close();
@@ -255,12 +256,16 @@ if ($_POST["tab"] == "scripts") {
 }
 
 if ($_POST["tab"] == "locations") {
-    for ($id = 1; $id <= $_POST["max_location"]; $id++) {
-        if (isset($_POST["location".$id."_name"])) {
-            $location_name = remove_quote($_POST["location".$id."_name"]);
-            $sql = 'INSERT INTO locations(id, name) VALUES('.$id.', "'.$location_name.'") ON DUPLICATE KEY UPDATE name="'.$location_name.'"';
-            $conn->query($sql);
+    for ($i = 0; $i < count($_POST["location_ids"]); $i++) {
+        $location_id = $_POST["location_ids"][$i];
+        $location_name = remove_quote($_POST["location_names"][$i]);
+        if ($location_id < 0) {
+            $sql = 'INSERT INTO locations(script_id, name) VALUES('.$script_id.', "'.$location_name.'")';
         }
+        else {
+            $sql = 'UPDATE locations SET name="'.$location_name.'" WHERE id='.$location_id;
+        }
+        $conn->query($sql);
     }
 
     if (isset($_POST["duplicate"])) {
@@ -269,13 +274,12 @@ if ($_POST["tab"] == "locations") {
     else {
         $duplicate = 0;
     }
-    $sql = 'UPDATE status SET value='.$duplicate.' WHERE id=2';
+    $sql = 'UPDATE status SET value='.$duplicate.' WHERE script_id='.$script_id.' AND name=2';
     $conn->query($sql);
 
-    if (isset($_POST["delete"])) {
-        $sql = 'DELETE FROM locations WHERE id='.$_POST["delete"];
-        $conn->query($sql);
-    }
+    $sql = 'DELETE FROM locations WHERE id='.$_POST["delete_id"];
+    $conn->query($sql);
+
     $conn->close();
     header("Location: ../admin.php?tab=locations");
 }
@@ -296,7 +300,7 @@ if ($_POST["tab"] == "clues") {
             }
         }
         if ($_POST["id"] == -1) {
-            $sql = 'INSERT INTO clues(chapter, location_id, position, points, self_description, description, unlock_id, unlock_characters) VALUES('.$chapter.', '.$location_id.', "'.$position.'", '.$points.', "'.$self_description.'", "'.$description.'", '.$unlock_id.', "'.$unlock_characters.'")';
+            $sql = 'INSERT INTO clues(script_id, chapter, location_id, position, points, self_description, description, unlock_id, unlock_characters) VALUES('.$script_id.', '.$chapter.', '.$location_id.', "'.$position.'", '.$points.', "'.$self_description.'", "'.$description.'", '.$unlock_id.', "'.$unlock_characters.'")';
             $conn->query($sql);
             $id = $conn->insert_id;
         }
@@ -338,8 +342,14 @@ if ($_POST["tab"] == "clues") {
 }
 
 if ($_POST["tab"] == "truth") {
+    $truth_id = $_POST["truth_id"];
     $truth = remove_quote($_POST["truth"]);
-    $sql = 'INSERT INTO background(id, content) VALUES(1, "'.$truth.'") ON DUPLICATE KEY UPDATE content="'.$truth.'"';
+    if ($truth_id < 0) {
+        $sql = 'INSERT INTO background(script_id, type, content) VALUES('.$script_id.', 2, "'.$truth.'")';
+    }
+    else {
+        $sql = 'UPDATE background SET content="'.$truth.'" WHERE script_id='.$script_id.' AND type=2';
+    }
     $conn->query($sql);
     header("Location: ../admin.php?tab=truth");
 }

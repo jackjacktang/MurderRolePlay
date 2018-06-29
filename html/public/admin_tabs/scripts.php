@@ -2,17 +2,20 @@
         var clue_information = [];
         var location_information = [];
         <?php
-        $sql = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"];
+        $sql = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND C.script_id='.$script_id;
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
             echo '
         clue_information['.$row["id"].'] = [\''.$row["name"].'\', \''.$row["position"].'\', '.$row["points"].', \''.$row["self_description"].'\', \''.$row["description"].'\', \''.$row["file_path"].'\', '.$row["unlock_id"].', \''.$row["unlock_characters"].'\'];';
         }
-        $sql = 'SELECT * FROM locations';
+        $sql = 'SELECT * FROM locations WHERE character_id='.$_GET["character_id"];
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
+            $location_id = $row["id"];
             echo '
-        location_information['.$row["id"].'] = \''.$row["name"].'\';';
+        var location_id = '.$row["id"].';
+        var location_name = \''.$row["name"].'\';
+        var admin = '.$admin.';';
         }
         ?>
         clue_information[-1] = ["", "",  1, "", "", "", "", ""];
@@ -28,8 +31,8 @@
             div.style.marginTop = "20px";
             timeline_area.appendChild(div);
             div.innerHTML += '<input type="hidden" name="timeline_ids[]" value="' + id + '">';
-            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input type="number" style="width: 5%;" value="' + hour + '" name="timeline_hours[]" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ timeline_counter + '_hour">';
-            div.innerHTML = div.innerHTML + '：<input type="number" style="width: 5%;" value="' + minute + '" name="timeline_minutes[]" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ timeline_counter + '_minute">';
+            div.innerHTML = div.innerHTML + '<label style="width: 48px; text-align: right;">时间：&nbsp;</label><input required type="number" style="width: 5%;" value="' + hour + '" name="timeline_hours[]" min="0" max="24" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>24)this.value=24;if(this.value<0)this.value=0;" id="timeline'+ timeline_counter + '_hour">';
+            div.innerHTML = div.innerHTML + '：<input required type="number" style="width: 5%;" value="' + minute + '" name="timeline_minutes[]" min="0" max="60" onchange="if(this.value.length==1)this.value=\'0\'+this.value;if(this.value>60)this.value=60;if(this.value<0)this.value=0;" id="timeline'+ timeline_counter + '_minute">';
             div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="timeline_contents[]" id="timeline'+ timeline_counter + '_hide">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + timeline_counter + ', \'timeline\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;" tabindex="-1"><i class="fa fa-minus"></i></button>';
             var div1 = document.createElement("div");
@@ -58,7 +61,7 @@
             div.setAttribute("id", "objective" + objective_counter);
             div.innerHTML += '<input type="hidden" name="objective_ids[]" value="' + id + '">';
             div.innerHTML = div.innerHTML + '<input type="hidden" value=\'' + content + '\' name="objective_contents[]" id="objective'+ objective_counter + '_hide">';
-            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input type="number" style="width: 5%;" value="' + points + '" name="objective_pointses[]" id="objective'+ objective_counter + '_points">';
+            div.innerHTML = div.innerHTML + '<label style="width: 78px; text-align: right;">分数：&nbsp;</label><input required type="number" style="width: 5%;" value="' + points + '" name="objective_pointses[]" id="objective'+ objective_counter + '_points">';
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id +', ' + objective_counter + ', \'objective\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 5%;" tabindex="-1"><i class="fa fa-minus"></i></button>';
             var div1 = document.createElement("div");
             div1.setAttribute("id", "menu_bar" + id);
@@ -152,14 +155,14 @@
             modal.style.display = "none";
         }
 
-        function open_modal1(id, location_id) {
+        function open_modal1(id) {
             var modal = document.getElementById("myModal");
             var modal1 = document.getElementById("myModal1");
             var modal2 = document.getElementById("myModal2");
             modal1.style.display = "block";
             modal2.style.display = "none";
             modal.style.display = "none";
-            if (location_id == 0) {
+            if (location_id == admin) {
                 document.getElementById("secret_clue").style.display = "none";
             }
             else {
@@ -167,7 +170,7 @@
             }
             document.getElementById("clue_id").value = id;
             document.getElementById("location_id").value = location_id;
-            document.getElementById("modal_title1").innerHTML = location_information[location_id];
+            document.getElementById("modal_title1").innerHTML = location_name;
             document.getElementById("position").value = clue_information[id][1];
             document.getElementById("points").value = clue_information[id][2];
             document.getElementById("self_description_hidden").value = clue_information[id][3];
@@ -285,8 +288,8 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" name="location_id" id="location_id">
-                        <label style="text-align: left; width: 120px;">位置</label><input name="position" id="position" style="width: 200px;" type="text" maxlength="20"><br>
-                        <label style="text-align: left; width: 120px;">所需行动点：</label><input style="width: 200px;" name="points" id="points" type="number" value=1><br>
+                        <label style="text-align: left; width: 120px;">位置</label><input required name="position" id="position" style="width: 200px;" type="text" maxlength="20"><br>
+                        <label style="text-align: left; width: 120px;">所需行动点：</label><input required style="width: 200px;" name="points" id="points" type="number" value=1><br>
                         <label style="text-align: left; width: 120px;">自己看到的描述：</label>
                         <!-- <input style="width: 200px;" name="self_description" id="self_description" type="text" maxlength="300"><br> -->
                         <input type="hidden" id="self_description_hidden" name="self_description">
@@ -322,9 +325,9 @@
                     <div id="secret_clue">
                         <label style="text-align: left; width: 120px; display: inline-block;">秘密线索：</label>
                         <select style="width: 200px; display: inline-block;" name="unlock_id" id="select">
-                            <option value="0" selected class="options"></option>
+                            <option value="null" selected class="options"></option>
                             <?php
-                            $sql = "SELECT * FROM clues WHERE location_id=0";
+                            $sql = 'SELECT C.id, C.position FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$admin;
                             $result = $conn->query($sql);
                             while ($row = $result->fetch_assoc()) {
                                 echo '
@@ -334,7 +337,7 @@
                         </select><br>
                         <label style="text-align: left; width: 120px;">可解锁的人：</label><br>
                         <?php
-                        $sql = "SELECT * FROM characters WHERE id>1";
+                        $sql = "SELECT * FROM characters WHERE id<>".$admin.' AND script_id='.$script_id.' ORDER BY id ASC';
                         $result = $conn->query($sql);
                         while ($row = $result->fetch_assoc()) {
                             echo '
@@ -365,7 +368,7 @@
             </div>
         </div>
 		<?php
-		$sql = 'SELECT * FROM sections WHERE chapter='.$_GET["chapter"].' ORDER BY sequence ASC';
+		$sql = 'SELECT * FROM sections WHERE chapter='.$_GET["chapter"].' AND script_id='.$script_id.' ORDER BY sequence ASC';
 		$result = $conn->query($sql);
 		while ($row = $result->fetch_assoc()) {
 			echo '
@@ -381,7 +384,7 @@
 
             //公共
             if ($row["type"] == 0) {
-                $sql1 = 'SELECT content FROM character_section WHERE character_id=1 AND section_id='.$row["id"];
+                $sql1 = 'SELECT content FROM character_section WHERE character_id='.$admin.' AND section_id='.$row["id"];
                 $result1 = $conn->query($sql1);
                 while ($row1 = $result1->fetch_assoc()) {
                     $content = $row1["content"];
@@ -447,13 +450,13 @@
             // 房间线索
             else if ($row["type"] == 3) {
                 echo '
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1, '.(-$_GET["character_id"]).')">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1)">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
                             </center>
                         </div>';
-                $sql1 = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND L.id='.(-$_GET["character_id"]);
+                $sql1 = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND L.id='.$location_id;
                 $result1 = $conn->query($sql1);
                 $counter = 0;
                 while ($row1 = $result1->fetch_assoc()) {
@@ -484,7 +487,7 @@
                     }
                     echo '
                                     </div>
-                                    <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">
+                                    <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].')">
                                         <h4>'.$row1["position"].'</h4>
                                         <p>'.$row1["self_description"].'</p>
                                     </div>
@@ -503,6 +506,7 @@
                             </div>';
                 }
             }
+            // 任务
             else if ($row["type"] == 4) {
                 echo '
                                     <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_objective(-1, \'\', -1)">

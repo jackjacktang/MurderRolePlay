@@ -2,7 +2,7 @@
         var id;
         var counter;
 
-        function add_section(chapter, id, sequence, type, title, content) {
+        function add_section(chapter, id, sequence, type, title, content, sub_title) {
             var section_area = document.getElementById("section_area" + chapter);
             if (sequence == -1) {
                 sequence = maxs[chapter - 1] + 1;
@@ -17,7 +17,8 @@
             section_area.appendChild(div);
             div.innerHTML = div.innerHTML + '<input type="hidden" name="section_ids[]" value="' + id + '">';
             div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">顺序：&nbsp;</label><input type="number" style="width: 5%;" value="' + sequence + '" name="section_sequences[]">';
-            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 20%;" value=\'' + title + '\' name="section_titles[]" id="section'+ section_counter + '_title" maxlength="30">';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">标题：&nbsp;</label><input style="width: 15%;" value=\'' + title + '\' name="section_titles[]" id="section'+ section_counter + '_title" maxlength="30">';
+            div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">副标题：&nbsp;</label><input style="width: 15%;" value=\'' + sub_title + '\' name="section_sub_titles[]" id="section'+ section_counter + '_sub_title" maxlength="100">';
             if (type == 0) {
                 type_chinese = "公共";
             }
@@ -165,14 +166,14 @@
                         <!-- <div class="col-lg-9 col-md-9 col-sm-10"> -->
                             <center>
                                 <h3 style="margin-bottom: 20px">第一幕</h3>
-                                <button type="button" id="button_1_0" onclick="add_section(1, -1, -1, 0, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加公共章节</button>
-                                <button type="button" id="button_1_1" onclick="add_section(1, -1, -1, 1, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
-                                <button type="button" id="button_1_2" onclick="add_section(1, -1, -1, 2, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
-                                <button type="button" id="button_1_3" onclick="add_section(1, -1, -1, 3, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
-                                <button type="button" id="button_1_4" onclick="add_section(1, -1, -1, 4, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
+                                <button type="button" id="button_1_0" onclick="add_section(1, -1, -1, 0, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加公共章节</button>
+                                <button type="button" id="button_1_1" onclick="add_section(1, -1, -1, 1, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
+                                <button type="button" id="button_1_2" onclick="add_section(1, -1, -1, 2, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
+                                <button type="button" id="button_1_3" onclick="add_section(1, -1, -1, 3, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
+                                <button type="button" id="button_1_4" onclick="add_section(1, -1, -1, 4, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
                                 <div id="section_area1">
                                     <?php
-                                    $sql = "SELECT * FROM sections WHERE chapter=1 ORDER BY sequence ASC";
+                                    $sql = 'SELECT * FROM sections WHERE chapter=1 AND script_id='.$script_id.' ORDER BY sequence ASC';
                                     $result = $conn->query($sql);
                                     echo '
                                     <script type="text/javascript">
@@ -180,13 +181,13 @@
                                         var maxs = [0, 0]';
                                     while ($row = $result->fetch_assoc()) {
                                         $content = "";
-                                        $sql1 = 'SELECT * FROM character_section WHERE character_id=1 AND section_id='.$row["id"];
+                                        $sql1 = 'SELECT * FROM character_section WHERE character_id='.$admin.' AND section_id='.$row["id"];
                                         $result1 = $conn->query($sql1);
                                         while ($row1 = $result1->fetch_assoc()) {
                                             $content = $row1["content"];
                                         }
                                         echo '
-                                        add_section(1, '.$row["id"].', '.$row["sequence"].', '.$row["type"].', \''.$row["title"].'\', \''.$content.'\');';
+                                        add_section(1, '.$row["id"].', '.$row["sequence"].', '.$row["type"].', \''.$row["title"].'\', \''.$content.'\', \''.$row["sub_title"].'\');';
                                     }
                                     echo '
                                     </script>';
@@ -206,26 +207,26 @@
                         <!-- <div class="col-lg-9 col-md-9 col-sm-10"> -->
                             <center>
                                 <h3 style="margin-bottom: 20px">第二幕</h3>
-                                <button type="button" id="button_2_0" onclick="add_section(2, -1, -1, 0, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加公共章节</button>
-                                <button type="button" id="button_2_1" onclick="add_section(2, -1, -1, 1, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
-                                <button type="button" id="button_2_2" onclick="add_section(2, -1, -1, 2, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
-                                <button type="button" id="button_2_3" onclick="add_section(2, -1, -1, 3, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
-                                <button type="button" id="button_2_4" onclick="add_section(2, -1, -1, 4, '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
+                                <button type="button" id="button_2_0" onclick="add_section(2, -1, -1, 0, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加公共章节</button>
+                                <button type="button" id="button_2_1" onclick="add_section(2, -1, -1, 1, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加普通章节</button>
+                                <button type="button" id="button_2_2" onclick="add_section(2, -1, -1, 2, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加时间线</button>
+                                <button type="button" id="button_2_3" onclick="add_section(2, -1, -1, 3, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加房间线索</button>
+                                <button type="button" id="button_2_4" onclick="add_section(2, -1, -1, 4, '', '', '')" class="genric-btn info-border circle e-large col-10" style="font-size: 10pt; width: 170px;">添加任务</button>
                                 <div id="section_area2">
                                     <?php
-                                    $sql = "SELECT * FROM sections WHERE chapter=2 ORDER BY sequence ASC";
+                                    $sql = 'SELECT * FROM sections WHERE chapter=2 AND script_id='.$script_id.' ORDER BY sequence ASC';
                                     $result = $conn->query($sql);
                                     echo '
                                     <script type="text/javascript">';
                                     while ($row = $result->fetch_assoc()) {
                                         $content = "";
-                                        $sql1 = 'SELECT * FROM character_section WHERE character_id=1 AND section_id='.$row["id"];
+                                        $sql1 = 'SELECT * FROM character_section WHERE character_id='.$admin.' AND section_id='.$row["id"];
                                         $result1 = $conn->query($sql1);
                                         while ($row1 = $result1->fetch_assoc()) {
                                             $content = $row1["content"];
                                         }
                                         echo '
-                                        add_section(2, '.$row["id"].', '.$row["sequence"].', '.$row["type"].', \''.$row["title"].'\', \''.$content.'\');';
+                                        add_section(2, '.$row["id"].', '.$row["sequence"].', '.$row["type"].', \''.$row["title"].'\', \''.$content.'\', \''.$row["sub_title"].'\');';
                                     }
                                     echo '
                                     </script>';

@@ -1,16 +1,5 @@
 <?php
-session_start();
-
-// Link to database
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db1 = "rp";
-$conn = new mysqli($db_host, $db_user, $db_password, $db1);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
-}
-$conn->set_charset("utf8");
+include("public/connection.php");
 
 function removeDirectory($path) {
     $files = glob($path . '/*');
@@ -47,106 +36,113 @@ if (isset($_POST["submit1"])) {
     else {
         $sql = 'INSERT INTO script_names(name) VALUES("'.$_POST["name"].'");';
         $conn->query($sql);
-        $sql1 = 'SELECT id FROM script_names WHERE name="'.$_POST["name"].'"';
-        $result1 = $conn->query($sql1);
-        while ($row1 = $result1->fetch_assoc()) {
-            mkdir("scripts/".$row1["id"], 0777, true);
-            mkdir("scripts/".$row1["id"].'/maps', 0777, true);
-            mkdir("scripts/".$row1["id"].'/clues', 0777, true);
-            $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
-            $conn->query($sql2);
-            $db2 = "rp_".$row1["id"];
-            $conn2 = new mysqli($db_host, $db_user, $db_password, $db2);
-            $conn2->set_charset("utf8");
-            $sql2 = "
-            CREATE TABLE characters(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                username VARCHAR(20),
-                password VARCHAR(20),
-                name VARCHAR(20),
-                preferred_name VARCHAR(20),
-                description VARCHAR(100),
-                points int DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = 'INSERT INTO characters(username, password, name, preferred_name, description, points) VALUES("admin", "admin", "组织者", "", "你是组织者，拥有至高无上的权力！", 0)';
-            $conn2->query($sql2);
-            $sql2 = "CREATE TABLE background(id int PRIMARY KEY, content varchar(3000)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "CREATE TABLE status(id int PRIMARY KEY, value int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "INSERT INTO status(id, value) VALUES(1, 1)";
-            $conn2->query($sql2);
-            $sql2 = "INSERT INTO status(id, value) VALUES(2, 0)";
-            $conn2->query($sql2);
-            $sql2 = "CREATE TABLE sections(id int PRIMARY KEY AUTO_INCREMENT, sequence int, type int, title VARCHAR(30), chapter int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE character_section(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                character_id int,
-                section_id int,
-                content VARCHAR(20000),
-                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
-                FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE timelines(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                character_id int,
-                chapter int,
-                hour int,
-                minute int,
-                content VARCHAR(400),
-                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE objectives(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                character_id int,
-                chapter int,
-                content varchar (400),
-                points int,
-                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE maps(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                description varchar (20),
-                file_path varchar(50)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE locations(
-                id int PRIMARY KEY,
-                name varchar (20)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = 'INSERT INTO locations(id, name) VALUES(0, "秘密线索")';
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE clues(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                chapter int,
-                location_id int,
-                position varchar(20),
-                points int,
-                self_description varchar(300),
-                description varchar(300),
-                file_path varchar(50),
-                unlock_id int,
-                unlock_characters varchar(30),
-                FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $sql2 = "
-            CREATE TABLE character_clue(
-                id int PRIMARY KEY AUTO_INCREMENT,
-                character_id int,
-                clue_id int,
-                owner int,
-                FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
-                FOREIGN KEY (clue_id) REFERENCES clues(id) ON DELETE CASCADE,
-                UNIQUE KEY (character_id, clue_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-            $conn2->query($sql2);
-            $conn2->close();
-        }
+        $id = $conn->insert_id;
+        mkdir("scripts/".$id, 0777, true);
+        mkdir("scripts/".$id.'/maps', 0777, true);
+        mkdir("scripts/".$id.'/clues', 0777, true);
+        $sql = 'INSERT INTO characters(script_id, username, password, name, preferred_name, description, points) VALUES('.$id.', "admin", "admin", "组织者", "", "你是组织者，拥有至高无上的权力！", 0)';
+        $conn->query($sql);
+        $admin_id = $conn->insert_id;
+        $sql = 'INSERT INTO status(script_id, name, value) VALUES('.$id.', 1, 1)';
+        $conn->query($sql);
+        $sql = 'INSERT INTO status(script_id, name, value) VALUES('.$id.', 2, 0)';
+        $conn->query($sql);
+        $sql = 'INSERT INTO locations(script_id, character_id, name) VALUES('.$id.', '.$admin_id.', "秘密线索")';
+        $conn->query($sql);
+        //     $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
+        //     $conn->query($sql2);
+        //     $db2 = "rp_".$row1["id"];
+        //     $conn2 = new mysqli($db_host, $db_user, $db_password, $db2);
+        //     $conn2->set_charset("utf8");
+        //     $sql2 = "
+        //     CREATE TABLE characters(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         username VARCHAR(20),
+        //         password VARCHAR(20),
+        //         name VARCHAR(20),
+        //         preferred_name VARCHAR(20),
+        //         description VARCHAR(100),
+        //         points int DEFAULT 0) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = 'INSERT INTO characters(username, password, name, preferred_name, description, points) VALUES("admin", "admin", "组织者", "", "你是组织者，拥有至高无上的权力！", 0)';
+        //     $conn2->query($sql2);
+        //     $sql2 = "CREATE TABLE background(id int PRIMARY KEY, content varchar(3000)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "CREATE TABLE status(id int PRIMARY KEY, value int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "INSERT INTO status(id, value) VALUES(1, 1)";
+        //     $conn2->query($sql2);
+        //     $sql2 = "INSERT INTO status(id, value) VALUES(2, 0)";
+        //     $conn2->query($sql2);
+        //     $sql2 = "CREATE TABLE sections(id int PRIMARY KEY AUTO_INCREMENT, sequence int, type int, title VARCHAR(30), chapter int) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE character_section(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         character_id int,
+        //         section_id int,
+        //         content VARCHAR(20000),
+        //         FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
+        //         FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE timelines(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         character_id int,
+        //         chapter int,
+        //         hour int,
+        //         minute int,
+        //         content VARCHAR(400),
+        //         FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE objectives(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         character_id int,
+        //         chapter int,
+        //         content varchar (400),
+        //         points int,
+        //         FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE maps(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         description varchar (20),
+        //         file_path varchar(50)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE locations(
+        //         id int PRIMARY KEY,
+        //         name varchar (20)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = 'INSERT INTO locations(id, name) VALUES(0, "秘密线索")';
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE clues(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         chapter int,
+        //         location_id int,
+        //         position varchar(20),
+        //         points int,
+        //         self_description varchar(300),
+        //         description varchar(300),
+        //         file_path varchar(50),
+        //         unlock_id int,
+        //         unlock_characters varchar(30),
+        //         FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $sql2 = "
+        //     CREATE TABLE character_clue(
+        //         id int PRIMARY KEY AUTO_INCREMENT,
+        //         character_id int,
+        //         clue_id int,
+        //         owner int,
+        //         FOREIGN KEY (character_id) REFERENCES characters(id) ON DELETE CASCADE,
+        //         FOREIGN KEY (clue_id) REFERENCES clues(id) ON DELETE CASCADE,
+        //         UNIQUE KEY (character_id, clue_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        //     $conn2->query($sql2);
+        //     $conn2->close();
+        // }
         $conn->close();
         header("Location: index.php");
     }
@@ -164,8 +160,6 @@ if (isset($_POST["submit2"])) {
     else {
         foreach ($_POST["script_ids"] as $script_id) {
             $sql = "DELETE FROM script_names WHERE id=".$script_id;
-            $conn->query($sql);
-            $sql = "DROP DATABASE rp_".$script_id;
             $conn->query($sql);
             removeDirectory("scripts/".$script_id);
         }
@@ -211,7 +205,7 @@ if (isset($_POST["submit2"])) {
         <div class="container">
             <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
-                    <a href="#"><img src="public/img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+                    <a href="index.php"><img src="public/img/logo.png" style="height: 50px;"  alt="" title="" /></a>
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">

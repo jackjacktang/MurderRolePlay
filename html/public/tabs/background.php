@@ -7,7 +7,7 @@
                         <br><br>
                         <p>
                             <?php
-                            $sql = "SELECT * FROM background";
+                            $sql = 'SELECT * FROM background WHERE script_id='.$script_id.' AND type=1';
                             $result = $conn->query($sql);
                             while ($row = $result->fetch_assoc()) {
                                 echo replace_text($pairs, $row["content"]);
@@ -31,7 +31,7 @@
                         <br>
                         <ol class="ordered-list">
                             <?php
-                            $sql = "SELECT id, name, description FROM characters ORDER BY id ASC";
+                            $sql = 'SELECT id, name, description FROM characters WHERE script_id='.$script_id.' ORDER BY id ASC';
                             $result = $conn->query($sql);
                             while ($row = $result->fetch_assoc()) {
                                 if ($row["id"] > 1) {

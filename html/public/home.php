@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="zxx" class="no-js">
 <?php
-session_start();
-
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_id"];
-$conn = new mysqli($db_host, $db_user, $db_password, $db);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
-}
-$conn->set_charset("utf8");
+include("connection.php");
 
 if (!isset($_SESSION["script_id"])) {
     $conn->close();
@@ -35,6 +23,9 @@ function replace_text($pairs, $text) {
     return $text;
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
 <head>
 	<!-- Mobile Specific Meta -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -73,14 +64,21 @@ function replace_text($pairs, $text) {
 
 <?php
 $pairs = array();
+$script_id = $_SESSION["script_id"];
 
-$sql = "SELECT * FROM status WHERE id=1";
+$sql = 'SELECT MIN(id) AS admin FROM characters WHERE script_id='.$_SESSION["script_id"];
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $admin = $row["admin"];
+}
+
+$sql = "SELECT * FROM status WHERE name=1 AND script_id=".$script_id;
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     $status = $row["value"];
 }
 
-$sql = "SELECT * FROM characters";
+$sql = "SELECT * FROM characters WHERE script_id=".$script_id;
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     array_push($pairs, array($row["name"], $row["preferred_name"]));
@@ -89,7 +87,7 @@ while ($row = $result->fetch_assoc()) {
     }
 }
 
-$sql = "SELECT * FROM maps";
+$sql = "SELECT * FROM maps WHERE script_id=".$script_id;
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     $maps = False;
@@ -100,9 +98,13 @@ else {
 
 $sections = array(array(), array());
 foreach (array(1, 2) as $chapter) {
-    $sql = 'SELECT * FROM sections WHERE chapter='.$chapter.' ORDER BY sequence ASC';
+    $sql = 'SELECT * FROM sections WHERE script_id='.$script_id.' AND chapter='.$chapter.' ORDER BY sequence ASC';
     $result = $conn->query($sql);
     while ($row = $result->fetch_assoc()) {
+        // 公共
+        if ($row["type"] == 0) {
+            array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"], "sub_title"=>$row["sub_title"]));
+        }
         // 普通线索
         if ($row["type"] == 1) {
             $sql1 = 'SELECT * FROM character_section WHERE character_id='.$character_id.' AND section_id='.$row["id"];
@@ -111,30 +113,30 @@ foreach (array(1, 2) as $chapter) {
             while ($row1 = $result1->fetch_assoc()) {
                 $content = $row1["content"];
             }
-            if ($content != "") array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+            if ($content != "") array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"], "sub_title"=>$row["sub_title"]));
         }
         // 时间线
         else if ($row["type"] == 2) {
             $sql1 = 'SELECT * FROM timelines WHERE character_id='.$character_id.' AND chapter='.$chapter.' ORDER BY hour ASC, minute ASC';
             $result1 = $conn->query($sql1);
-            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"], "sub_title"=>$row["sub_title"]));
         }
         // 房间线索
         else if ($row["type"] == 3) {
-            $sql1 = 'SELECT * FROM clues WHERE location_id='.(-$character_id).' AND chapter='.$chapter.' ORDER BY id ASC';
+            $sql1 = 'SELECT * FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$character_id.' AND C.chapter='.$chapter.' ORDER BY C.id ASC';
             $result1 = $conn->query($sql1);
-            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"], "sub_title"=>$row["sub_title"]));
         }
         // 任务
         else {
             $sql1 = 'SELECT * FROM objectives WHERE character_id='.$character_id.' AND chapter='.$chapter.' ORDER BY id ASC';
             $result1 = $conn->query($sql1);
-            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"]));
+            if ($result1->num_rows > 0) array_push($sections[$chapter - 1], array("id"=>$row["id"], "type"=>$row["type"], "title"=>$row["title"], "sub_title"=>$row["sub_title"]));
         }
     }
 }
 
-$sql = 'SELECT * FROM status WHERE id=2';
+$sql = "SELECT * FROM status WHERE name=2 AND script_id=".$script_id;
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     if ($row["value"] == 0) $duplicate = False;
@@ -151,7 +153,7 @@ $tab = $_GET["tab"];
 	    <div class="container">
 	        <div class="row align-items-center justify-content-between d-flex">
 		        <div id="logo">
-		            <a href="index.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+		            <a href="home.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
 			    </div>
 			    <nav id="nav-menu-container">
 			        <ul class="nav-menu">

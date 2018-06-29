@@ -9,7 +9,7 @@
     <script type="text/javascript">
         var clue_information = [];
         <?php
-        $sql = 'SELECT * FROM clues WHERE location_id='.(-$character_id).' AND chapter='.$_GET["chapter"].' ORDER BY id ASC';
+        $sql = 'SELECT C.id, C.unlock_id, C.file_path, C.position, C.self_description FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$character_id.' AND C.chapter='.$_GET["chapter"].' ORDER BY C.id ASC';
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
             if ($row["unlock_id"] > 0) {
@@ -29,7 +29,7 @@
 
         function open_modal(id) {
             document.getElementById("myModal").style.display = "block";
-            modal_title.innerHTML = "你的房间：" + clue_information[id][0];
+            modal_title.innerHTML = clue_information[id][0];
             var file_path = clue_information[id][2];
             var img = document.getElementById("modal_img");
             if (file_path == "") {
@@ -62,12 +62,19 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8 col-md-9 col-sm-10">
                         <center>
-                            <h3 style="margin-bottom: 20px;">'.$section["title"].'</h3>
+                            <h3 style="margin-bottom: '.($section["sub_title"] != ""? 0:20).'px;">'.$section["title"].'</h3>';
+
+        if ($section["sub_title"] != "") {
+            echo '
+                            <p>'.$section["sub_title"].'</p>';
+        }
+
+        echo '
                         </center>';
 
         // 公共
         if ($section["type"] == 0) {
-            $sql = 'SELECT * FROM character_section WHERE character_id=1 AND section_id='.$section["id"];
+            $sql = 'SELECT * FROM character_section WHERE character_id='.$admin.' AND section_id='.$section["id"];
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
                 echo replace_text($pairs, $row["content"]);
@@ -102,7 +109,7 @@
         else if ($section["type"] == 3) {
             echo '
                     </div>';
-            $sql = 'SELECT * FROM clues WHERE location_id='.(-$character_id).' AND chapter='.$_GET["chapter"].' ORDER BY id ASC';
+            $sql = 'SELECT C.id, C.unlock_id, C.file_path, C.position, C.self_description FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$character_id.' AND C.chapter='.$_GET["chapter"].' ORDER BY C.id ASC';
             $result = $conn->query($sql);
             $counter = 0;
             while ($row = $result->fetch_assoc()) {

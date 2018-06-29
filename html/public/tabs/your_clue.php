@@ -1,14 +1,14 @@
     <?php
     $character_id = $_SESSION["character_id"];
-    $sql = 'SELECT * FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id WHERE C.location_id=0 AND CC.character_id='.$character_id;
+    $sql = 'SELECT * FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$admin.' AND CC.character_id='.$character_id;
     $result = $conn->query($sql);
     if ($result->num_rows == 0) $secret = False;
     else $secret = True;
-    $sql = 'SELECT * FROM clues WHERE chapter=1';
+    $sql = 'SELECT * FROM clues WHERE chapter=1 AND script_id='.$script_id;
     $result = $conn->query($sql);
     if ($result->num_rows == 0) $chapter_1_clue = False;
     else $chapter_1_clue = True;
-    $sql = 'SELECT * FROM clues WHERE chapter=2';
+    $sql = 'SELECT * FROM clues WHERE chapter=2 AND script_id='.$script_id;
     $result = $conn->query($sql);
     if ($result->num_rows == 0) $chapter_2_clue = False;
     else $chapter_2_clue = True;
@@ -54,7 +54,7 @@
                         <h3 style="margin-bottom: 20px;">秘密线索</h3>
                     </center>
                     <?php
-                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND L.id=0 ORDER BY CC.id ASC';
+                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND L.character_id='.$admin.' ORDER BY CC.id ASC';
                     $result1 = $conn->query($sql1);
                     $counter = 0;
                     while ($row1 = $result1->fetch_assoc()) {
@@ -116,7 +116,7 @@
                         <h3 style="margin-bottom: 20px;">线索</h3>
                     </center>
                     <?php
-                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND L.id<>0 ORDER BY CC.id ASC';
+                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND (L.character_id IS NULL OR L.character_id<>'.$admin.') ORDER BY CC.id ASC';
                     $result1 = $conn->query($sql1);
                     $counter = 0;
                     while ($row1 = $result1->fetch_assoc()) {
@@ -242,7 +242,7 @@
                 <div class="modal-body">
                     <p>将这条线索分享给：</p>
                     <?php
-                    $sql = "SELECT id, name FROM characters";
+                    $sql = "SELECT id, name FROM characters WHERE script_id=".$script_id;
                     $result = $conn->query($sql);
                     while ($row = $result->fetch_assoc()) {
                         if ($row["id"] != $_SESSION["character_id"] && $row["id"] != 1) {

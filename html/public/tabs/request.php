@@ -26,7 +26,7 @@ if ($_POST["tab"] == "find_clue") {
 </script>';
 		        }
 		        else {
-		        	$sql1 = 'INSERT INTO character_clue(character_id, clue_id, owner) VALUES("'.$_SESSION["character_id"].'", '.$clue_id.', 1)';
+		        	$sql1 = 'INSERT INTO character_clue(script, character_id, clue_id, owner) VALUES('.$script_id.', "'.$_SESSION["character_id"].'", '.$clue_id.', 1)';
 		        	$conn->query($sql1);
 		        	$sql1 = 'UPDATE characters SET points=points-'.$clue["points"].' WHERE id="'.$_SESSION["character_id"].'"';
 		        	$conn->query($sql1);
@@ -96,7 +96,7 @@ if ($_POST["tab"] == "find_clue") {
 if ($_POST["tab"] == "your_clue") {
 	if (isset($_POST["share"])) {
 		foreach ($_POST["share_targets"] as $share_target) {
-			$sql = 'INSERT INTO character_clue(character_id, clue_id, owner) VALUES('.$share_target.', '.$_POST["clue_id"].', 0)';
+			$sql = 'INSERT INTO character_clue(script_id, character_id, clue_id, owner) VALUES('.$script_id.', '.$share_target.', '.$_POST["clue_id"].', 0)';
 			$conn->query($sql);
 		}
 	}
@@ -130,7 +130,7 @@ if ($_POST["tab"] == "your_clue") {
 </script>';
 		        }
 		        else {
-		        	$sql1 = 'INSERT INTO character_clue(character_id, clue_id, owner) VALUES("'.$_SESSION["character_id"].'", '.$clue_id.', 1)';
+		        	$sql1 = 'INSERT INTO character_clue(script_id, character_id, clue_id, owner) VALUES('.$script_id.', "'.$_SESSION["character_id"].'", '.$clue_id.', 1)';
 		        	$conn->query($sql1);
 		        	$sql1 = 'UPDATE characters SET points=points-'.$clue["points"].' WHERE id="'.$_SESSION["character_id"].'"';
 		        	$conn->query($sql1);

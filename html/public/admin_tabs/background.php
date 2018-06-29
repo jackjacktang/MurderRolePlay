@@ -1,9 +1,11 @@
     <?php
-    $sql = "SELECT * FROM background";
+    $sql = 'SELECT * FROM background WHERE type=1 AND script_id='.$script_id;
     $result = $conn->query($sql);
     $background = "";
+    $background_id = -1; 
     while ($row = $result->fetch_assoc()) {
         $background = $row["content"];
+        $background_id = $row["id"];
     }
     ?>
     
@@ -12,7 +14,7 @@
         var counter;
         var section;
 
-        function add_role(id, username, password, name, preferred_name, description) {
+        function add_role(id, username, password, name, preferred_name, description, is_admin) {
             var role_area = document.getElementById("role_area");
             var li = document.createElement("li");
             li.setAttribute("id", "character" + character_counter);
@@ -20,16 +22,16 @@
             li.style.marginBottom = "20px";
             role_area.appendChild(li);
             li.innerHTML = li.innerHTML + '<input type="hidden" name="character_ids[]" value="' + id + '">';
-            if (id == 1) {
+            if (is_admin) {
                 li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input readonly style="width: 10%; border: 0px;" value="' + username + '" name="character_usernames[]">';
             }
             else {
-                li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input style="width: 10%;" value=\'' + username + '\' name="character_usernames[]" id="character'+ character_counter + '_username" maxlength=20>';
+                li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input required style="width: 10%;" value=\'' + username + '\' name="character_usernames[]" id="character'+ character_counter + '_username" maxlength=20>';
             }
-            li.innerHTML += '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value=\'' + password + '\' name="character_passwords[]" maxlength=20>';
-            li.innerHTML += '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input style="width: 10%;" value=\'' + name + '\' name="character_names[]" id="character' + character_counter + '_name" maxlength=20>';
+            li.innerHTML += '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input required style="width: 10%;" value=\'' + password + '\' name="character_passwords[]" maxlength=20>';
+            li.innerHTML += '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input required style="width: 10%;" value=\'' + name + '\' name="character_names[]" id="character' + character_counter + '_name" maxlength=20>';
             li.innerHTML += '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value=\'' + preferred_name + '\' name="character_preferred_names[]" maxlength=20>';
-            if (id == 1) {
+            if (is_admin) {
                 li.innerHTML += '<div style="width: 15%;"></div>';
             }
             else {
@@ -47,7 +49,7 @@
             div.style.marginTop = "20px";
             map_area.appendChild(div);
             div.innerHTML += '<input type="hidden" name="map_ids[]" value="' + id + '">';
-            div.innerHTML += '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input style="width: 30%;" value=\'' + description + '\' name="map_descriptions[]" maxlength=20 id="map'+ map_counter + '_description">';
+            div.innerHTML += '<label style="width: 10%; text-align: right;">描述：&nbsp;</label><input required style="width: 30%;" value=\'' + description + '\' name="map_descriptions[]" maxlength=20 id="map'+ map_counter + '_description">';
             div.innerHTML += '<label style="width: 10%; text-align: right;">图片：&nbsp;</label><input type="file" name="map_images[]" onchange="preview(this, ' + map_counter + ')">';
             div.innerHTML += '<button type="button" onclick="open_modal(' + id + ', ' + map_counter + ', \'map\')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px;" tabindex="-1"><i class="fa fa-minus" tabindex="-1"></i></button>';
             div.innerHTML += '<center style="margin-top: 20px;"><img src="'+ file_path + '" id="map' + id + '_preview"></center>';
@@ -167,6 +169,7 @@
                             
                             <center>
                                 <h3>添加/修改故事背景</h3><br>
+                                <input type="hidden" name="background_id" value="<?php echo $background_id; ?>">
                                 <input type="hidden" id="background_hide" name="bg_story" value='<?php echo $background; ?>'>
                                 <div onclick="copyHTML()" style="width: 90%; height: 40px; border: 1px solid #BBBBBB; text-align: left; font-size: 14px;">
                                     <button type="button" class="genric-btn info-border small" style="width: 26px; height: 26px; padding: 0px; margin-top: 7px; margin-left: 10px; font-weight: bold;" onclick="document.execCommand('bold',false,null);" tabindex="-1">B</button>
@@ -195,7 +198,7 @@
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
                                 <h3>添加/修改人物
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_role(-1,'','','','','')">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_role(-1,'','','','','', false)">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
@@ -203,15 +206,16 @@
                                 <div>
                                     <ol class="ordered-list" id="role_area" start="0">
                                     <?php
-                                    $sql = "SELECT * FROM characters";
+                                    $sql = 'SELECT * FROM characters WHERE script_id='.$script_id.' ORDER BY id ASC';
                                     $result = $conn->query($sql);
                                     echo '
                                         <script type="text/javascript">
                                             var character_counter = 0;';
                                     while ($row = $result->fetch_assoc()) {
                                         $points = $row["points"];
+                                        $is_admin = (($row["id"]==$admin)? "true":"false");
                                         echo '
-                                            add_role('.$row["id"].', \''.$row["username"].'\', \''.$row["password"].'\', \''.$row["name"].'\', \''.$row["preferred_name"].'\', \''.$row["description"].'\');';
+                                            add_role('.$row["id"].', \''.$row["username"].'\', \''.$row["password"].'\', \''.$row["name"].'\', \''.$row["preferred_name"].'\', \''.$row["description"].'\', '.$is_admin.');';
                                     }
                                     echo '
                                         </script>';
@@ -240,7 +244,7 @@
                                 </h3>
                                 <div id="map_area">
                                     <?php
-                                    $sql = "SELECT * FROM maps";
+                                    $sql = 'SELECT * FROM maps WHERE script_id='.$script_id.' ORDER BY id ASC';
                                     $result = $conn->query($sql);
                                     echo '
                                         <script type="text/javascript">

@@ -1,34 +1,36 @@
 	<br><br><br>
 	<script type="text/javascript">
-		function add_location(id, name) {
+        var id;
+        var counter;
+
+		function add_location(id, name, is_room) {
             var location_area = document.getElementById("location_area");
             var div = document.createElement("div");
+            div.setAttribute("id", "location" + location_counter);
             div.style.marginTop = "20px";
             location_area.appendChild(div);
-            if (id == -1) {
-                id = max_location + 1;
-            }
             
-            if (id <= 0) {
-            	div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input readonly style="width: 30%; border: 0px;" value=\'' + name + '\' name="location'+ id + '_name" maxlength=20 id="location'+ id + '_name">';
-            	var visibility = "hidden";
+            div.innerHTML = div.innerHTML + '<input type="hidden" name="location_ids[]" value="' + id + '">';
+            if (id == 0) {
+                div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input readonly required style="width: 30%; border: 0px;" value=\'' + name + '\' name="location_names[]" maxlength=20 id="location'+ location_counter + '_name">';
             }
             else {
-            	div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input style="width: 30%;" value=\'' + name + '\' name="location'+ id + '_name" maxlength=20 id="location'+ id + '_name">';
-            	var visibility = "visible";
+                div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input required style="width: 30%;" value=\'' + name + '\' name="location_names[]" maxlength=20 id="location'+ location_counter + '_name">';
             }
-            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 50px; visibility: ' + visibility + ';"><i class="fa fa-minus"></i></button>';
-            if (id > max_location) {
-                max_location = id;
-                document.getElementById("max_location").value = max_location;
-            }
+            
+            if (is_room) var visibility = "hidden";
+            else var visibility = "visible";
+            div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ', ' + location_counter + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 50px; visibility: ' + visibility + ';"><i class="fa fa-minus"></i></button>';
+
+            location_counter += 1;
         }
 
-        function open_modal(id) {
+        function open_modal(id, counter) {
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
-            document.getElementById("modal_content").innerHTML = document.getElementById("location" + id + "_name").value;
-            document.getElementById("modal_confirm").value = id;
+            window.id = id;
+            window.counter = counter;
+            document.getElementById("modal_content").innerHTML = document.getElementById("location" + counter + "_name").value;
         }
 
         function close_modal() {
@@ -42,11 +44,23 @@
                 modal.style.display = "none";
             }
         }
+
+        function delete_modal() {
+            if (id < 0) {
+                var delete_li = document.getElementById("location" + counter);
+                delete_li.parentNode.removeChild(delete_li);
+                close_modal();
+            }
+            else {
+                document.getElementById("delete_id").value = id;
+                document.getElementById("myform").submit();
+            }
+        }
     </script>
 
-	<form action="admin_tabs/request.php" method="post">
+	<form id="myform" action="admin_tabs/request.php" method="post">
 		<input type="hidden" name="tab" value="locations">
-        <input type="hidden" name="max_location" value="0" id="max_location">
+        <input type="hidden" name="delete_id" id="delete_id" value="-1">
         <div id="myModal" class="modal" style="top: 30%;">
             <div class="modal-content col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2 col-10 offset-1">
                 <div class="modal-header">
@@ -57,7 +71,7 @@
                     <p id="modal_content"></p>
                 </div>
                 <div class="modal-footer justify-content-center" style="font-size: 14pt;">
-                    <button class="genric-btn info circle e-large" id="modal_confirm" name="delete">确定</button>
+                    <button class="genric-btn info circle e-large" type="button" onclick="delete_modal()">确定</button>
                     <button class="genric-btn info circle e-large" type="button" onclick="close_modal()">关闭</button>
                 </div>
             </div>
@@ -72,7 +86,7 @@
                                 <div class="switch-wrap" style="margin-top: 20px;">
                                     <div class="confirm-switch">
                                         <?php
-                                        $sql = "SELECT * FROM status WHERE id=2";
+                                        $sql = "SELECT * FROM status WHERE name=2 AND script_id=".$script_id;
                                         $result = $conn->query($sql);
                                         while ($row = $result->fetch_assoc()) {
                                             $duplicate = $row["value"];
@@ -103,19 +117,19 @@
                                     <?php
                                     echo '
                                         <script type="text/javascript">
-                                            var max_location = 0;
-                                            add_location(0, "秘密线索");';
-                                    $sql = "SELECT * FROM locations WHERE id<0 ORDER BY id DESC";
+                                            var location_counter = 0;
+                                            add_location(0, "秘密线索", true);';
+                                    $sql = 'SELECT * FROM locations WHERE character_id IS NOT NULL AND character_id<>'.$admin.' AND script_id='.$script_id.' ORDER BY character_id ASC';
                                     $result = $conn->query($sql);
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
-                                            add_location('.$row["id"].', \''.$row["name"].'\');';
+                                            add_location('.$row["id"].', \''.$row["name"].'\', true);';
                                     }
-                                    $sql = "SELECT * FROM locations WHERE id>0 ORDER BY id ASC";
+                                    $sql = 'SELECT * FROM locations WHERE character_id IS NULL AND script_id='.$script_id.' ORDER BY id ASC';
                                     $result = $conn->query($sql);
                                     while ($row = $result->fetch_assoc()) {
                                         echo '
-                                            add_location('.$row["id"].', \''.$row["name"].'\');';
+                                            add_location('.$row["id"].', \''.$row["name"].'\', false);';
                                     }
                                     echo '
                                         </script>';

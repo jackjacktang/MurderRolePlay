@@ -1,14 +1,26 @@
-<!DOCTYPE html>
-<html lang="zxx" class="no-js">
 <?php
-session_start();
+include("connection.php");
+
+$sql = 'SELECT MIN(id) AS admin FROM characters WHERE script_id='.$_SESSION["script_id"];
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    $admin = $row["admin"];
+}
+
 if (!isset($_SESSION["character_id"])) {
     header("Location: login.php");
 }
-else if ($_SESSION["character_id"] != 1) {
+else if ($_SESSION["character_id"] != $admin) {
     header("Location: login.php");
 }
+
+$tab = $_GET["tab"];
+$script_id = $_SESSION["script_id"];
+$pairs = array();
 ?>
+
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
 <head>
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -45,26 +57,11 @@ else if ($_SESSION["character_id"] != 1) {
 
 <body>
 
-<?php
-$tab = $_GET["tab"];
-$pairs = array();
-
-$db_host = "localhost";
-$db_user = "root";
-$db_password = "Lu636593";
-$db = "rp_".$_SESSION["script_id"];
-$conn = new mysqli($db_host, $db_user, $db_password, $db);
-if (mysqli_connect_errno()) {
-    echo mysqli_connect_error();
-}
-$conn->set_charset("utf8");
-?>
-
     <header id="header">
         <div class="container">
             <div class="row align-items-center justify-content-between d-flex">
                 <div id="logo">
-                    <a href="index.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
+                    <a href="login.php"><img src="img/logo.png" style="height: 50px;"  alt="" title="" /></a>
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
@@ -73,7 +70,7 @@ $conn->set_charset("utf8");
                         <li class="menu-has-children"><a href="#">剧本（第一幕）</a>
                             <ul>
                                 <?php
-                                $sql = "SELECT id, name FROM characters ORDER BY id ASC";
+                                $sql = 'SELECT id, name FROM characters WHERE script_id='.$script_id.' ORDER BY id ASC';
                                 $result = $conn->query($sql);
                                 $counter = 0;
                                 while ($row = $result->fetch_assoc()) {
@@ -89,7 +86,7 @@ $conn->set_charset("utf8");
                         <li class="menu-has-children"><a href="#">（第二幕）</a>
                             <ul>
                                 <?php
-                                $sql = "SELECT id, name FROM characters ORDER BY id ASC";
+                                $sql = 'SELECT id, name FROM characters WHERE script_id='.$script_id.' ORDER BY id ASC';
                                 $result = $conn->query($sql);
                                 $counter = 0;
                                 while ($row = $result->fetch_assoc()) {

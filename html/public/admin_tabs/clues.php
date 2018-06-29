@@ -4,17 +4,18 @@
         var clue_information = [];
         var location_information = [];
         <?php
-        $sql = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"];
+        $sql = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND C.script_id='.$script_id;
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
             echo '
         clue_information['.$row["id"].'] = [\''.$row["name"].'\', \''.$row["position"].'\', '.$row["points"].', \''.$row["self_description"].'\', \''.$row["description"].'\', \''.$row["file_path"].'\', '.$row["unlock_id"].', \''.$row["unlock_characters"].'\'];';
         }
-        $sql = 'SELECT * FROM locations';
+        $sql = 'SELECT * FROM locations WHERE script_id='.$script_id;
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
             echo '
-        location_information['.$row["id"].'] = \''.$row["name"].'\';';
+        location_information['.$row["id"].'] = [\''.$row["name"].'\', \''.$row["character_id"].'\'];
+        var admin = '.$admin.';';
         }
         ?>
         clue_information[-1] = ["", "",  1, "", "", "", "", ""];
@@ -24,7 +25,7 @@
             var modal2 = document.getElementById("myModal2");
             modal1.style.display = "block";
             modal2.style.display = "none";
-            if (location_id == 0) {
+            if (location_information[location_id][1] == admin) {
                 document.getElementById("secret_clue").style.display = "none";
             }
             else {
@@ -32,7 +33,7 @@
             }
             document.getElementById("id1").value = id;
             document.getElementById("location_id").value = location_id;
-            document.getElementById("modal_title1").innerHTML = location_information[location_id];
+            document.getElementById("modal_title1").innerHTML = location_information[location_id][0];
             document.getElementById("position").value = clue_information[id][1];
             document.getElementById("points").value = clue_information[id][2];
             document.getElementById("self_description_hidden").value = clue_information[id][3];
@@ -90,9 +91,6 @@
         window.onclick = function(event) {
             var modal1 = document.getElementById("myModal1");
             var modal2 = document.getElementById("myModal2");
-            if (event.target == modal1) {
-                modal1.style.display = "none";
-            }
             if (event.target == modal2) {
                 modal2.style.display = "none";
             }
@@ -131,13 +129,12 @@
 	
     <?php
     $locations = array();
-    array_push($locations, array("id"=>0, "name"=>"秘密线索"));
-	$sql = 'SELECT * FROM locations WHERE id<0 ORDER BY id DESC';
+	$sql = 'SELECT * FROM locations WHERE character_id IS NOT NULL AND script_id='.$script_id.' ORDER BY character_id ASC';
 	$result = $conn->query($sql);
 	while ($row = $result->fetch_assoc()) {
 		array_push($locations, array("id"=>$row["id"], "name"=>$row["name"]));
 	}
-	$sql = 'SELECT * FROM locations WHERE id>0 ORDER BY id ASC';
+	$sql = 'SELECT * FROM locations WHERE character_id IS NULL AND script_id='.$script_id.' ORDER BY id ASC';
 	$result = $conn->query($sql);
 	while ($row = $result->fetch_assoc()) {
 		array_push($locations, array("id"=>$row["id"], "name"=>$row["name"]));
@@ -255,9 +252,9 @@
                     <div id="secret_clue">
                         <label style="text-align: left; width: 120px; display: inline-block;">秘密线索：</label>
                         <select style="width: 200px; display: inline-block;" name="unlock_id" id="select">
-                            <option value="0" selected class="options"></option>
+                            <option value="null" selected class="options"></option>
                             <?php
-                            $sql = "SELECT * FROM clues WHERE location_id=0";
+                            $sql = 'SELECT C.id, C.position FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$admin;
                             $result = $conn->query($sql);
                             while ($row = $result->fetch_assoc()) {
                                 echo '
@@ -267,7 +264,7 @@
                         </select><br>
                         <label style="text-align: left; width: 120px;">可解锁的人：</label><br>
                         <?php
-                        $sql = "SELECT * FROM characters WHERE id>1";
+                        $sql = "SELECT * FROM characters WHERE id<>".$admin.' AND script_id='.$script_id.' ORDER BY id ASC';
                         $result = $conn->query($sql);
                         while ($row = $result->fetch_assoc()) {
                             echo '

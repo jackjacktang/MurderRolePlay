@@ -11,30 +11,29 @@
             <div class="row">
                 <?php
                 $chapter = ($status <= 2? 1:2);
-                $sql = 'SELECT * FROM status WHERE id=2';
                 $locations = array();
-                $sql = 'SELECT location_id FROM clues WHERE chapter='.$chapter.' AND location_id<0 GROUP BY location_id HAVING COUNT(id)>0 ORDER BY location_id DESC';
+                $sql = 'SELECT location_id, character_id FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.script_id='.$script_id.' AND C.chapter='.$chapter.' AND L.character_id IS NOT NULL AND L.character_id<>'.$admin.' GROUP BY L.id HAVING COUNT(L.id)>0 ORDER BY L.character_id DESC';
                 $result = $conn->query($sql);
                 while ($row = $result->fetch_assoc()) {
-                    array_push($locations, $row["location_id"]);
+                    array_push($locations, array($row["location_id"], $row["character_id"]));
                 }
-                $sql = 'SELECT location_id FROM clues WHERE chapter='.$chapter.' AND location_id>0 GROUP BY location_id HAVING COUNT(id)>0 ORDER BY location_id ASC';
+                $sql = 'SELECT location_id FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.script_id='.$script_id.' AND C.chapter='.$chapter.' AND L.character_id IS NULL AND L.character_id<>'.$admin.' GROUP BY L.id HAVING COUNT(L.id)>0 ORDER BY L.id DESC';
                 $result = $conn->query($sql);
                 while ($row = $result->fetch_assoc()) {
-                    array_push($locations, $row["location_id"]);
+                    array_push($locations, array($row["location_id"], $row["character_id"]));
                 }
                 foreach ($locations as $location) {
-                    $sql = 'SELECT * FROM locations WHERE id='.$location;
+                    $sql = 'SELECT * FROM locations WHERE id='.$location[0];
                     $result = $conn->query($sql);
                     while ($row = $result->fetch_assoc()) {
                         $location_chinese = $row["name"];
                     }
                     echo '
                 <div class="single-testimonial item col-lg-3 col-md-3 col-sm-6 col-6">
-                    <h5>'.($location == (-$_SESSION["character_id"])? "你的房间":replace_text($pairs, $location_chinese)).'</h5>
+                    <h5>'.($location[1] == $_SESSION["character_id"]? "你的房间":replace_text($pairs, $location_chinese)).'</h5>
                     <div class="row">';
 
-                    $sql = 'SELECT * FROM clues WHERE chapter='.$chapter.' AND location_id='.$location;
+                    $sql = 'SELECT * FROM clues WHERE chapter='.$chapter.' AND location_id='.$location[0];
                     $result = $conn->query($sql);
                     while ($row = $result->fetch_assoc()) {
                         echo '
@@ -47,7 +46,7 @@
                             $sql1 = 'SELECT * FROM character_clue WHERE clue_id='.$row["id"];
                         }
                         $result1 = $conn->query($sql1);
-                        if ($location == (-$_SESSION["character_id"]) || $result1->num_rows > 0) {
+                        if ($location[1] == $_SESSION["character_id"] || $result1->num_rows > 0) {
                             echo '
                             <a style="color: #BBBBBB;">'.$row["position"].'</a>';
                         }
@@ -103,10 +102,10 @@
                     <p>
                         将行动点赠送给：<br>
                     <?php
-                    $sql = "SELECT id, name FROM characters";
+                    $sql = 'SELECT id, name FROM characters WHERE script_id='.$script_id;
                     $result = $conn->query($sql);
                     while ($row = $result->fetch_assoc()) {
-                        if ($row["id"] != $_SESSION["character_id"] && $row["id"] != 1) {
+                        if ($row["id"] != $_SESSION["character_id"] && $row["id"] != $admin) {
                             echo '
                         <input required type="radio" name="share_target" value="'.$row["id"].'" style="margin-top: 10px;"> 【'.replace_text($pairs, $row["name"]).'】<br>';
                         }
