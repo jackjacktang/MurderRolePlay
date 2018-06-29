@@ -31,7 +31,7 @@
             }
             else if (type == 3) {
                 type_chinese = "房间线索";
-                document.getElementById("button_" + chapter + "_3").style.display = "none";
+                // document.getElementById("button_" + chapter + "_3").style.display = "none";
             }
             else if (type == 4) {
                 type_chinese = "任务";

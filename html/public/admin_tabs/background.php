@@ -28,7 +28,7 @@
             else {
                 li.innerHTML += '<label style="width: 10%; text-align: right;">用户名：&nbsp;</label><input required style="width: 10%;" value=\'' + username + '\' name="character_usernames[]" id="character'+ character_counter + '_username" maxlength=20>';
             }
-            li.innerHTML += '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input required style="width: 10%;" value=\'' + password + '\' name="character_passwords[]" maxlength=20>';
+            li.innerHTML += '<label style="width: 10%; text-align: right;">密码：&nbsp;</label><input style="width: 10%;" value=\'' + password + '\' name="character_passwords[]" maxlength=20>';
             li.innerHTML += '<label style="width: 10%; text-align: right;">姓名：&nbsp;</label><input required style="width: 10%;" value=\'' + name + '\' name="character_names[]" id="character' + character_counter + '_name" maxlength=20>';
             li.innerHTML += '<label style="width: 15%; text-align: right;">推荐名称：&nbsp;</label><input style="width: 10%;" value=\'' + preferred_name + '\' name="character_preferred_names[]" maxlength=20>';
             if (is_admin) {

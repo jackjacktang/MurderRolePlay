@@ -186,7 +186,7 @@ $tab = $_GET["tab"];
                         </li>
                         <li style="display: <?php echo ($status>=2? "block":"none"); ?>;"><a href="<?php echo ($tab=='find_clue'? '#':'home.php?tab=find_clue') ?>">调查线索</a></li>
                         <li><a href="<?php echo ($tab=='your_clue'? '#':'home.php?tab=your_clue') ?>">你的线索</a></li>
-                        <li style="display: <?php echo ($status>=5? "block":"none"); ?>;"><a href="<?php echo ($tab=='submit'? '#':'home.php?tab=submit') ?>">指认凶手</a></li>
+                        <li style="display: <?php echo ($status>=5? "block":"none"); ?>;"><a href="<?php echo ($tab=='submit'? '#':'home.php?tab=votes') ?>">投票</a></li>
                         <li style="display: <?php echo ($status>=6? "block":"none"); ?>;"><a href="<?php echo ($tab=='result'? '#':'home.php?tab=result') ?>">最终得分</a></li>
                         <li><a href="logout.php">登出</a></li>
                     </ul>

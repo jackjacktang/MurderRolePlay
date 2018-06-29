@@ -31,12 +31,12 @@
                         <br>
                         <ol class="ordered-list">
                             <?php
-                            $sql = 'SELECT id, name, description FROM characters WHERE script_id='.$script_id.' ORDER BY id ASC';
+                            $sql = 'SELECT id, name, description FROM characters WHERE script_id='.$script_id.' AND id<>'.$admin.' ORDER BY id ASC';
                             $result = $conn->query($sql);
                             while ($row = $result->fetch_assoc()) {
                                 if ($row["id"] > 1) {
                                     echo '
-                            <li>&nbsp;'.replace_text($pairs, $row["name"])."：".replace_text($pairs, $row["description"]).'</li>';
+                            <li><b>&nbsp;'.replace_text($pairs, $row["name"])."</b>：".replace_text($pairs, $row["description"]).'</li>';
                                 }
                             }
                             ?>

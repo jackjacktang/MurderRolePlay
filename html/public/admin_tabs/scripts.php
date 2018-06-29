@@ -288,8 +288,8 @@
                 <div class="modal-body">
                     <div>
                         <input type="hidden" name="location_id" id="location_id">
-                        <label style="text-align: left; width: 120px;">位置</label><input required name="position" id="position" style="width: 200px;" type="text" maxlength="20"><br>
-                        <label style="text-align: left; width: 120px;">所需行动点：</label><input required style="width: 200px;" name="points" id="points" type="number" value=1><br>
+                        <label style="text-align: left; width: 120px;">位置</label><input name="position" id="position" style="width: 200px;" type="text" maxlength="20"><br>
+                        <label style="text-align: left; width: 120px;">所需行动点：</label><input style="width: 200px;" name="points" id="points" type="number" value=1><br>
                         <label style="text-align: left; width: 120px;">自己看到的描述：</label>
                         <!-- <input style="width: 200px;" name="self_description" id="self_description" type="text" maxlength="300"><br> -->
                         <input type="hidden" id="self_description_hidden" name="self_description">

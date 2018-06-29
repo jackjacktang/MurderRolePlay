@@ -351,6 +351,27 @@ if ($_POST["tab"] == "truth") {
         $sql = 'UPDATE background SET content="'.$truth.'" WHERE script_id='.$script_id.' AND type=2';
     }
     $conn->query($sql);
+
+    $conn->close();
     header("Location: ../admin.php?tab=truth");
+}
+
+if ($_POST["tab"] == "votes") {
+    for ($i = 0; $i < count($_POST["vote_ids"]); $i++) {
+        $vote_id = $_POST["vote_ids"][$i];
+        $vote_description = remove_quote($_POST["vote_descriptions"][$i]);
+        if ($vote_id < 0) {
+            $sql = 'INSERT INTO votes(script_id, description) VALUES('.$script_id.', "'.$vote_description.'")';
+        }
+        else {
+            $sql = 'UPDATE votes SET description="'.$vote_description.'" WHERE id='.$vote_id;
+        }
+        $conn->query($sql);
+    }
+    $sql = 'DELETE FROM votes WHERE id='.$_POST["delete_id"];
+    $conn->query($sql);
+
+    $conn->close();
+    header("Location: ../admin.php?tab=votes");
 }
 ?>

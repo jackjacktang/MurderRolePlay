@@ -10,7 +10,7 @@
             <br>
             <div class="row">
                 <?php
-                $chapter = ($status <= 2? 1:2);
+                $chapter = ($status <= 3? 1:2);
                 $locations = array();
                 $sql = 'SELECT location_id, character_id FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.script_id='.$script_id.' AND C.chapter='.$chapter.' AND L.character_id IS NOT NULL AND L.character_id<>'.$admin.' GROUP BY L.id HAVING COUNT(L.id)>0 ORDER BY L.character_id DESC';
                 $result = $conn->query($sql);
