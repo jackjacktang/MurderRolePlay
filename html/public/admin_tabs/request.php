@@ -382,9 +382,25 @@ if ($_POST["tab"] == "votes") {
     header("Location: ../admin.php?tab=votes");
 }
 
-if ($_POST["tab"] == "process") {
+if ($_POST["tab"] == "progress") {
     $sql = 'UPDATE status SET value='.$_POST["value"].' WHERE script_id='.$script_id.' AND name=1';
     $conn->query($sql);
-    header("Location: ../admin.php?tab=process");
+    if (isset($_POST["reset"])) {
+        $sql = 'DELETE FROM character_clue WHERE script_id='.$script_id;
+        $conn->query($sql);
+        $sql = 'DELETE FROM character_vote WHERE script_id='.$script_id;
+        $conn->query($sql);
+        $sql = 'UPDATE status set value=1 WHERE script_id='.$script_id.' AND name=1';
+        $conn->query($sql);
+        $sql = 'SELECT points from characters WHERE id='.$admin;
+        $result = $conn->query($sql);
+        while ($row = $result->fetch_assoc()) {
+            $points = $row["points"];
+        }
+        $sql = 'UPDATE characters set points='.$points.' WHERE script_id='.$script_id;
+        $conn->query($sql);
+    }
+    $conn->close();
+    header("Location: ../admin.php?tab=progress");
 }
 ?>

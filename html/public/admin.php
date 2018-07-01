@@ -65,7 +65,7 @@ $pairs = array();
                 </div>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
-                        <li><a href="admin.php?tab=process">进度</a></li>
+                        <li><a href="admin.php?tab=progress">进度</a></li>
                         <li><a href="admin.php?tab=background">故事背景</a></li>
                         <li><a href="admin.php?tab=sections">章节</a></li>
                         <li class="menu-has-children"><a href="#">剧本（第一幕）</a>
