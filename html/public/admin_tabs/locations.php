@@ -17,9 +17,10 @@
             else {
                 div.innerHTML = div.innerHTML + '<label style="width: 10%; text-align: right;">地点：&nbsp;</label><input required style="width: 30%;" value=\'' + name + '\' name="location_names[]" maxlength=20 id="location'+ location_counter + '_name">';
             }
-            
+
             if (is_room) var visibility = "hidden";
             else var visibility = "visible";
+            
             div.innerHTML = div.innerHTML + '<button type="button" onclick="open_modal(' + id + ', ' + location_counter + ')" class="genric-btn danger circle small" style="width: 25px; height: 25px; padding: 0px; margin-left: 50px; visibility: ' + visibility + ';"><i class="fa fa-minus"></i></button>';
 
             location_counter += 1;
@@ -109,7 +110,7 @@
                         <div class="col-lg-9 col-md-9 col-sm-10">
                             <center>
                                 <h3>添加/修改地点
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_location(-1, '')">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="add_location(-1, '', false)">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
@@ -118,7 +119,7 @@
                                     echo '
                                         <script type="text/javascript">
                                             var location_counter = 0;
-                                            add_location(0, "秘密线索", true);';
+                                            add_location(0, "秘密线索", 0, true);';
                                     $sql = 'SELECT * FROM locations WHERE character_id IS NOT NULL AND character_id<>'.$admin.' AND script_id='.$script_id.' ORDER BY character_id ASC';
                                     $result = $conn->query($sql);
                                     while ($row = $result->fetch_assoc()) {

@@ -26,7 +26,8 @@ if ($_POST["tab"] == "find_clue") {
 </script>';
 		        }
 		        else {
-		        	$sql1 = 'INSERT INTO character_clue(script, character_id, clue_id, owner) VALUES('.$script_id.', "'.$_SESSION["character_id"].'", '.$clue_id.', 1)';
+		        	$sql1 = 'INSERT INTO character_clue(script_id, character_id, clue_id, owner) VALUES('.$script_id.', '.$_SESSION["character_id"].', '.$clue_id.', 1)';
+		        	echo $sql1;
 		        	$conn->query($sql1);
 		        	$sql1 = 'UPDATE characters SET points=points-'.$clue["points"].' WHERE id="'.$_SESSION["character_id"].'"';
 		        	$conn->query($sql1);
@@ -41,7 +42,7 @@ if ($_POST["tab"] == "find_clue") {
 			}
 			$conn->commit();
 			echo '
-<div id="myModal2" class="modal" style="top: 20%; display: block;">
+<div id="myModal2" class="modal" style="top: 8%; display: block;">
 	<div class="modal-content col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
 		<div class="modal-header">
 			<h4 id="modal_title" class="modal-title">'.replace_text($pairs, $clue["name"]).'：'.$clue["position"].'</h4>
@@ -80,7 +81,10 @@ if ($_POST["tab"] == "find_clue") {
 	        $sql = 'UPDATE characters SET points=points+'.$_POST["amount"].' WHERE id="'.$_POST["share_target"].'"';
 	        $conn->query($sql);
 	        $conn->commit();
-	        header("Location: home.php?tab=find_clue");
+	        echo '
+<script type="text/javascript">
+	window.location = "home.php?tab=find_clue";
+</script>';
 		}
 		catch (Exception $e) {
 			$conn->rollBack();
@@ -126,7 +130,7 @@ if ($_POST["tab"] == "your_clue") {
 		            echo '
 <script type="text/javascript">
 	alert("作弊有意思么？");
-	window.location = "home.php?tab=find_clue";
+	window.location = "home.php?tab=your_clue&chapter='.$_POST["chapter"].'";
 </script>';
 		        }
 		        else {
@@ -139,8 +143,8 @@ if ($_POST["tab"] == "your_clue") {
 		    else {
 		    	echo '
 <script type="text/javascript">
-	alert("不好意思哦，手慢了。请选择其它的线索。");
-	window.location = "home.php?tab=find_clue";
+	alert("作弊有意思么？");
+	window.location = "home.php?tab=your_clue&chapter='.$_POST["chapter"].'";
 </script>';
 			}
 			$conn->commit();
@@ -165,11 +169,28 @@ if ($_POST["tab"] == "your_clue") {
 			echo '
 <script type="text/javascript">
 	alert("不好意思哦，手慢了。请选择其它的线索。");
-	window.location = "home.php?tab=find_clue";
+	window.location = "home.php?tab=your_clue&chapter='.$_POST["chapter"].'";
 </script>';
 		}
 	}
-	header("Location: home.php?tab=your_clue&chapter=".$_POST["chapter"]);
+	echo '
+<script type="text/javascript">
+	window.location = "home.php?tab=your_clue&chapter='.$_POST["chapter"].'";
+</script>';
+}
+
+if ($_POST["tab"] == "votes") {
+	$sql = 'SELECT * FROM votes WHERE script_id='.$script_id;
+	$result = $conn->query($sql);
+	while ($row = $result->fetch_assoc()) {
+		$vote_id = $row["id"];
+		$sql1 = 'INSERT INTO character_vote(script_id, character_id, vote_id, selection) VALUES('.$script_id.', '.$_SESSION["character_id"].', '.$vote_id.', '.$_POST["vote".$vote_id].')';
+		$conn->query($sql1);
+	}
+	echo '
+<script type="text/javascript">
+	window.location = "home.php?tab=votes";
+</script>';
 }
 	
 exit(0);

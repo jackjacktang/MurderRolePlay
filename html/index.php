@@ -47,7 +47,7 @@ if (isset($_POST["submit1"])) {
         $conn->query($sql);
         $sql = 'INSERT INTO status(script_id, name, value) VALUES('.$id.', 2, 0)';
         $conn->query($sql);
-        $sql = 'INSERT INTO locations(script_id, character_id, name) VALUES('.$id.', '.$admin_id.', "秘密线索")';
+        $sql = 'INSERT INTO locations(script_id, character_id, section_id, name) VALUES('.$id.', '.$admin_id.', null, "秘密线索")';
         $conn->query($sql);
         //     $sql2 = 'CREATE DATABASE rp_'.$row1["id"];
         //     $conn->query($sql2);

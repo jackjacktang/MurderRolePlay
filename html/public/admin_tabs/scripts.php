@@ -1,6 +1,8 @@
 	<script type="text/javascript">
         var clue_information = [];
         var location_information = [];
+        var location_id = new Array();
+        var location_name = new Array();
         <?php
         $sql = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND C.script_id='.$script_id;
         $result = $conn->query($sql);
@@ -11,10 +13,10 @@
         $sql = 'SELECT * FROM locations WHERE character_id='.$_GET["character_id"];
         $result = $conn->query($sql);
         while ($row = $result->fetch_assoc()) {
-            $location_id = $row["id"];
+            $location_id[$row["section_id"]] = $row["id"];
             echo '
-        var location_id = '.$row["id"].';
-        var location_name = \''.$row["name"].'\';
+        location_id['.$row["section_id"].'] = '.$row["id"].';
+        location_name['.$row["section_id"].'] = \''.$row["name"].'\';
         var admin = '.$admin.';';
         }
         ?>
@@ -155,22 +157,22 @@
             modal.style.display = "none";
         }
 
-        function open_modal1(id) {
+        function open_modal1(id, section) {
             var modal = document.getElementById("myModal");
             var modal1 = document.getElementById("myModal1");
             var modal2 = document.getElementById("myModal2");
             modal1.style.display = "block";
             modal2.style.display = "none";
             modal.style.display = "none";
-            if (location_id == admin) {
+            if (location_id[section] == admin) {
                 document.getElementById("secret_clue").style.display = "none";
             }
             else {
                 document.getElementById("secret_clue").style.display = "block";
             }
             document.getElementById("clue_id").value = id;
-            document.getElementById("location_id").value = location_id;
-            document.getElementById("modal_title1").innerHTML = location_name;
+            document.getElementById("location_id").value = location_id[section];
+            document.getElementById("modal_title1").innerHTML = location_name[section];
             document.getElementById("position").value = clue_information[id][1];
             document.getElementById("points").value = clue_information[id][2];
             document.getElementById("self_description_hidden").value = clue_information[id][3];
@@ -450,13 +452,13 @@
             // 房间线索
             else if ($row["type"] == 3) {
                 echo '
-                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1)">
+                                    <button class="genric-btn info circle small" style="width: 25px; height: 25px; padding: 0px;" type="button" onclick="open_modal1(-1, '.$row["id"].')">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </h3>
                             </center>
                         </div>';
-                $sql1 = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND L.id='.$location_id;
+                $sql1 = 'SELECT C.id, C.location_id, L.name, C.position, C.points, C.self_description, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$_GET["chapter"].' AND L.id='.$location_id[$row["id"]].' AND L.section_id='.$row["id"];
                 $result1 = $conn->query($sql1);
                 $counter = 0;
                 while ($row1 = $result1->fetch_assoc()) {
@@ -476,7 +478,7 @@
                     echo '
                             <div class="col-lg-5 offset-lg-'.$offset.' col-md-5 offset-md-'.$offset.' col-sm-10 offset-sm-1">
                                 <div class="row" style="border: 1px solid #BBBBBB; margin-top: 20px; padding: 5px 0px 5px 0px;">
-                                    <div class="col-3" style="padding: 0px 0px 0px 5px; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row1["location_id"].')">';
+                                    <div class="col-3" style="padding: 0px 0px 0px 5px; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row["id"].')">';
                     if (!file_exists($file_path)) {
                         echo '
                                         <img style="width: 100%;" src="img/alt.png">';
@@ -487,7 +489,7 @@
                     }
                     echo '
                                     </div>
-                                    <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].')">
+                                    <div class="col-8" style="border-right: 1px solid #BBBBBB; cursor: pointer;" onclick="open_modal1('.$row1["id"].', '.$row["id"].')">
                                         <h4>'.$row1["position"].'</h4>
                                         <p>'.$row1["self_description"].'</p>
                                     </div>

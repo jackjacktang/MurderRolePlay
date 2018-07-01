@@ -54,7 +54,7 @@
                         <h3 style="margin-bottom: 20px;">秘密线索</h3>
                     </center>
                     <?php
-                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND L.character_id='.$admin.' ORDER BY CC.id ASC';
+                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND L.character_id='.$admin.' ORDER BY L.character_id ASC, L.section_id ASC, C.id ASC';
                     $result1 = $conn->query($sql1);
                     $counter = 0;
                     while ($row1 = $result1->fetch_assoc()) {
@@ -116,7 +116,7 @@
                         <h3 style="margin-bottom: 20px;">线索</h3>
                     </center>
                     <?php
-                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND (L.character_id IS NULL OR L.character_id<>'.$admin.') ORDER BY CC.id ASC';
+                    $sql1 = 'SELECT CC.owner, C.id, L.name, C.position, C.description, C.file_path, C.unlock_id, C.unlock_characters FROM character_clue AS CC LEFT JOIN clues AS C ON CC.clue_id=C.id LEFT JOIN locations AS L ON C.location_id=L.id WHERE C.chapter='.$chapter.' AND CC.character_id='.$character_id.' AND (L.character_id IS NULL OR L.character_id<>'.$admin.') ORDER BY L.character_id ASC, L.section_id ASC, C.id ASC';
                     $result1 = $conn->query($sql1);
                     $counter = 0;
                     while ($row1 = $result1->fetch_assoc()) {
@@ -197,14 +197,14 @@
         </div>
     </section>
 
-    <div id="img_modal" class="modal" style="top: 20%;">
+    <div id="img_modal" class="modal" style="top: 8%;">
         <div class="modal-content col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
             <div class="modal-header">
                 <h4 id="img_modal_title" class="modal-title"></h4>
                 <span class="close" style="float: right;" onclick="close_img_modal()">&times;</span>
             </div>
             <div class="modal-body">
-                <img src="" class="col-lg-8 offset-lg-2 col-md-10 offset-md-1" id="img_modal_img">
+                <img src="" class="col-lg-6 offset-lg-3 col-md-8 offset-md-2" id="img_modal_img">
                 <br><br>
                 <p id="img_modal_content"></p>
             </div>
@@ -241,13 +241,14 @@
                 </div>
                 <div class="modal-body">
                     <p>将这条线索分享给：</p>
+                    <p style="cursor: pointer;" onclick="select_all()">全选</p>
                     <?php
                     $sql = "SELECT id, name FROM characters WHERE script_id=".$script_id;
                     $result = $conn->query($sql);
                     while ($row = $result->fetch_assoc()) {
-                        if ($row["id"] != $_SESSION["character_id"] && $row["id"] != 1) {
+                        if ($row["id"] != $_SESSION["character_id"] && $row["id"] != $admin) {
                             echo '
-                    <input type="checkbox" name="share_targets[]" value="'.$row["id"].'" style="margin-bottom: 10px;"> 【'.replace_text($pairs, $row["name"]).'】<br>';
+                    <input class="checkbox" type="checkbox" name="share_targets[]" value="'.$row["id"].'" style="margin-bottom: 10px;"> 【'.replace_text($pairs, $row["name"]).'】<br>';
                         }
                     }
                     ?>
@@ -362,5 +363,21 @@
             if (event.target == share_modal) {
                 share_modal.style.display = "none";
             }
+        }
+
+        var is_select_all = false;
+        function select_all() {
+            checkboxes = document.getElementsByClassName("checkbox");
+            console.log(checkboxes);
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                if (is_select_all) {
+                    checkboxes[i].checked = false;
+                }
+                else {
+                    checkboxes[i].checked = true;
+                }
+            }
+            if (is_select_all) is_select_all = false;
+            else is_select_all = true;
         }
     </script>

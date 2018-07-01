@@ -69,17 +69,17 @@ if ($_POST["tab"] == "background") {
         if ($id > 0) {
             $sql = 'UPDATE characters SET username="'.$username.'", password="'.$password.'", name="'.$name.'", preferred_name="'.$preferred_name.'", description="'.$description.'", points='.$points.' WHERE id='.$id;
             $conn->query($sql);
-            if ($id != $admin) {
-                $sql = 'UPDATE locations SET name="【'.$name.'】的房间" WHERE script_id='.$script_id.' AND character_id='.$id;
-                $conn->query($sql);
-            }
         }
         else {
             $sql = 'INSERT INTO characters(script_id, username, password, name, preferred_name, description, points) VALUES('.$script_id.', "'.$username.'", "'.$password.'", "'.$name.'", "'.$preferred_name.'", "'.$description.'", '.$points.')';
             $conn->query($sql);
             $id = $conn->insert_id;
-            $sql = 'INSERT INTO locations(script_id, character_id, name) VALUES('.$script_id.', '.$id.', "【'.$name.'】的房间")';
-            $conn->query($sql);
+            $sql = 'SELECT * FROM sections WHERE type=3 AND script_id='.$script_id;
+            $result = $conn->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $sql1 = 'INSERT INTO locations(script_id, character_id, section_id, name) VALUES('.$script_id.', '.$id.', '.$row["id"].', "'.$name.'")';
+                $conn->query($sql1);
+            }
         }
     }
 
@@ -113,6 +113,13 @@ if ($_POST["tab"] == "sections") {
             $sql = 'INSERT INTO sections(script_id, sequence, type, title, sub_title, chapter) VALUES('.$script_id.', '.$sequence.', '.$type.', "'.$title.'", "'.$sub_title.'", '.$chapter.')';
             $conn->query($sql);
             $id = $conn->insert_id;
+            $sql = 'SELECT * FROM characters WHERE id<>'.$admin.' AND script_id='.$script_id;
+            $result = $conn->query($sql);
+            while ($row = $result->fetch_assoc()) {
+                $character_id = $row["id"];
+                $sql2 = 'INSERT INTO locations(script_id, character_id, section_id, name) VALUES ('.$script_id.', '.$character_id.', '.$id.', "'.$row["name"].'")';
+                $conn->query($sql2);
+            }
             if ($type == 0) {
                 $sql = 'INSERT INTO character_section(script_id, character_id, section_id, content) VALUES('.$script_id.', '.$admin.', '.$id.', "'.$content.'");';
                 $conn->query($sql);
@@ -315,7 +322,7 @@ if ($_POST["tab"] == "clues") {
                 $sql = 'SELECT file_path FROM clues WHERE id='.$id;
                 $result = $conn->query($sql);
                 while ($row = $result->fetch_assoc()) {
-                    if ($row["file_path"] != $file_path) {
+                    if ($row["file_path"] != $file_path && $row["file_path"] != "") {
                         unlink("../".$row["file_path"]);
                     }
                 }
@@ -373,5 +380,11 @@ if ($_POST["tab"] == "votes") {
 
     $conn->close();
     header("Location: ../admin.php?tab=votes");
+}
+
+if ($_POST["tab"] == "process") {
+    $sql = 'UPDATE status SET value='.$_POST["value"].' WHERE script_id='.$script_id.' AND name=1';
+    $conn->query($sql);
+    header("Location: ../admin.php?tab=process");
 }
 ?>

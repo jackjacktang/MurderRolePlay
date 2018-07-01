@@ -119,7 +119,7 @@
             $sql = 'SELECT * FROM characters WHERE script_id='.$script_id;
             $result = $conn->query($sql);
             while ($row = $result->fetch_assoc()) {
-            	if ($row["id"] != 1) {
+            	if ($row["id"] != $admin) {
             		array_push($character_ids, $row["id"]);
             		echo '
             					<th style="min-width: 150px; text-align: center;">'.$row["name"].'</th>';

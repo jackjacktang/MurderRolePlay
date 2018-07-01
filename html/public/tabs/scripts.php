@@ -109,7 +109,7 @@
         else if ($section["type"] == 3) {
             echo '
                     </div>';
-            $sql = 'SELECT C.id, C.unlock_id, C.file_path, C.position, C.self_description FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$character_id.' AND C.chapter='.$_GET["chapter"].' ORDER BY C.id ASC';
+            $sql = 'SELECT C.id, C.unlock_id, C.file_path, C.position, C.self_description FROM clues AS C LEFT JOIN locations AS L ON C.location_id=L.id WHERE L.character_id='.$character_id.' AND C.chapter='.$_GET["chapter"].' AND section_id='.$section["id"].' ORDER BY C.id ASC';
             $result = $conn->query($sql);
             $counter = 0;
             while ($row = $result->fetch_assoc()) {
